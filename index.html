@@ -31,8 +31,6 @@ header img{width:62px;height:62px;background:white;border-radius:12px;padding:4p
 .badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:800;color:white}.badge.local{background:var(--verde)}.badge.visitante{background:var(--rojo)}.badge.libre{background:#888}
 
 /* VISIBLE SOLO SI SOS ADMIN - CON ESPACIO OBLIGATORIO */
-body.admin.add-box{display:block!important}
-body.admin.del{display:block!important}
 </style>
 </head>
 <body>
@@ -63,8 +61,22 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyPUsuMZbnY-Emx06OzoOmU
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
 let ubicaciones = {};
 let isAdmin = localStorage.getItem('filippo_admin')==='si';
-function refreshAdminUI(){ if(isAdmin){ document.body.classList.add('admin'); document.getElementById('adminBtn').innerText='🔓 Salir Admin'; document.getElementById('adminInfo').style.display='block'; } else { document.body.classList.remove('admin'); document.getElementById('adminBtn').innerText='🔒 Admin'; document.getElementById('adminInfo').style.display='none'; } }
-refreshAdminUI();
+function refreshAdminUI(){ 
+  const cajas = document.querySelectorAll('.add-box');
+  const borrar = document.querySelectorAll('.del');
+  if(isAdmin){ 
+    document.body.classList.add('admin'); 
+    document.getElementById('adminBtn').innerText='🔓 Salir Admin'; 
+    document.getElementById('adminInfo').style.display='block';
+    cajas.forEach(c=>c.style.display='block');
+    borrar.forEach(b=>b.style.display='block');
+  } else { 
+    document.body.classList.remove('admin'); 
+    document.getElementById('adminBtn').innerText='🔒 Admin'; 
+    document.getElementById('adminInfo').style.display='none';
+    cajas.forEach(c=>c.style.display='none');
+    borrar.forEach(b=>b.style.display='none');
+  } 
 function activarAdmin(){ if(isAdmin){ localStorage.removeItem('filippo_admin'); isAdmin=false; refreshAdminUI(); return; } const c=prompt('Clave admin:'); if(c==='filippo2012'){ localStorage.setItem('filippo_admin','si'); isAdmin=true; refreshAdminUI(); alert('Admin activado. Ahora abrí GALERÍA o UBICACIONES'); } else if(c){ alert('Clave incorrecta'); } }
 function togglePanel(id){ const p=document.getElementById(id); const o=p.classList.contains('show'); document.querySelectorAll('.panel').forEach(e=>e.classList.remove('show')); if(!o) p.classList.add('show'); }
 const partidos=[["Escuela Tigre","LOCAL","Fecha 1"],["Argentinos Del Viso Rojo","LOCAL","Fecha 2"],["Puertos Blanco","LOCAL","Fecha 3"],["","LIBRE","Fecha 4"],["MG Fútbol","VISITANTE","Fecha 5"],["Caza y Pesca Verde","LOCAL","Fecha 6"],["Cerro Pilar","VISITANTE","Fecha 7"],["Defensores de Escobar","LOCAL","Fecha 8"],["Fair Play","VISITANTE","Fecha 9"],["Racing San Martín","VISITANTE","Fecha 10"],["Puertos Naranja","LOCAL","Fecha 11"],["Club San Fernando","LOCAL","Fecha 12"],["River Maschwitz Rojo","VISITANTE","Fecha 13"]];
