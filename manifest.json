@@ -1,0 +1,9 @@
+{
+  "name": "Escuela Filippo 2012",
+  "short_name": "Filippo 2012",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#1ca15a",
+  "theme_color": "#1ca15a",
+  "icons": [{"src": "escudo.png","sizes": "512x512","type": "image/png"}]
+}
