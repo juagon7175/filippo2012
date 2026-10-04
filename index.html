@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Escuela Filippo - 2012</title>
-<link rel="icon" href="escudo.png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
 :root{--verde:#1ca15a;--negro:#111;--rojo:#d12a2a;--gris:#f3f7f4}
@@ -19,87 +18,51 @@ header img{width:62px;height:62px;background:white;border-radius:12px;padding:4p
 .galeria{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
 .thumb{position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--negro);aspect-ratio:1/1;background:#eee}
 .thumb img,.thumb iframe{width:100%;height:100%;object-fit:cover;display:block;border:none}
-.link{background:var(--verde);color:white;padding:12px;text-align:center;border-radius:10px;text-decoration:none;display:block;font-weight:800;border:2px solid var(--negro);margin-top:10px}
-.link.negro{background:var(--negro)}
-.add-box{display:none;border:2px dashed var(--verde);border-radius:12px;padding:12px;margin-top:12px;background:#f8fffa;text-align:center}
-.del{display:none;position:absolute;top:3px;right:3px;background:var(--rojo);color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;z-index:2}
-.del.ubibtn{position:static;width:auto;padding:4px 10px;border-radius:8px}
+.link{background:var(--negro);color:white;padding:12px;text-align:center;border-radius:10px;text-decoration:none;display:block;font-weight:800;border:2px solid var(--negro);margin-top:10px}
+/* OCULTOS POR DEFECTO */
+.add-box{display:none!important;border:2px dashed var(--verde);border-radius:12px;padding:12px;margin-top:12px;background:#f8fffa;text-align:center}
+.del{display:none!important;position:absolute;top:3px;right:3px;background:var(--rojo);color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;z-index:10}
+.del.ubibtn{position:static;width:auto;height:auto;padding:4px 10px;border-radius:8px}
 .input-txt{width:100%;padding:10px;border-radius:8px;border:2px solid #ddd;margin-top:6px}
 .fecha{margin-top:10px;border:2px solid var(--negro);border-radius:12px;overflow:hidden;cursor:pointer}.fecha-head{background:var(--negro);color:white;padding:8px 12px;font-size:12px;font-weight:800;display:flex;justify-content:space-between}
 .match{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:13px}.match.local{background:#e8f5e9}.match.visitante{background:#ffebee}.match.libre{background:#f3f3f3}
 .badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:800;color:white}.badge.local{background:var(--verde)}.badge.visitante{background:var(--rojo)}.badge.libre{background:#888}
-/* ESTA ES LA CORRECCION CLAVE */
+/* FIX ADMIN - CON ESPACIO */
 body.admin.add-box{display:block!important}
 body.admin.del{display:block!important}
 </style>
 </head>
-<body id="body">
-<header><img src="escudo.png"><div><b>ESCUELA FILIPPO</b><br><small>2012</small></div><button class="admin-btn" onclick="activarAdmin()" id="adminBtn">🔒 Admin</button></header>
-<div class="hero"><img src="equipo.jpg"></div>
+<body>
+<header><img src="escudo.png" onerror="this.style.display='none'"><div><b>ESCUELA FILIPPO</b><br><small>2012 - Clausura 2026</small></div><button class="admin-btn" onclick="activarAdmin()" id="adminBtn">🔒 Admin</button></header>
+<div class="hero"><img src="equipo.jpg" onerror="this.style.display='none'"></div>
 <div class="card">
 <button class="btn" onclick="togglePanel('p1')">📅 FIXTURE <span>▼</span></button>
-<div id="p1" class="panel show">
-<div class="fecha" onclick="abrirPartido('Escuela Tigre','LOCAL')"><div class="fecha-head"><span>Fecha 1</span><span>LOCAL</span></div><div class="match local"><span><b>Filippo</b> vs Escuela Tigre</span><span class="badge local">LOCAL</span></div></div>
-<div class="fecha" onclick="abrirPartido('Argentinos Del Viso Rojo','LOCAL')"><div class="fecha-head"><span>Fecha 2</span><span>LOCAL</span></div><div class="match local"><span><b>Filippo</b> vs Argentinos Del Viso Rojo</span><span class="badge local">LOCAL</span></div></div>
-<div class="fecha" onclick="abrirPartido('Puertos Blanco','LOCAL')"><div class="fecha-head"><span>Fecha 3</span><span>LOCAL</span></div><div class="match local"><span><b>Filippo</b> vs Puertos Blanco</span><span class="badge local">LOCAL</span></div></div>
-<div class="fecha"><div class="fecha-head"><span>Fecha 4</span><span>LIBRE</span></div><div class="match libre"><span>LIBRE</span><span class="badge libre">LIBRE</span></div></div>
-<div class="fecha" onclick="abrirPartido('MG Fútbol','VISITANTE')"><div class="fecha-head"><span>Fecha 5</span><span>VISITANTE</span></div><div class="match visitante"><span>MG Fútbol vs <b>Filippo</b></span><span class="badge visitante">VISITANTE</span></div></div>
-<div class="fecha" onclick="abrirPartido('Caza y Pesca Verde','LOCAL')"><div class="fecha-head"><span>Fecha 6</span><span>LOCAL</span></div><div class="match local"><span><b>Filippo</b> vs Caza y Pesca Verde</span><span class="badge local">LOCAL</span></div></div>
-<div class="fecha" onclick="abrirPartido('Cerro Pilar','VISITANTE')"><div class="fecha-head"><span>Fecha 7</span><span>VISITANTE</span></div><div class="match visitante"><span>Cerro Pilar vs <b>Filippo</b></span><span class="badge visitante">VISITANTE</span></div></div>
-<div class="fecha" onclick="abrirPartido('Defensores de Escobar','LOCAL')"><div class="fecha-head"><span>Fecha 8</span><span>LOCAL</span></div><div class="match local"><span><b>Filippo</b> vs Defensores de Escobar</span><span class="badge local">LOCAL</span></div></div>
-<div class="fecha" onclick="abrirPartido('Fair Play','VISITANTE')"><div class="fecha-head"><span>Fecha 9</span><span>VISITANTE</span></div><div class="match visitante"><span>Fair Play vs <b>Filippo</b></span><span class="badge visitante">VISITANTE</span></div></div>
-<div class="fecha" onclick="abrirPartido('Racing San Martín','VISITANTE')"><div class="fecha-head"><span>Fecha 10</span><span>VISITANTE</span></div><div class="match visitante"><span>Racing San Martín vs <b>Filippo</b></span><span class="badge visitante">VISITANTE</span></div></div>
-<div class="fecha" onclick="abrirPartido('Puertos Naranja','LOCAL')"><div class="fecha-head"><span>Fecha 11</span><span>LOCAL</span></div><div class="match local"><span><b>Filippo</b> vs Puertos Naranja</span><span class="badge local">LOCAL</span></div></div>
-<div class="fecha" onclick="abrirPartido('Club San Fernando','LOCAL')"><div class="fecha-head"><span>Fecha 12</span><span>LOCAL</span></div><div class="match local"><span><b>Filippo</b> vs Club San Fernando</span><span class="badge local">LOCAL</span></div></div>
-<div class="fecha" onclick="abrirPartido('River Maschwitz Rojo','VISITANTE')"><div class="fecha-head"><span>Fecha 13</span><span>VISITANTE</span></div><div class="match visitante"><span>River Maschwitz Rojo vs <b>Filippo</b></span><span class="badge visitante">VISITANTE</span></div></div>
-</div>
-
+<div id="p1" class="panel show"><div id="fixture"></div></div>
 <button class="btn" onclick="togglePanel('p3')">📍 UBICACIONES <span>▼</span></button>
-<div id="p3" class="panel"><div id="listaUbicaciones">Cargando...</div>
-<div class="add-box"><b>Agregar ubicación (solo Admin)</b><input id="nombreUbi" class="input-txt" placeholder="Ej: MG Fútbol"><input id="linkUbi" class="input-txt" placeholder="Link Google Maps"><button onclick="agregarUbi()" style="width:100%;margin-top:8px;padding:10px;background:var(--negro);color:white;border:none;border-radius:8px;font-weight:800">+ Guardar</button></div></div>
-
+<div id="p3" class="panel"><div id="listaUbicaciones">Cargando...</div><div class="add-box"><b>Agregar ubicación (solo Admin)</b><input id="nombreUbi" class="input-txt" placeholder="Ej: MG Fútbol"><input id="linkUbi" class="input-txt" placeholder="Link Google Maps"><button onclick="agregarUbi()" style="width:100%;margin-top:8px;padding:10px;background:var(--negro);color:white;border:none;border-radius:8px;font-weight:800">+ Guardar</button></div></div>
 <button class="btn" onclick="togglePanel('p2')">📸 GALERÍA <span>▼</span></button>
-<div id="p2" class="panel"><div class="galeria" id="galeria"></div>
-<div class="add-box"><b>Subir foto/video (solo Admin)</b><br><input type="file" id="fileInput" accept="image/*,video/*" multiple></div></div>
-
-<a class="link negro" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">🔗 Ver tabla oficial LUEFI</a>
-<div id="adminInfo" style="display:none;margin-top:12px;background:var(--negro);color:white;padding:10px;border-radius:8px;font-size:12px;text-align:center">🔓 Modo Admin Activo</div>
+<div id="p2" class="panel"><div class="galeria" id="galeria"></div><div class="add-box"><b>Subir foto/video (solo Admin)</b><br><input type="file" id="fileInput" accept="image/*,video/*" multiple></div></div>
+<a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">🔗 Ver tabla oficial LUEFI</a>
+<div id="adminInfo" style="display:none;margin-top:12px;background:var(--negro);color:white;padding:10px;border-radius:8px;font-size:12px;text-align:center">🔓 Modo Admin Activo - Ya podés cargar</div>
 </div>
-
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyPUsuMZbnY-Emx06OzoOmUliagGwAPhAKdgoOHlLcOaPfLWvcnpEZV-BGZAgtlzMki/exec";
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
 let ubicaciones = {};
 let isAdmin = localStorage.getItem('filippo_admin')==='si';
-function refreshAdminUI(){
-  if(isAdmin){ document.body.classList.add('admin'); document.getElementById('adminBtn').innerText='🔓 Salir Admin'; document.getElementById('adminInfo').style.display='block'; }
-  else { document.body.classList.remove('admin'); document.getElementById('adminBtn').innerText='🔒 Admin'; document.getElementById('adminInfo').style.display='none'; }
-}
+function refreshAdminUI(){ if(isAdmin){ document.body.classList.add('admin'); document.getElementById('adminBtn').innerText='🔓 Salir'; document.getElementById('adminInfo').style.display='block'; } else { document.body.classList.remove('admin'); document.getElementById('adminBtn').innerText='🔒 Admin'; document.getElementById('adminInfo').style.display='none'; } }
 refreshAdminUI();
-function activarAdmin(){
-  if(isAdmin){ localStorage.removeItem('filippo_admin'); isAdmin=false; refreshAdminUI(); return; }
-  const c=prompt('Clave admin:');
-  if(c==='filippo2012'){ localStorage.setItem('filippo_admin','si'); isAdmin=true; refreshAdminUI(); alert('Admin activado - abrí Ubicaciones y Galería'); }
-  else if(c!=null){ alert('Clave incorrecta'); }
-}
-function togglePanel(id){const p=document.getElementById(id);const o=p.classList.contains('show');document.querySelectorAll('.panel').forEach(e=>e.classList.remove('show'));if(!o)p.classList.add('show');}
-async function cargarTodo(){
-  const r=await fetch(API_URL);const data=await r.json();
-  ubicaciones={}; let html=`<div class="item"><div><b>Filippo LOCAL - KIRAKU-EN</b><br><a href="${UBICACION_FILIPPO}" target="_blank">📍 Maps</a></div></div>`;
-  (data.ubicaciones||[]).forEach(u=>{ ubicaciones[u.key]=u; html+=`<div class="item"><div><b>${u.display}</b><br><a href="${u.href}" target="_blank">📍 Maps</a></div><button class="del ubibtn" onclick="borrarUbi('${u.row}')">Borrar</button></div>`; });
-  document.getElementById('listaUbicaciones').innerHTML=html;
-  const gal=document.getElementById('galeria'); gal.innerHTML='';
-  (data.galeria||[]).forEach(g=>{
-    let cont=g.type==='image'?`<img src="https://drive.google.com/thumbnail?id=${g.fileId}&sz=w400">`:`<iframe src="https://drive.google.com/file/d/${g.fileId}/preview"></iframe>`;
-    gal.innerHTML+=`<div class="thumb">${cont}<button class="del" onclick="borrarImg('${g.fileId}',${g.row})">X</button></div>`;
-  });
-}
+function activarAdmin(){ if(isAdmin){ localStorage.removeItem('filippo_admin'); isAdmin=false; refreshAdminUI(); return; } const c=prompt('Clave admin:'); if(c==='filippo2012'){ localStorage.setItem('filippo_admin','si'); isAdmin=true; refreshAdminUI(); } else if(c){ alert('Clave incorrecta'); } }
+function togglePanel(id){ const p=document.getElementById(id); const o=p.classList.contains('show'); document.querySelectorAll('.panel').forEach(e=>e.classList.remove('show')); if(!o) p.classList.add('show'); }
+const partidos=[["Escuela Tigre","LOCAL","Fecha 1"],["Argentinos Del Viso Rojo","LOCAL","Fecha 2"],["Puertos Blanco","LOCAL","Fecha 3"],["","LIBRE","Fecha 4"],["MG Fútbol","VISITANTE","Fecha 5"],["Caza y Pesca Verde","LOCAL","Fecha 6"],["Cerro Pilar","VISITANTE","Fecha 7"],["Defensores de Escobar","LOCAL","Fecha 8"],["Fair Play","VISITANTE","Fecha 9"],["Racing San Martín","VISITANTE","Fecha 10"],["Puertos Naranja","LOCAL","Fecha 11"],["Club San Fernando","LOCAL","Fecha 12"],["River Maschwitz Rojo","VISITANTE","Fecha 13"]];
+let htmlFix=""; partidos.forEach(p=>{ if(p[1]==="LIBRE"){ htmlFix+=`<div class="fecha"><div class="fecha-head"><span>${p[2]}</span><span>LIBRE</span></div><div class="match libre"><span>LIBRE</span></div></div>` } else { const cl=p[1]==="LOCAL"?"local":"visitante"; const vs=p[1]==="LOCAL"?`<b>Filippo</b> vs ${p[0]}`:`${p[0]} vs <b>Filippo</b>`; htmlFix+=`<div class="fecha" onclick="abrirPartido('${p[0]}','${p[1]}')"><div class="fecha-head"><span>${p[2]} - ${p[0]}</span><span>${p[1]}</span></div><div class="match ${cl}"><span>${vs}</span><span class="badge ${cl}">${p[1]}</span></div></div>` } }); document.getElementById('fixture').innerHTML=htmlFix;
+async function cargarTodo(){ const r=await fetch(API_URL); const data=await r.json(); ubicaciones={}; let html=`<div class="item"><div><b>Filippo LOCAL - KIRAKU-EN</b><br><a href="${UBICACION_FILIPPO}" target="_blank">📍 Maps</a></div></div>`; (data.ubicaciones||[]).forEach(u=>{ ubicaciones[u.key]=u; html+=`<div class="item"><div><b>${u.display}</b><br><a href="${u.href}" target="_blank">📍 Maps</a></div><button class="del ubibtn" onclick="borrarUbi('${u.row}')">Borrar</button></div>`; }); document.getElementById('listaUbicaciones').innerHTML=html; const gal=document.getElementById('galeria'); gal.innerHTML=''; (data.galeria||[]).forEach(g=>{ let cont=g.type==='image'?`<img src="https://drive.google.com/thumbnail?id=${g.fileId}&sz=w400">`:`<iframe src="https://drive.google.com/file/d/${g.fileId}/preview"></iframe>`; gal.innerHTML+=`<div class="thumb">${cont}<button class="del" onclick="borrarImg('${g.fileId}',${g.row})">X</button></div>`; }); }
 cargarTodo();
-async function agregarUbi(){const d=document.getElementById('nombreUbi').value.trim();const h=document.getElementById('linkUbi').value.trim();if(!d||!h)return alert('Completá');await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:d.toLowerCase(),display:d,href:h})});alert('Guardado');setTimeout(cargarTodo,2000);document.getElementById('nombreUbi').value='';document.getElementById('linkUbi').value='';}
-async function borrarUbi(id){if(!confirm('¿Borrar?'))return;await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteUbi',pass:'filippo2012',id:id})});setTimeout(cargarTodo,1500);}
-async function borrarImg(fid,row){if(!confirm('¿Borrar?'))return;await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteImage',pass:'filippo2012',fileId:fid,row:row})});setTimeout(cargarTodo,1500);}
-function abrirPartido(n,t){if(t==='LOCAL')window.open(UBICACION_FILIPPO,'_blank');else{const u=ubicaciones[n.toLowerCase()];if(u)window.open(u.href,'_blank');else alert('No hay ubicación para '+n);}}
-document.getElementById('fileInput').addEventListener('change', async(e)=>{for(let f of e.target.files){const rd=new FileReader();rd.onload=async()=>{const b64=rd.result.split(',')[1];await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})});setTimeout(cargarTodo,2500);};rd.readAsDataURL(f);}});
+async function agregarUbi(){ const d=document.getElementById('nombreUbi').value.trim(); const h=document.getElementById('linkUbi').value.trim(); if(!d||!h) return alert('Completá'); await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:d.toLowerCase(),display:d,href:h})}); alert('Guardado'); setTimeout(cargarTodo,2000); document.getElementById('nombreUbi').value=''; document.getElementById('linkUbi').value=''; }
+async function borrarUbi(id){ if(!confirm('¿Borrar?')) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteUbi',pass:'filippo2012',id:id})}); setTimeout(cargarTodo,1500); }
+async function borrarImg(fid,row){ if(!confirm('¿Borrar?')) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteImage',pass:'filippo2012',fileId:fid,row:row})}); setTimeout(cargarTodo,1500); }
+function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blank'); else{ const u=ubicaciones[n.toLowerCase()]; if(u) window.open(u.href,'_blank'); else alert('No hay ubicación para '+n); } }
+document.getElementById('fileInput').addEventListener('change', async(e)=>{ for(let f of e.target.files){ const rd=new FileReader(); rd.onload=async()=>{ const b64=rd.result.split(',')[1]; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); setTimeout(cargarTodo,2500); }; rd.readAsDataURL(f); } });
 </script>
 </body>
 </html>
