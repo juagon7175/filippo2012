@@ -42,10 +42,12 @@ header img{width:66px;height:66px;background:white;border-radius:14px;padding:4p
 .info-box h4{font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
 .info-box p{font-size:12.5px;line-height:1.5;color:#333}
 .info-label{display:inline-block;background:var(--dorado);border:1px solid var(--negro);padding:2px 8px;border-radius:6px;font-size:10px;font-weight:900;margin-bottom:4px}
+.wa-btn{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:white;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:800;border:2px solid var(--negro);margin-top:6px;font-size:12px}
+.copy-box{background:#f0f0f0;border:2px dashed var(--negro);padding:10px;border-radius:10px;margin:6px 0;font-family:monospace;font-size:12px;word-break:break-all}
 </style>
 </head>
 <body>
-<header><img src="escudo.png" onerror="this.src='icon-192.png'"><div><b>ESCUELA FILIPPO</b><br><small>2012 - Clausura 2026 ⚫🔴🟢</small></div><button class="admin-btn" onclick="activarAdmin()" id="adminBtn">🔒 Admin</button></header>
+<header><img src="escudo.png" onerror="this.src='icon-192.png'"><div><b>ESCUELA FILIPPO</b><br><small>2012 - Clausura 2026</small></div><button class="admin-btn" onclick="activarAdmin()" id="adminBtn">🔒 Admin</button></header>
 <div class="hero"><img src="equipo.jpg" onerror="this.style.display='none'"></div>
 <div class="card">
 <button class="btn verde" onclick="togglePanel('p1')">📅 FIXTURE <span>▼</span></button>
@@ -56,31 +58,48 @@ header img{width:66px;height:66px;background:white;border-radius:14px;padding:4p
 <div id="p2" class="panel"><div class="galeria" id="galeria"></div><div class="add-box"><b style="color:var(--verde)">➕ Subir foto/video (solo Admin)</b><br><br><input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%"></div></div>
 <button class="btn info" onclick="togglePanel('p4')">ℹ️ INFORMACIÓN <span>▼</span></button>
 <div id="p4" class="panel">
+
   <div class="info-box" style="border-top:5px solid var(--verde)">
     <span class="info-label">CATEGORÍA 2012</span>
-    <h4>🟢 Escuela Filippo - Clausura 2026</h4>
-    <p>Liga LUEFI - Zona Metropolitana<br><b>Sede:</b> Bella Vista, Buenos Aires</p>
+    <h4>🟢 Escuela de Fútbol Filippo</h4>
+    <p><b>DT:</b> Jhonatan<br><b>Coordinadores:</b> Miguel y Hernán</p>
   </div>
-  <div class="info-box" style="border-top:5px solid var(--rojo)">
-    <span class="info-label" style="background:var(--rojo);color:white">DT 2012</span>
-    <h4>👨‍🏫 DT: Jhonatan</h4>
-    <p>Director Técnico oficial de la categoría 2012.<br>Consultas de fútbol y entrenamientos directamente con él.</p>
+
+  <div class="info-box" style="border-top:5px solid var(--verde);background:#f0faf0">
+    <span class="info-label" style="background:var(--verde);color:white">ENTRENAMIENTOS</span>
+    <h4>⏰ Días y sedes</h4>
+    <p><b>LUNES:</b><br>Club de Empleados BBVA</p>
+    <a href="https://www.google.com/maps/place/Club+de+Empleados+BBVA/@-34.5754896,-58.7063758,17z/data=!3m1!4b1!4m6!3m5!1s0x95bcbdc66c2af993:0x69f4c22b86fdb78c!8m2!3d-34.575494!4d-58.7038009!16s%2Fg%2F11c1s0c34j!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDkzMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="wa-btn" style="background:var(--negro)">📍 Ver ubicación Lunes</a>
+    <br><br>
+    <p><b>MIÉRCOLES Y VIERNES:</b><br>Filippo Football</p>
+    <a href="https://www.google.com/maps/place/Filippo+Football/@-34.5526633,-58.7000079,17z/data=!3m1!4b1!4m6!3m5!1s0x95bcbda955426449:0x7737bbd1f6ceb383!8m2!3d-34.5526677!4d-58.697433!16s%2Fg%2F11bvt8kl7v!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDkzMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="wa-btn" style="background:var(--verde)">📍 Ver ubicación Mie y Vie</a>
   </div>
+
   <div class="info-box" style="border-top:5px solid var(--negro)">
-    <span class="info-label" style="background:var(--negro);color:white">COORDINACIÓN</span>
-    <h4>🤝 Coordinadores: Miguel y Hernán</h4>
-    <p>Coordinación general de Escuela Filippo.<br>Para temas de cuotas, documentación y organización.</p>
+    <span class="info-label" style="background:var(--negro);color:white">FILIPPO INFORMACIÓN GENERAL</span>
+    <h4>📱 Celular administración:</h4>
+    <a href="https://wa.me/5491178285589" target="_blank" class="wa-btn">WhatsApp 11 7828-5589</a>
+    <br><br>
+    <h4>💳 Datos de cuenta:</h4>
+    <div class="copy-box">
+      <b>CBU:</b> 0070026930004030762979<br>
+      <b>ALIAS:</b> escuelafilippo<br>
+      <b>Titular:</b> MARIA INES LOPEZ BRAVO
+    </div>
+    <br>
+    <h4>📸 Instagram:</h4>
+    <a href="https://instagram.com/escuelafilippo" target="_blank" style="color:var(--verde);font-weight:900;text-decoration:none">@escuelafilippo</a>
+    <br><br>
+    <h4>ℹ️ Info / Consultas:</h4>
+    <a href="https://wa.me/5491150555166" target="_blank" class="wa-btn" style="background:var(--negro)">WhatsApp 11 5055-5166</a>
   </div>
-  <div class="info-box" style="border-top:5px solid var(--dorado)">
-    <span class="info-label">ENTRENAMIENTO</span>
-    <h4>⏰ Lugar y Horarios</h4>
-    <p><b>Lugar:</b> Asociación Japonesa Sarmiento KIRAKU-EN<br><b>Dirección:</b> Bella Vista<br><b>Horarios:</b> Consultar con DT Jhonatan<br><br><a href="https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/" target="_blank" style="color:var(--verde);font-weight:800">📍 Ver en Maps - KIRAKU-EN</a></p>
-  </div>
+
   <div class="info-box">
-    <span class="info-label" style="background:var(--verde);color:white">INFO ÚTIL</span>
+    <span class="info-label" style="background:var(--dorado)">INFO ÚTIL</span>
     <h4>📋 Para tener en cuenta</h4>
-    <p>- Llevar DNI y carnet LUEFI<br>- Botines sin tapones de aluminio<br>- Cuota al día<br>- Avisar falta 24hs antes<br>- Grupo WhatsApp oficial para avisos</p>
+    <p>- Llevar DNI<br>- Botines sin tapones de aluminio<br>- Avisar falta 24hs antes<br>- Grupo WhatsApp oficial para avisos</p>
   </div>
+
 </div>
 <a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">🔗 Ver tabla oficial LUEFI</a>
 <div id="adminInfo" style="display:none;margin-top:12px;background:var(--negro);color:white;padding:12px;border-radius:12px;font-size:12px;text-align:center;border:2px solid var(--rojo)">🔓 Modo Admin Activo</div>
@@ -89,7 +108,7 @@ header img{width:66px;height:66px;background:white;border-radius:14px;padding:4p
 const API_URL = "https://script.google.com/macros/s/AKfycbyPUsuMZbnY-Emx06OzoOmUliagGwAPhAKdgoOHlLcOaPfLWvcnpEZV-BGZAgtlzMki/exec";
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
 let ubicaciones = {}; let isAdmin = localStorage.getItem('filippo_admin')==='si';
-function refreshAdminUI(){ const cajas=document.querySelectorAll('.add-box'); const borrar=document.querySelectorAll('.del'); if(isAdmin){ document.body.classList.add('admin'); document.getElementById('adminBtn').innerText='🔓 Salir Admin'; document.getElementById('adminInfo').style.display='block'; cajas.forEach(c=>c.style.display='block'); borrar.forEach(b=>b.style.display='block'); } else { document.body.classList.remove('admin'); document.getElementById('adminBtn').innerText='🔒 Admin'; document.getElementById('adminInfo').style.display='none'; cajas.forEach(c=>c.style.display='none'); borrar.forEach(b=>b.style.display='none'); } }
+function refreshAdminUI(){ const cajas=document.querySelectorAll('.add-box'); const borrar=document.querySelectorAll('.del'); if(isAdmin){ document.getElementById('adminBtn').innerText='🔓 Salir Admin'; document.getElementById('adminInfo').style.display='block'; cajas.forEach(c=>c.style.display='block'); borrar.forEach(b=>b.style.display='block'); } else { document.getElementById('adminBtn').innerText='🔒 Admin'; document.getElementById('adminInfo').style.display='none'; cajas.forEach(c=>c.style.display='none'); borrar.forEach(b=>b.style.display='none'); } }
 function activarAdmin(){ if(isAdmin){ localStorage.removeItem('filippo_admin'); isAdmin=false; refreshAdminUI(); return; } const c=prompt('Clave admin:'); if(c==='filippo2012'){ localStorage.setItem('filippo_admin','si'); isAdmin=true; refreshAdminUI(); alert('Admin activado'); } else if(c){ alert('Clave incorrecta'); } }
 function togglePanel(id){ const p=document.getElementById(id); const o=p.classList.contains('show'); document.querySelectorAll('.panel').forEach(e=>e.classList.remove('show')); if(!o) p.classList.add('show'); if(isAdmin) refreshAdminUI(); }
 const partidos=[["Escuela Tigre","LOCAL","Fecha 1"],["Argentinos Del Viso Rojo","LOCAL","Fecha 2"],["Puertos Blanco","LOCAL","Fecha 3"],["","LIBRE","Fecha 4"],["MG Fútbol","VISITANTE","Fecha 5"],["Caza y Pesca Verde","LOCAL","Fecha 6"],["Cerro Pilar","VISITANTE","Fecha 7"],["Defensores de Escobar","LOCAL","Fecha 8"],["Fair Play","VISITANTE","Fecha 9"],["Racing San Martín","VISITANTE","Fecha 10"],["Puertos Naranja","LOCAL","Fecha 11"],["Club San Fernando","LOCAL","Fecha 12"],["River Maschwitz Rojo","VISITANTE","Fecha 13"]];
