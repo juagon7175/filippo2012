@@ -1,1 +1,1 @@
-# filippo2012
+Esta es la pagina de la categoria 2012 de la Escuela Filippo de Fútbol en la que se resume brevemente su actividad y donde se incluye informacion complementaria para los nuevos integrantes o todo aquel que este interesado. # filippo2012
