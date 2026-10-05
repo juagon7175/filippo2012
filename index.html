@@ -6,72 +6,95 @@
 <link rel="icon" href="escudo.png">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1ca15a">
+<meta name="theme-color" content="#0a7d3e">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
-:root{--verde:#1ca15a;--negro:#111;--rojo:#d12a2a;--gris:#f3f7f4}
+:root{--verde:#0a7d3e;--verde-claro:#1ca15a;--rojo:#c41e24;--negro:#121212;--dorado:#f5c518;--gris:#f4f7f4}
 body{background:var(--gris)}
-header{background:var(--verde);color:white;padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:4px solid var(--negro);position:relative}
-header img{width:62px;height:62px;background:white;border-radius:12px;padding:4px;border:2px solid var(--negro);object-fit:contain}
-.admin-btn{position:absolute;right:12px;top:14px;background:var(--negro);color:white;border:none;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:800;cursor:pointer}
-.hero img{width:100%;max-height:420px;object-fit:cover;display:block}
-.card{background:white;margin:14px;border-radius:18px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);border-top:4px solid var(--verde)}
-.btn{width:100%;background:var(--verde);color:white;padding:14px 16px;border:none;border-radius:12px;font-size:14px;font-weight:800;display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin-top:12px;border:2px solid var(--negro);border-left:6px solid var(--negro)}
+header{background:linear-gradient(135deg, var(--verde) 0%, var(--verde-claro) 100%);color:white;padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:4px solid var(--rojo);position:relative;box-shadow:0 4px 0 var(--negro)}
+header img{width:66px;height:66px;background:white;border-radius:14px;padding:4px;border:3px solid var(--negro);object-fit:contain;box-shadow:2px 2px 0 var(--negro)}
+.admin-btn{position:absolute;right:12px;top:14px;background:var(--negro);color:white;border:2px solid white;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:800;cursor:pointer}
+.hero img{width:100%;max-height:420px;object-fit:cover;display:block;border-bottom:4px solid var(--negro)}
+.card{background:white;margin:14px;border-radius:20px;padding:16px;box-shadow:4px 4px 0 var(--negro);border:2px solid var(--negro);border-top:6px solid var(--verde)}
+.btn{width:100%;background:white;color:var(--negro);padding:14px 16px;border:2px solid var(--negro);border-radius:12px;font-size:14px;font-weight:900;display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin-top:12px;box-shadow:3px 3px 0 var(--negro)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--negro)}
+.btn.verde{background:var(--verde);color:white;border-left:6px solid var(--rojo)}
+.btn.rojo{background:var(--rojo);color:white;border-left:6px solid var(--negro)}
+.btn.negro{background:var(--negro);color:white;border-left:6px solid var(--verde)}
+.btn.info{background:white;border-left:6px solid var(--dorado)}
 .panel{display:none;padding:12px 0}.panel.show{display:block}
-.item{padding:11px;background:#f9fafb;border-radius:10px;margin:6px 0;font-size:13px;border-left:4px solid var(--verde);display:flex;justify-content:space-between;align-items:center}
-.galeria{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
-.thumb{position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--negro);aspect-ratio:1/1;background:#eee}
+.item{padding:12px;background:#f9fafb;border-radius:12px;margin:8px 0;font-size:13px;border:2px solid var(--negro);border-left:5px solid var(--verde);display:flex;justify-content:space-between;align-items:center;box-shadow:2px 2px 0 rgba(0,0,0,.1)}
+.galeria{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.thumb{position:relative;border-radius:12px;overflow:hidden;border:2px solid var(--negro);aspect-ratio:1/1;background:#eee;box-shadow:2px 2px 0 var(--negro)}
 .thumb img,.thumb iframe{width:100%;height:100%;object-fit:cover;display:block;border:none}
-.link{background:var(--negro);color:white;padding:12px;text-align:center;border-radius:10px;text-decoration:none;display:block;font-weight:800;border:2px solid var(--negro);margin-top:20px}
-.add-box{display:none;border:2px dashed var(--verde);border-radius:12px;padding:14px;margin-top:12px;background:#f0fff4;text-align:center}
-.del{display:none;position:absolute;top:3px;right:3px;background:var(--rojo);color:white;border:none;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer;z-index:10}
+.link{background:var(--negro);color:white;padding:14px;text-align:center;border-radius:12px;text-decoration:none;display:block;font-weight:900;border:2px solid var(--negro);margin-top:20px;box-shadow:3px 3px 0 var(--rojo)}
+.add-box{display:none;border:2px dashed var(--verde);border-radius:12px;padding:14px;margin-top:12px;background:#e8f5e9;text-align:center}
+.del{display:none;position:absolute;top:3px;right:3px;background:var(--rojo);color:white;border:2px solid var(--negro);border-radius:50%;width:26px;height:26px;font-size:12px;cursor:pointer;z-index:10;font-weight:800}
 .del.ubibtn{position:static;width:auto;height:auto;padding:5px 12px;border-radius:8px;font-size:11px}
-.input-txt{width:100%;padding:10px;border-radius:8px;border:2px solid #ddd;margin-top:8px}
-.fecha{margin-top:10px;border:2px solid var(--negro);border-radius:12px;overflow:hidden;cursor:pointer}.fecha-head{background:var(--negro);color:white;padding:8px 12px;font-size:12px;font-weight:800;display:flex;justify-content:space-between}
-.match{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:13px}.match.local{background:#e8f5e9}.match.visitante{background:#ffebee}.match.libre{background:#f3f3f3}
-.badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:800;color:white}.badge.local{background:var(--verde)}.badge.visitante{background:var(--rojo)}.badge.libre{background:#888}
+.input-txt{width:100%;padding:11px;border-radius:10px;border:2px solid var(--negro);margin-top:8px;font-weight:600}
+.fecha{margin-top:12px;border:2px solid var(--negro);border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:3px 3px 0 var(--negro)}
+.fecha-head{background:var(--negro);color:white;padding:9px 12px;font-size:12px;font-weight:800;display:flex;justify-content:space-between}
+.match{display:flex;justify-content:space-between;align-items:center;padding:11px 12px;font-size:13px;font-weight:600}
+.match.local{background:#e8f5e9;border-left:6px solid var(--verde)}.match.visitante{background:#ffebee;border-left:6px solid var(--rojo)}.match.libre{background:#f3f3f3;border-left:6px solid #999}
+.badge{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:900;color:white;border:1px solid var(--negro)}
+.badge.local{background:var(--verde)}.badge.visitante{background:var(--rojo)}.badge.libre{background:#888}
+.info-box{background:white;border:2px solid var(--negro);border-radius:14px;padding:14px;margin:8px 0;box-shadow:3px 3px 0 var(--negro)}
+.info-box h4{font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.info-box p{font-size:12.5px;line-height:1.5;color:#333}
+.info-label{display:inline-block;background:var(--dorado);border:1px solid var(--negro);padding:2px 8px;border-radius:6px;font-size:10px;font-weight:900;margin-bottom:4px}
 </style>
 </head>
 <body>
-<header><img src="escudo.png" onerror="this.src='icon-192.png'"><div><b>ESCUELA FILIPPO</b><br><small>2012 - Clausura 2026</small></div><button class="admin-btn" onclick="activarAdmin()" id="adminBtn">🔒 Admin</button></header>
+<header><img src="escudo.png" onerror="this.src='icon-192.png'"><div><b>ESCUELA FILIPPO</b><br><small>2012 - Clausura 2026 ⚫🔴🟢</small></div><button class="admin-btn" onclick="activarAdmin()" id="adminBtn">🔒 Admin</button></header>
 <div class="hero"><img src="equipo.jpg" onerror="this.style.display='none'"></div>
 <div class="card">
-<button class="btn" onclick="togglePanel('p1')">📅 FIXTURE <span>▼</span></button>
+<button class="btn verde" onclick="togglePanel('p1')">📅 FIXTURE <span>▼</span></button>
 <div id="p1" class="panel show"><div id="fixture"></div></div>
-<button class="btn" onclick="togglePanel('p3')">📍 UBICACIONES <span>▼</span></button>
-<div id="p3" class="panel"><div id="listaUbicaciones">Cargando ubicaciones...</div><div class="add-box"><b style="color:var(--verde)">➕ Agregar ubicación (solo Admin)</b><input id="nombreUbi" class="input-txt" placeholder="Ej: MG Fútbol (igual que en fixture)"><input id="linkUbi" class="input-txt" placeholder="Pega link de Google Maps"><button onclick="agregarUbi()" style="width:100%;margin-top:10px;padding:12px;background:var(--negro);color:white;border:none;border-radius:8px;font-weight:800">+ Guardar</button></div></div>
-<button class="btn" onclick="togglePanel('p2')">📸 GALERÍA <span>▼</span></button>
-<div id="p2" class="panel"><div class="galeria" id="galeria"></div><div class="add-box"><b style="color:var(--verde)">➕ Subir foto/video (solo Admin)</b><br><br><input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%"><small style="display:block;margin-top:8px">Podés seleccionar varias fotos</small></div></div>
+<button class="btn rojo" onclick="togglePanel('p3')">📍 UBICACIONES <span>▼</span></button>
+<div id="p3" class="panel"><div id="listaUbicaciones">Cargando...</div><div class="add-box"><b style="color:var(--verde)">➕ Agregar ubicación (solo Admin)</b><input id="nombreUbi" class="input-txt" placeholder="Ej: MG Fútbol"><input id="linkUbi" class="input-txt" placeholder="Link Google Maps"><button onclick="agregarUbi()" style="width:100%;margin-top:10px;padding:12px;background:var(--negro);color:white;border:2px solid var(--negro);border-radius:10px;font-weight:900">+ Guardar</button></div></div>
+<button class="btn negro" onclick="togglePanel('p2')">📸 GALERÍA <span>▼</span></button>
+<div id="p2" class="panel"><div class="galeria" id="galeria"></div><div class="add-box"><b style="color:var(--verde)">➕ Subir foto/video (solo Admin)</b><br><br><input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%"></div></div>
+<button class="btn info" onclick="togglePanel('p4')">ℹ️ INFORMACIÓN <span>▼</span></button>
+<div id="p4" class="panel">
+  <div class="info-box" style="border-top:5px solid var(--verde)">
+    <span class="info-label">CATEGORÍA 2012</span>
+    <h4>🟢 Escuela Filippo - Clausura 2026</h4>
+    <p>Liga LUEFI - Zona Metropolitana<br><b>Sede:</b> Bella Vista, Buenos Aires</p>
+  </div>
+  <div class="info-box" style="border-top:5px solid var(--rojo)">
+    <span class="info-label" style="background:var(--rojo);color:white">DT 2012</span>
+    <h4>👨‍🏫 DT: Jhonatan</h4>
+    <p>Director Técnico oficial de la categoría 2012.<br>Consultas de fútbol y entrenamientos directamente con él.</p>
+  </div>
+  <div class="info-box" style="border-top:5px solid var(--negro)">
+    <span class="info-label" style="background:var(--negro);color:white">COORDINACIÓN</span>
+    <h4>🤝 Coordinadores: Miguel y Hernán</h4>
+    <p>Coordinación general de Escuela Filippo.<br>Para temas de cuotas, documentación y organización.</p>
+  </div>
+  <div class="info-box" style="border-top:5px solid var(--dorado)">
+    <span class="info-label">ENTRENAMIENTO</span>
+    <h4>⏰ Lugar y Horarios</h4>
+    <p><b>Lugar:</b> Asociación Japonesa Sarmiento KIRAKU-EN<br><b>Dirección:</b> Bella Vista<br><b>Horarios:</b> Consultar con DT Jhonatan<br><br><a href="https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/" target="_blank" style="color:var(--verde);font-weight:800">📍 Ver en Maps - KIRAKU-EN</a></p>
+  </div>
+  <div class="info-box">
+    <span class="info-label" style="background:var(--verde);color:white">INFO ÚTIL</span>
+    <h4>📋 Para tener en cuenta</h4>
+    <p>- Llevar DNI y carnet LUEFI<br>- Botines sin tapones de aluminio<br>- Cuota al día<br>- Avisar falta 24hs antes<br>- Grupo WhatsApp oficial para avisos</p>
+  </div>
+</div>
 <a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">🔗 Ver tabla oficial LUEFI</a>
-<div id="adminInfo" style="display:none;margin-top:12px;background:var(--negro);color:white;padding:12px;border-radius:10px;font-size:12px;text-align:center">🔓 Modo Admin Activo</div>
+<div id="adminInfo" style="display:none;margin-top:12px;background:var(--negro);color:white;padding:12px;border-radius:12px;font-size:12px;text-align:center;border:2px solid var(--rojo)">🔓 Modo Admin Activo</div>
 </div>
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyPUsuMZbnY-Emx06OzoOmUliagGwAPhAKdgoOHlLcOaPfLWvcnpEZV-BGZAgtlzMki/exec";
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
-let ubicaciones = {};
-let isAdmin = localStorage.getItem('filippo_admin')==='si';
-function refreshAdminUI(){
-  const cajas = document.querySelectorAll('.add-box');
-  const borrar = document.querySelectorAll('.del');
-  if(isAdmin){
-    document.body.classList.add('admin');
-    document.getElementById('adminBtn').innerText='🔓 Salir Admin';
-    document.getElementById('adminInfo').style.display='block';
-    cajas.forEach(c=>c.style.display='block');
-    borrar.forEach(b=>b.style.display='block');
-  } else {
-    document.body.classList.remove('admin');
-    document.getElementById('adminBtn').innerText='🔒 Admin';
-    document.getElementById('adminInfo').style.display='none';
-    cajas.forEach(c=>c.style.display='none');
-    borrar.forEach(b=>b.style.display='none');
-  }
-}
-function activarAdmin(){ if(isAdmin){ localStorage.removeItem('filippo_admin'); isAdmin=false; refreshAdminUI(); return; } const c=prompt('Clave admin:'); if(c==='filippo2012'){ localStorage.setItem('filippo_admin','si'); isAdmin=true; refreshAdminUI(); alert('Admin activado. Abrí GALERÍA o UBICACIONES'); } else if(c){ alert('Clave incorrecta'); } }
+let ubicaciones = {}; let isAdmin = localStorage.getItem('filippo_admin')==='si';
+function refreshAdminUI(){ const cajas=document.querySelectorAll('.add-box'); const borrar=document.querySelectorAll('.del'); if(isAdmin){ document.body.classList.add('admin'); document.getElementById('adminBtn').innerText='🔓 Salir Admin'; document.getElementById('adminInfo').style.display='block'; cajas.forEach(c=>c.style.display='block'); borrar.forEach(b=>b.style.display='block'); } else { document.body.classList.remove('admin'); document.getElementById('adminBtn').innerText='🔒 Admin'; document.getElementById('adminInfo').style.display='none'; cajas.forEach(c=>c.style.display='none'); borrar.forEach(b=>b.style.display='none'); } }
+function activarAdmin(){ if(isAdmin){ localStorage.removeItem('filippo_admin'); isAdmin=false; refreshAdminUI(); return; } const c=prompt('Clave admin:'); if(c==='filippo2012'){ localStorage.setItem('filippo_admin','si'); isAdmin=true; refreshAdminUI(); alert('Admin activado'); } else if(c){ alert('Clave incorrecta'); } }
 function togglePanel(id){ const p=document.getElementById(id); const o=p.classList.contains('show'); document.querySelectorAll('.panel').forEach(e=>e.classList.remove('show')); if(!o) p.classList.add('show'); if(isAdmin) refreshAdminUI(); }
 const partidos=[["Escuela Tigre","LOCAL","Fecha 1"],["Argentinos Del Viso Rojo","LOCAL","Fecha 2"],["Puertos Blanco","LOCAL","Fecha 3"],["","LIBRE","Fecha 4"],["MG Fútbol","VISITANTE","Fecha 5"],["Caza y Pesca Verde","LOCAL","Fecha 6"],["Cerro Pilar","VISITANTE","Fecha 7"],["Defensores de Escobar","LOCAL","Fecha 8"],["Fair Play","VISITANTE","Fecha 9"],["Racing San Martín","VISITANTE","Fecha 10"],["Puertos Naranja","LOCAL","Fecha 11"],["Club San Fernando","LOCAL","Fecha 12"],["River Maschwitz Rojo","VISITANTE","Fecha 13"]];
 let htmlFix=""; partidos.forEach(p=>{ if(p[1]==="LIBRE"){ htmlFix+=`<div class="fecha"><div class="fecha-head"><span>${p[2]}</span><span>LIBRE</span></div><div class="match libre"><span>LIBRE</span></div></div>` } else { const cl=p[1]==="LOCAL"?"local":"visitante"; const vs=p[1]==="LOCAL"?`<b>Filippo</b> vs ${p[0]}`:`${p[0]} vs <b>Filippo</b>`; htmlFix+=`<div class="fecha" onclick="abrirPartido('${p[0]}','${p[1]}')"><div class="fecha-head"><span>${p[2]} - ${p[0]}</span><span>${p[1]}</span></div><div class="match ${cl}"><span>${vs}</span><span class="badge ${cl}">${p[1]}</span></div></div>` } }); document.getElementById('fixture').innerHTML=htmlFix;
-async function cargarTodo(){ try{ const r=await fetch(API_URL); const data=await r.json(); ubicaciones={}; let html=`<div class="item"><div><b>Filippo LOCAL - KIRAKU-EN</b><br><a href="${UBICACION_FILIPPO}" target="_blank">📍 Ver Maps</a></div></div>`; (data.ubicaciones||[]).forEach(u=>{ ubicaciones[u.key]=u; html+=`<div class="item"><div><b>${u.display}</b><br><a href="${u.href}" target="_blank">📍 Maps</a></div><button class="del ubibtn" onclick="borrarUbi('${u.row}')">Borrar</button></div>`; }); document.getElementById('listaUbicaciones').innerHTML=html; const gal=document.getElementById('galeria'); gal.innerHTML=''; (data.galeria||[]).forEach(g=>{ let cont=g.type==='image'?`<img src="https://drive.google.com/thumbnail?id=${g.fileId}&sz=w400">`:`<iframe src="https://drive.google.com/file/d/${g.fileId}/preview"></iframe>`; gal.innerHTML+=`<div class="thumb">${cont}<button class="del" onclick="borrarImg('${g.fileId}',${g.row})">X</button></div>`; }); if(isAdmin) refreshAdminUI(); }catch(e){ document.getElementById('listaUbicaciones').innerHTML='Error cargando, recargá'; } }
+async function cargarTodo(){ try{ const r=await fetch(API_URL); const data=await r.json(); ubicaciones={}; let html=`<div class="item"><div><b>Filippo LOCAL - KIRAKU-EN</b><br><a href="${UBICACION_FILIPPO}" target="_blank">📍 Ver Maps</a></div></div>`; (data.ubicaciones||[]).forEach(u=>{ ubicaciones[u.key]=u; html+=`<div class="item"><div><b>${u.display}</b><br><a href="${u.href}" target="_blank">📍 Maps</a></div><button class="del ubibtn" onclick="borrarUbi('${u.row}')">Borrar</button></div>`; }); document.getElementById('listaUbicaciones').innerHTML=html; const gal=document.getElementById('galeria'); gal.innerHTML=''; (data.galeria||[]).forEach(g=>{ let cont=g.type==='image'?`<img src="https://drive.google.com/thumbnail?id=${g.fileId}&sz=w400">`:`<iframe src="https://drive.google.com/file/d/${g.fileId}/preview"></iframe>`; gal.innerHTML+=`<div class="thumb">${cont}<button class="del" onclick="borrarImg('${g.fileId}',${g.row})">X</button></div>`; }); if(isAdmin) refreshAdminUI(); }catch(e){ document.getElementById('listaUbicaciones').innerHTML='Error cargando'; } }
 cargarTodo();
 async function agregarUbi(){ const d=document.getElementById('nombreUbi').value.trim(); const h=document.getElementById('linkUbi').value.trim(); if(!d||!h) return alert('Completá'); await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:d.toLowerCase(),display:d,href:h})}); alert('Guardado'); setTimeout(cargarTodo,2000); document.getElementById('nombreUbi').value=''; document.getElementById('linkUbi').value=''; }
 async function borrarUbi(id){ if(!confirm('¿Borrar?')) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteUbi',pass:'filippo2012',id:id})}); setTimeout(cargarTodo,1500); }
