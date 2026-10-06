@@ -23,8 +23,29 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 .admin-btn{margin-left:auto;background:var(--negro);color:white;border:none;border-radius:999px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer}
 
 /* FOTO AHORA COMPLETA - SIN RECORTE */
-.hero{padding:10px 16px 0;display:flex;justify-content:center}
-.hero img{width:82%;max-width:360px;height:auto;max-height:200px;object-fit:contain;display:block;border-radius:18px;border:3px solid white;box-shadow:0 6px 18px rgba(0,0,0,.08);background:white}
+.hero{
+  margin:10px 16px 0;
+  height:190px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(90deg, #dff3e3 0%, #fdf6ef 50%, #ffe4e6 100%);
+  border-radius:20px;
+  overflow:hidden;
+  padding:0;
+  border:1px solid #efe8df;
+}
+.hero img{
+  height:100%;
+  width:auto;
+  max-width:92%;
+  object-fit:contain;
+  display:block;
+  border-radius:14px;
+  border:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  background:white;
+}
 
 .tabs-nav{display:flex;gap:20px;padding:16px 20px 0;border-bottom:1px solid var(--borde);margin:0 16px;overflow-x:auto}
 .tabs-nav::-webkit-scrollbar{display:none}
