@@ -80,36 +80,16 @@ function renderFixture(){
     else {
       const cl=p[1]==="LOCAL"?"local":"visitante"; const vs=p[1]==="LOCAL"?`<b>Filippo</b> vs ${p[0]}`:`${p[0]} vs <b>Filippo</b>`;
       const res = resultadosDB[p[2]] || "Pendiente"; const gols = goleadoresDB[p[2]] || "";
-      // REEMPLAZAR ESTA FUNCIÓN ENTERA
-function renderFixture(){
-  let htmlFix=""; partidos.forEach(p=>{
-    if(p[1]==="LIBRE"){
-      htmlFix+=`<div class="fecha"><div class="fecha-head"><span>${p[2]}</span><span>LIBRE</span></div><div class="match libre"><span>LIBRE</span></div></div>`
-    } else {
-      const cl=p[1]==="LOCAL"?"local":"visitante";
-      const vs=p[1]==="LOCAL"?`<b>Filippo</b> vs ${p[0]}`:`${p[0]} vs <b>Filippo</b>`;
-      const res = resultadosDB[p[2]] || "Pendiente";
-      const gols = goleadoresDB[p[2]] || "";
-
-      // --- COLORES SEGUN RESULTADO FILIPPO ---
-      let colorRes = '#999'; // gris pendiente
-      let textoRes = res;
-      if(res!== 'Pendiente' && res.includes('-')){
-        const parts = res.split('-');
-        const gf = parseInt(parts[0]); // goles Filippo
-        const gc = parseInt(parts[1]); // goles rival
+      let colorRes = '#9e9e9e'; let txtColor = 'white'; let bordeRes = '2px solid #000';
+      if(res!=='Pendiente' && res.includes('-')){
+        const sp = res.split('-'); const gf = parseInt(sp[0]); const gc = parseInt(sp[1]);
         if(!isNaN(gf) &&!isNaN(gc)){
-          if(gf > gc){ colorRes = 'var(--verde)'; } // ganó
-          else if(gf < gc){ colorRes = 'var(--rojo)'; } // perdió
-          else { colorRes = 'var(--dorado)'; } // empate amarillo
+          if(gf > gc){ colorRes = 'var(--verde)'; }
+          else if(gf < gc){ colorRes = 'var(--rojo)'; }
+          else { colorRes = 'var(--dorado)'; txtColor = 'black'; }
         }
       }
-
-      htmlFix+=`<div class="fecha"><div class="fecha-head"><span>${p[2]} - ${p[0]}</span><span>${p[1]}</span></div><div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span><span class="badge ${cl}">${p[1]}</span></div><div style="padding:8px 12px;display:flex;justify-content:space-between;align-items:center;background:#fff;border-top:2px dashed #000;font-weight:900"><span>Resultado: <span style="background:${colorRes};color:${colorRes=='var(--dorado)'?'black':'white'};padding:4px 10px;border-radius:8px;border:2px solid #000;min-width:60px;display:inline-block;text-align:center">${textoRes}</span></span><button onclick="verGoles('${p[2]}')" style="background:var(--dorado);border:2px solid #000;border-radius:8px;padding:5px 10px;font-weight:900;font-size:11px">⚽ Ver</button></div><div id="goles-${p[2]}" style="display:none;padding:10px;background:#fffbe6;border-top:2px solid #000;font-size:12px"><b>⚽ Goleadores ${p[2]}:</b><br><div style="margin-top:6px">${gols || "Sin datos aún"}</div>${isAdmin? `<div style="margin-top:10px;border-top:2px dashed var(--verde);padding-top:10px"><b style="font-size:11px">EDITAR (Admin):</b><p style="font-size:10px;margin:4px 0;color:#555">Siempre cargá: Filippo - Rival</p><div style="display:flex;gap:6px;margin-top:6px"><input id="res-${p[2]}" class="input-txt" style="margin:0" placeholder="Filippo - Rival ej: 2-1" value="${resultadosDB[p[2]] && resultadosDB[p[2]]!='Pendiente'? resultadosDB[p[2]] : ''}"><button onclick="guardarResultado('${p[2]}')" style="padding:8px 10px;background:var(--negro);color:white;border-radius:8px;font-weight:800;border:2px solid #000;white-space:nowrap">💾 Res</button></div><input id="input-${p[2]}" class="input-txt" placeholder="Goleadores: Thiago 2, Benja 1" value="${gols}"><button onclick="guardarGoles('${p[2]}')" style="width:100%;margin-top:6px;padding:10px;background:var(--verde);color:white;border-radius:8px;font-weight:800;border:2px solid #000">💾 Guardar goles</button></div>` : ''}</div></div>`;
-    }
-  }); document.getElementById('fixture').innerHTML=htmlFix; if(isAdmin) refreshAdminUI();
-}
-      htmlFix+=`<div class="fecha"><div class="fecha-head"><span>${p[2]} - ${p[0]}</span><span>${p[1]}</span></div><div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span><span class="badge ${cl}">${p[1]}</span></div><div style="padding:8px 12px;display:flex;justify-content:space-between;align-items:center;background:#fff;border-top:2px dashed #000;font-weight:900"><span>Resultado: <span style="background:${colorRes};color:white;padding:3px 8px;border-radius:6px;border:1px solid #000">${res}</span></span><button onclick="verGoles('${p[2]}')" style="background:var(--dorado);border:2px solid #000;border-radius:8px;padding:5px 10px;font-weight:900;font-size:11px">⚽ Ver</button></div><div id="goles-${p[2]}" style="display:none;padding:10px;background:#fffbe6;border-top:2px solid #000;font-size:12px"><b>⚽ Goleadores ${p[2]}:</b><br><div style="margin-top:6px">${gols || "Sin datos aún"}</div>${isAdmin? `<div style="margin-top:10px;border-top:2px dashed var(--verde);padding-top:10px"><b style="font-size:11px">EDITAR (Admin):</b><div style="display:flex;gap:6px;margin-top:6px"><input id="res-${p[2]}" class="input-txt" style="margin:0" placeholder="Resultado ej: 2-1" value="${resultadosDB[p[2]] && resultadosDB[p[2]]!='Pendiente'? resultadosDB[p[2]] : ''}"><button onclick="guardarResultado('${p[2]}')" style="padding:8px 10px;background:var(--negro);color:white;border-radius:8px;font-weight:800;border:2px solid #000;white-space:nowrap">💾 Res</button></div><input id="input-${p[2]}" class="input-txt" placeholder="Goleadores: Thiago 2, Benja 1" value="${gols}"><button onclick="guardarGoles('${p[2]}')" style="width:100%;margin-top:6px;padding:10px;background:var(--verde);color:white;border-radius:8px;font-weight:800;border:2px solid #000">💾 Guardar goles</button></div>` : ''}</div></div>`;
+      htmlFix+=`<div class="fecha"><div class="fecha-head"><span>${p[2]} - ${p[0]}</span><span>${p[1]}</span></div><div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span><span class="badge ${cl}">${p[1]}</span></div><div style="padding:8px 12px;display:flex;justify-content:space-between;align-items:center;background:#fff;border-top:2px dashed #000;font-weight:900"><span>Resultado: <span style="background:${colorRes};color:${txtColor};padding:4px 12px;border-radius:8px;border:${bordeRes};min-width:78px;display:inline-block;text-align:center">${res}</span></span><button onclick="verGoles('${p[2]}')" style="background:var(--dorado);border:2px solid #000;border-radius:8px;padding:5px 10px;font-weight:900;font-size:11px">⚽ Ver</button></div><div id="goles-${p[2]}" style="display:none;padding:10px;background:#fffbe6;border-top:2px solid #000;font-size:12px"><b>⚽ Goleadores ${p[2]}:</b><br><div style="margin-top:6px">${gols || "Sin datos aún"}</div>${isAdmin? `<div style="margin-top:10px;border-top:2px dashed var(--verde);padding-top:10px"><b style="font-size:11px">EDITAR (Admin):</b><p style="font-size:10px;margin:4px 0;color:#666">Formato: Filippo - Rival</p><div style="display:flex;gap:6px;margin-top:6px"><input id="res-${p[2]}" class="input-txt" style="margin:0" placeholder="Ej: 2-1 ganó Filippo" value="${resultadosDB[p[2]] && resultadosDB[p[2]]!='Pendiente'? resultadosDB[p[2]] : ''}"><button onclick="guardarResultado('${p[2]}')" style="padding:8px 10px;background:var(--negro);color:white;border-radius:8px;font-weight:800;border:2px solid #000;white-space:nowrap">💾 Res</button></div><input id="input-${p[2]}" class="input-txt" placeholder="Goleadores: Thiago 2, Benja 1" value="${gols}"><button onclick="guardarGoles('${p[2]}')" style="width:100%;margin-top:6px;padding:10px;background:var(--verde);color:white;border-radius:8px;font-weight:800;border:2px solid #000">💾 Guardar goles</button></div>` : ''}</div></div>`;
     }
   }); document.getElementById('fixture').innerHTML=htmlFix; if(isAdmin) refreshAdminUI();
 }
