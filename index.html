@@ -22,29 +22,31 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 .header-titulo small{font-family:'Inter';font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase;display:block;margin-top:2px}
 .admin-btn{margin-left:auto;background:var(--negro);color:white;border:none;border-radius:999px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer}
 
-/* FOTO AHORA COMPLETA - SIN RECORTE */
+/* HERO ANCHO TOTAL - FIX ROJO */
 .hero{
-  margin:10px 16px 0;
-  height:190px;
+  margin:10px 0 0;
+  height:195px;
   display:flex;
   justify-content:center;
   align-items:center;
   background: linear-gradient(90deg, #dff3e3 0%, #fdf6ef 50%, #ffe4e6 100%);
-  border-radius:20px;
+  border-radius:0;
   overflow:hidden;
   padding:0;
-  border:1px solid #efe8df;
+  border:none;
+  border-top:1px solid #efe8df;
+  border-bottom:1px solid #efe8df;
 }
 .hero img{
+  width:100%;
   height:100%;
-  width:auto;
-  max-width:92%;
-  object-fit:contain;
+  max-width:100%;
+  object-fit:cover;
+  object-position:center 30%;
   display:block;
-  border-radius:14px;
+  border-radius:0;
   border:none;
-  box-shadow:0 4px 12px rgba(0,0,0,.08);
-  background:white;
+  box-shadow:none;
 }
 
 .tabs-nav{display:flex;gap:20px;padding:16px 20px 0;border-bottom:1px solid var(--borde);margin:0 16px;overflow-x:auto}
@@ -52,11 +54,9 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 .tab-btn{background:none;border:none;padding:0 0 10px;font-family:'Inter';font-size:13px;font-weight:500;color:#aaa;cursor:pointer;white-space:nowrap;position:relative}
 .tab-btn.active{color:var(--negro);font-weight:700}
 .tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2.5px;background:var(--verde);border-radius:2px}
-
 .card{padding:12px 16px 24px}
 .panel{display:none}.panel.show{display:block;animation:fade.2s ease}
 @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
 .fecha{background:white;border:1px solid var(--borde);border-radius:18px;margin-top:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.03)}
 .fecha-head{padding:9px 14px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg, var(--verde-pastel2), #fff);border-bottom:1px solid var(--borde)}
 .fecha-head span:first-child{font-family:'Inter';font-size:10px;font-weight:700;color:#6b6b6b;letter-spacing:.6px;text-transform:uppercase}
@@ -74,7 +74,6 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 .res-ganado{background:var(--verde);color:white}
 .res-perdido{background:var(--rojo);color:white}
 .res-empate{background:#ffcc33;color:#5a4a00}
-
 .goles-box{margin:0 10px 10px;background:var(--crema);border-radius:14px;padding:12px;border:1px solid var(--borde)}
 .galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .thumb{border-radius:14px;overflow:hidden;aspect-ratio:1/1;background:white;border:1px solid var(--borde);position:relative}
@@ -104,13 +103,23 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 <div class="card">
 <div id="p1" class="panel show"><div id="fixture"></div><a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">Tabla oficial LUEFI →</a><a class="link dorado" href="https://www.amateurchampionscup.com.ar/" target="_blank">Amateur Champions Cup →</a></div>
 <div id="p3" class="panel"><div id="listaUbicaciones"></div><div class="add-box"><input id="nombreUbi" class="input-txt" placeholder="Nombre sede"><input id="linkUbi" class="input-txt" placeholder="Link Maps"><button onclick="agregarUbi()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Guardar</button></div></div>
-<div id="p2" class="panel"><div class="galeria" id="galeria"></div><div class="add-box"><input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%"></div></div>
+
+<div id="p2" class="panel">
+  <div class="galeria" id="galeria"></div>
+  <div class="add-box" id="boxGaleria" style="text-align:left">
+    <div style="font-weight:800;font-size:13px;margin-bottom:8px">Subir fotos/videos</div>
+    <input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%;background:white;padding:8px;border-radius:10px;border:1px solid #ddd">
+    <button id="btnSubir" onclick="subirGaleria()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700;cursor:pointer">Subir ahora</button>
+    <div id="uploadStatus" style="margin-top:8px;font-size:12px;font-weight:700;color:var(--verde);text-align:center"></div>
+  </div>
+</div>
+
 <div id="p4" class="panel">
   <div class="info-box"><span class="info-label">Equipo</span><h4>Filippo 2012</h4><p style="font-size:13px;color:#666">DT Jhonatan · Coord. Miguel y Hernán</p></div>
   <div class="info-box" style="background:var(--verde);color:white;border-color:var(--verde)"><span class="info-label" style="color:rgba(255,255,255,.7)">Entrenamientos</span><h4 style="color:white">Horarios</h4><p style="color:#d7f0e0;font-size:13px">LUN 17:45-19h BBVA<br>MIÉ/VIE 17:45-19h Filippo</p><a href="https://www.google.com/maps/place/Club+de+Empleados+BBVA/@-34.5754896,-58.7063758,17z/" target="_blank" class="wa-btn" style="background:white;color:black">Lunes</a> <a href="https://www.google.com/maps/place/Filippo+Football/@-34.5526633,-58.7000079,17z/" target="_blank" class="wa-btn">Mié y Vie</a></div>
   <div class="info-box"><span class="info-label">Contacto</span><h4>Administración</h4><a href="https://wa.me/5491178285589" target="_blank" class="wa-btn">11 7828-5589</a><br><br><h4>Cuenta</h4><p style="font-family:monospace;font-size:12px;background:#fffbeb;padding:8px;border-radius:10px;border:1px dashed #f59e0b">ALIAS: escuelafilippo<br>CBU: 0070026930004030762979</p></div>
 </div>
-<div id="adminInfo" style="display:none;margin-top:14px;text-align:center;font-size:11px;color:#999">Modo Admin activo</div>
+<div id="adminInfo" style="display:none;margin-top:14px;text-align:center;font-size:11px;color:#999">Modo Admin activo - Galería habilitada</div>
 </div>
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzcJNvsgKODMbuUVouVF7ZB_-6TeZOV_h-UfrIw9vb1nP3jM_7DhKPRq1mXYNevTjmA/exec";
@@ -132,13 +141,39 @@ function renderFixture(){
 function verGoles(f){ const el=document.getElementById(`goles-${f}`); el.style.display=el.style.display=='none'?'block':'none'; }
 async function guardarGoles(f){ const v=document.getElementById(`input-${f}`).value.trim(); if(!v) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addGoles',pass:'filippo2012',fecha:f,goles:v})}); goleadoresDB[f]=v; renderFixture(); }
 async function guardarResultado(f){ const v=document.getElementById(`res-${f}`).value.trim(); if(!v) return; const r=partidos.find(x=>x[2]==f)?.[0]||''; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addResultado',pass:'filippo2012',fecha:f,resultado:v,rival:r})}); resultadosDB[f]=v; renderFixture(); }
-async function cargarTodo(){ try{ const r=await fetch(API_URL); const d=await r.json(); ubicaciones={}; let html=`<div class="item"><div><b>Filippo LOCAL</b><div style="font-size:11px;color:#999">KIRAKU-EN</div></div><a href="${UBICACION_FILIPPO}" target="_blank" style="font-size:11px;font-weight:700;text-decoration:none;color:var(--verde)">Maps →</a></div>`; (d.ubicaciones||[]).forEach(u=>{ ubicaciones[u.key]=u; html+=`<div class="item"><div><b>${u.display}</b></div><div style="display:flex;gap:8px"><a href="${u.href}" target="_blank" style="font-size:11px;font-weight:700;text-decoration:none;color:var(--negro)">Maps →</a><button class="del ubibtn" onclick="borrarUbi('${u.row}')">✕</button></div></div>`; }); document.getElementById('listaUbicaciones').innerHTML=html; const gal=document.getElementById('galeria'); gal.innerHTML=''; (d.galeria||[]).forEach(g=>{ gal.innerHTML+=`<div class="thumb"><${g.type==='image'?'img src="https://drive.google.com/thumbnail?id='+g.fileId+'&sz=w400"':'iframe src="https://drive.google.com/file/d/'+g.fileId+'/preview"'}></${g.type==='image'?'img':'iframe'}><button class="del" onclick="borrarImg('${g.fileId}',${g.row})">✕</button></div>`; }); (d.resultados||[]).forEach(rr=>{ let v=rr.resultado; if(v&&v.toString().includes('T00')) v='Pendiente'; resultadosDB[rr.fecha]=v; }); (d.goleadores||[]).forEach(gg=>{ goleadoresDB[gg.fecha]=gg.goles; }); renderFixture(); }catch(e){ renderFixture(); } refreshAdminUI(); }
+
+async function cargarTodo(){ try{ const r=await fetch(API_URL); const d=await r.json(); ubicaciones={}; let html=`<div class="item"><div><b>Filippo LOCAL</b><div style="font-size:11px;color:#999">KIRAKU-EN</div></div><a href="${UBICACION_FILIPPO}" target="_blank" style="font-size:11px;font-weight:700;text-decoration:none;color:var(--verde)">Maps →</a></div>`; (d.ubicaciones||[]).forEach(u=>{ ubicaciones[u.key]=u; html+=`<div class="item"><div><b>${u.display}</b></div><div style="display:flex;gap:8px"><a href="${u.href}" target="_blank" style="font-size:11px;font-weight:700;text-decoration:none;color:var(--negro)">Maps →</a><button class="del ubibtn" onclick="borrarUbi('${u.row}')">✕</button></div></div>`; }); document.getElementById('listaUbicaciones').innerHTML=html; const gal=document.getElementById('galeria'); gal.innerHTML=''; (d.galeria||[]).forEach(g=>{ gal.innerHTML+=`<div class="thumb"><${g.type==='image'?`img src="https://drive.google.com/uc?export=view&id=${g.fileId}" loading="lazy" onerror="this.src='https://drive.google.com/thumbnail?id=${g.fileId}&sz=w400'"`:`iframe src="https://drive.google.com/file/d/${g.fileId}/preview"`}></${g.type==='image'?'img':'iframe'}><button class="del" onclick="borrarImg('${g.fileId}',${g.row})">✕</button></div>`; }); (d.resultados||[]).forEach(rr=>{ let v=rr.resultado; if(v&&v.toString().includes('T00')) v='Pendiente'; resultadosDB[rr.fecha]=v; }); (d.goleadores||[]).forEach(gg=>{ goleadoresDB[gg.fecha]=gg.goles; }); renderFixture(); }catch(e){ renderFixture(); } refreshAdminUI(); }
 cargarTodo();
 async function agregarUbi(){ const d=document.getElementById('nombreUbi').value.trim(); const h=document.getElementById('linkUbi').value.trim(); if(!d||!h) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:d.toLowerCase(),display:d,href:h})}); setTimeout(cargarTodo,1500); }
 async function borrarUbi(id){ if(!confirm('Borrar?')) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteUbi',pass:'filippo2012',id:id})}); setTimeout(cargarTodo,1000); }
 async function borrarImg(fid,row){ if(!confirm('Borrar?')) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteImage',pass:'filippo2012',fileId:fid,row:row})}); setTimeout(cargarTodo,1000); }
 function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blank'); else{ const u=ubicaciones[n.toLowerCase()]; if(u) window.open(u.href,'_blank'); else alert('Sin ubicación para '+n); } }
-document.getElementById('fileInput').addEventListener('change', async(e)=>{ for(let f of e.target.files){ const rd=new FileReader(); rd.onload=async()=>{ const b64=rd.result.split(',')[1]; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); setTimeout(cargarTodo,2000); }; rd.readAsDataURL(f); } });
+
+// --- NUEVA FUNCION DE SUBIDA CON FEEDBACK ---
+async function subirGaleria(){
+  const input = document.getElementById('fileInput');
+  const status = document.getElementById('uploadStatus');
+  const btn = document.getElementById('btnSubir');
+  if(!input.files.length){ alert("Elegí un archivo"); return; }
+  btn.disabled = true;
+  btn.textContent = "Subiendo...";
+  let i = 0;
+  for(let f of input.files){
+    i++;
+    status.textContent = `Subiendo ${i}/${input.files.length}: ${f.name}...`;
+    const b64 = await new Promise(res=>{
+      const r = new FileReader();
+      r.onload = e=> res(e.target.result.split(',')[1]);
+      r.readAsDataURL(f);
+    });
+    await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})});
+  }
+  status.textContent = "¡Listo! Recargando galería...";
+  input.value = "";
+  btn.disabled = false;
+  btn.textContent = "Subir ahora";
+  setTimeout(cargarTodo, 2500);
+}
 </script>
 </body>
 </html>
