@@ -113,7 +113,7 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 <div id="adminInfo" style="display:none;margin-top:14px;text-align:center;font-size:11px;color:#999">Modo Admin activo</div>
 </div>
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwV5wweQ4UH3SX-VuFMTFiJ7HEjFrAABWEpEezvye3wmmK6QPMBx4-6-PajMHrvZCEc/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzcJNvsgKODMbuUVouVF7ZB_-6TeZOV_h-UfrIw9vb1nP3jM_7DhKPRq1mXYNevTjmA/exec";
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
 let ubicaciones = {}; let isAdmin = localStorage.getItem('filippo_admin')==='si'; let resultadosDB = {}; let goleadoresDB = {};
 function refreshAdminUI(){ document.querySelectorAll('.add-box,.del').forEach(e=>e.style.display=isAdmin?'block':'none'); document.getElementById('adminInfo').style.display=isAdmin?'block':'none'; }
