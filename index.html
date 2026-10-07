@@ -7,44 +7,84 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--verde:#0a7d3e;--borde:#efe8df;--negro:#1a1a1a;--rojo:#c41e24}
+:root{--verde:#0a7d3e;--borde:#efe8df;--negro:#1a1a1a}
 body{background:#fdf6ef;font-family:'Inter',sans-serif}
 header{padding:14px 18px;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);position:sticky;top:0;z-index:20;border-bottom:1px solid var(--borde)}
-header img{width:44px;height:44px;border-radius:12px;background:white;border:1px solid var(--borde);padding:3px;object-fit:contain}
-.hero{height:220px;background:linear-gradient(90deg,#dff3e3 0%,#fdf6ef 50%,#ffe4e6 100%);display:flex;justify-content:center;align-items:center;overflow:hidden;border-top:1px solid var(--borde);border-bottom:1px solid var(--borde);perspective:1000px}
-.escudo-3d{width:140px;height:170px;position:relative;transform-style:preserve-3d;animation:spin360 7s linear infinite}
-@keyframes spin360{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
-.face{position:absolute;inset:0;background-image:url('escudo.png');background-size:contain;background-position:center;background-repeat:no-repeat;backface-visibility:hidden;background-color:transparent!important;filter:drop-shadow(0 10px 14px rgba(0,0,0,.2))}
-.face.front{transform:translateZ(16px)}.face.back{transform:rotateY(180deg) translateZ(16px)}
+header img{width:44px;height:44px;border-radius:12px;background:white;border:1px solid var(--borde);padding:3px}
+
+/* HERO 3D - ARREGLO: 7s lento, transparente sin cuadrado */
+.hero{
+  height:200px;
+  background: linear-gradient(90deg, #dff3e3 0%, #fdf6ef 50%, #ffe4e6 100%);
+  display:flex;justify-content:center;align-items:center;
+  overflow:hidden;border-top:1px solid var(--borde);border-bottom:1px solid var(--borde);
+  perspective: 1000px;
+}
+.escudo-3d{
+  width:135px;height:162px;
+  position:relative;
+  transform-style: preserve-3d;
+  animation: spin360 7s linear infinite;
+}
+@keyframes spin360{
+  0%{transform: rotateY(0deg);}
+  100%{transform: rotateY(360deg);}
+}
+.face{
+  position:absolute;inset:0;
+  background-image: url('escudo.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  backface-visibility: hidden;
+  background-color: transparent!important;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,.18));
+}
+.face.front{ transform: translateZ(14px); }
+.face.back{ transform: rotateY(180deg) translateZ(14px); }
+
 .tabs-nav{display:flex;gap:20px;padding:16px 20px 0;border-bottom:1px solid var(--borde);margin:0 16px;overflow-x:auto}
 .tab-btn{background:none;border:none;padding:0 0 10px;font-size:13px;font-weight:500;color:#aaa;cursor:pointer;white-space:nowrap;position:relative}
 .tab-btn.active{color:var(--negro);font-weight:700}.tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2.5px;background:var(--verde);border-radius:2px}
 .card{padding:12px 16px 24px}.panel{display:none}.panel.show{display:block}
 .fecha{background:white;border:1px solid var(--borde);border-radius:18px;margin-top:12px;overflow:hidden}
-.fecha-head{padding:9px 14px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#e8f5e9,#fff);border-bottom:1px solid var(--borde);font-size:13px;font-weight:700}
-.match{padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-size:14px}
-.match.local{border-left:4px solid var(--verde);background:#f7fcf8}.match.visitante{border-left:4px solid var(--rojo);background:#fff8f8}.match.libre{border-left:4px solid #ddd;background:#fafafa;color:#999}
+.fecha-head{padding:9px 14px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#e8f5e9,#fff);border-bottom:1px solid var(--borde)}
+.match{padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.match.local{border-left:4px solid var(--verde);background:#f7fcf8}.match.visitante{border-left:4px solid #c41e24;background:#fff8f8}.match.libre{border-left:4px solid #ddd;background:#fafafa;color:#999}
 .result-row{padding:0 14px 12px;display:flex;justify-content:space-between;align-items:center}
-.res-pill{font-size:11px;font-weight:900;padding:5px 12px;border-radius:999px;border:1px solid var(--borde)}
-.res-pendiente{background:#fdf6ef;color:#b0a89f}.res-ganado{background:#0a7d3e;color:white;border-color:#0a7d3e}.res-perdido{background:#c41e24;color:white;border-color:#c41e24}.res-empate{background:#ffcc33;color:#5a4a00;border-color:#ffcc33}
-.goles-box{margin:0 10px 10px;background:#fdf6ef;border-radius:14px;padding:12px;border:1px solid var(--borde);font-size:13px}
-.galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.thumb{border-radius:14px;overflow:hidden;aspect-ratio:1/1;background:white;border:1px solid var(--borde)}.thumb img,.thumb iframe{width:100%;height:100%;object-fit:cover}
+.res-pill{font-size:11px;font-weight:800;padding:5px 11px;border-radius:999px}
+.res-pendiente{background:#fdf6ef;color:#b0a89f;border:1px solid var(--borde)}
+.res-ganado{background:var(--verde);color:white}
+.res-perdido{background:#c41e24;color:white}
+.res-empate{background:#ffcc33;color:#5a4a00}
+.goles-box{margin:0 10px 10px;background:#fdf6ef;border-radius:14px;padding:12px;border:1px solid var(--borde)}
+.galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.thumb{border-radius:14px;overflow:hidden;aspect-ratio:1/1;background:white;border:1px solid var(--borde);position:relative}.thumb img,.thumb iframe{width:100%;height:100%;object-fit:cover}
 .item{padding:12px 14px;background:white;border:1px solid var(--borde);border-radius:14px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
 .link{display:block;text-align:center;padding:12px;border-radius:999px;text-decoration:none;font-size:12.5px;font-weight:700;margin-top:10px;border:1px solid var(--borde);background:white;color:var(--negro)}.link.dorado{background:var(--verde);color:white;border-color:var(--verde)}
-.info-box{background:white;border:1px solid var(--borde);border-radius:18px;padding:0;margin:12px 0;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.06)}
-.info-top{background:#111;color:white;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--rojo)}
-.info-verde{background:#0a7d3e;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 22px,rgba(0,0,0,.07) 22px 44px);color:white;padding:20px}
-.info-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:24px}.info-row.ico{width:46px;height:46px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
-.pill-negra{background:#111;color:white;padding:12px 18px;border-radius:12px;display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:900;font-size:18px}
-.pill-ig{background:white;color:#111;padding:12px 18px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:900;font-size:18px}
-.datos-cbu{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:14px;font-size:14px;line-height:1.7}
-.info-footer{background:#111;color:#aaa;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;border-top:3px solid #0a7d3e}
-.btn-copy{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:white;padding:4px 8px;border-radius:999px;font-size:11px;cursor:pointer;margin-left:8px}
+.add-box{display:none;background:#dff3e3;border:1px dashed var(--verde);border-radius:16px;padding:14px;margin-top:10px;text-align:center}
+.input-txt{width:100%;padding:10px 14px;border-radius:999px;border:1px solid var(--borde);margin-top:8px;font-size:13px;outline:none}
+.info-box{background:white;border:1px solid var(--borde);border-radius:18px;padding:0;margin:10px 0;overflow:hidden}
+.info-top{background:#111;color:white;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #c41e24}
+.info-verde{background:#0a7d3e;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 22px,rgba(0,0,0,.07) 22px 44px);color:white;padding:18px}
+.info-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:22px}
+.info-row.ico{width:42px;height:42px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.pill-negra{background:#111;color:white;padding:10px 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:900;font-size:17px}
+.pill-blanca{background:white;color:#111;padding:10px 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:900;font-size:17px}
+.datos-cbu{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:12px;font-size:13px;line-height:1.6}
+.wa-btn{display:inline-flex;background:#25D366;color:white;padding:6px 12px;border-radius:999px;text-decoration:none;font-size:11.5px;font-weight:600;margin-top:6px}
+.del{display:none;position:absolute;top:5px;right:5px;background:#c41e24;color:white;border:none;border-radius:999px;width:22px;height:22px;font-size:10px;cursor:pointer}.del.ubibtn{position:static;width:auto;height:auto;padding:5px 10px;font-size:10px}
 </style>
 </head>
 <body>
 <header><img src="escudo.png"><div style="line-height:1.05"><b style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;display:block">ESCUELA FILIPPO <span style="color:var(--verde)">CATEGORIA 2012</span></b><small style="font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase">Clausura 2026</small></div></header>
-<div class="hero"><div class="escudo-3d"><div class="face front"></div><div class="face back"></div></div></div>
+
+<div class="hero">
+  <div class="escudo-3d">
+    <div class="face front"></div>
+    <div class="face back"></div>
+  </div>
+</div>
+
 <div class="tabs-nav">
   <button class="tab-btn active" onclick="togglePanel('p1')" id="t1">Fixture</button>
   <button class="tab-btn" onclick="togglePanel('p3')" id="t3">Sedes</button>
@@ -53,65 +93,80 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 </div>
 <div class="card">
 <div id="p1" class="panel show"><div id="fixture"></div><a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">Tabla oficial LUEFI →</a><a class="link dorado" href="https://www.amateurchampionscup.com.ar/" target="_blank">Amateur Champions Cup →</a></div>
-<div id="p3" class="panel"><div id="listaUbicaciones"></div></div>
-<div id="p2" class="panel"><div class="galeria" id="galeria"></div></div>
+<div id="p3" class="panel"><div id="listaUbicaciones"></div><div class="add-box"><input id="nombreUbi" class="input-txt" placeholder="Nombre sede"><input id="linkUbi" class="input-txt" placeholder="Link Maps"><button onclick="agregarUbi()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Guardar</button></div></div>
+<div id="p2" class="panel"><div class="galeria" id="galeria"></div><div class="add-box" style="text-align:left"><input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%"><button id="btnSubir" onclick="subirGaleria()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Subir</button><div id="uploadStatus" style="margin-top:8px;font-size:12px;text-align:center"></div></div></div>
 <div id="p4" class="panel">
   <div class="info-box">
-    <div class="info-top"><div style="display:flex;align-items:center;gap:8px"><span style="background:var(--rojo);color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">✓</span><b>FILIPPO INFORMACIÓN GENERAL</b></div><img src="escudo.png" style="width:30px;height:30px;background:white;border-radius:8px;padding:2px;object-fit:contain"></div>
-    <div class="info-verde">
-      <div class="info-row"><div class="ico">⚽</div><div><h4>Celular administración:</h4><a class="pill-negra" href="https://wa.me/5491178285589?text=Hola%20Filippo%20soy%20de%20la%202012" target="_blank">💬 11 7828-5589</a></div></div>
-      <div class="info-row"><div class="ico">🏦</div><div style="flex:1"><h4>Datos de cuenta:</h4><div class="datos-cbu"><div><b>CBU:</b> 0070026930004030762979 <button class="btn-copy" onclick="navigator.clipboard.writeText('0070026930004030762979');this.textContent='¡Copiado!'">Copiar</button></div><div><b>ALIAS:</b> escuelafilippo <button class="btn-copy" onclick="navigator.clipboard.writeText('escuelafilippo');this.textContent='¡Copiado!'">Copiar</button></div><div><b>Titular:</b> MARIA INES LOPEZ BRAVO</div></div></div></div>
-      <div class="info-row"><div class="ico">📸</div><div><h4>Instagram:</h4><a class="pill-ig" href="https://instagram.com/escuelafilippo" target="_blank"> @escuelafilippo</a></div></div>
+    <div class="info-top">
+      <div style="display:flex;align-items:center;gap:8px"><span style="background:#c41e24;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">✔</span><b>FILIPPO INFORMACIÓN GENERAL</b></div>
+      <img src="escudo.png" style="width:28px;height:28px;background:white;border-radius:6px;padding:2px">
     </div>
-    <div class="info-footer"><span>INFO / CONSULTAS → 11 5055-5166</span><a href="https://wa.me/5491150555166" target="_blank" style="color:#25D366;text-decoration:none;font-weight:900">WhatsApp →</a></div>
+    <div class="info-verde">
+      <div class="info-row">
+        <div class="ico">⚽</div>
+        <div>
+          <h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Celular administración:</h4>
+          <a class="pill-negra" href="https://wa.me/5491178285589?text=Hola%20Filippo%20soy%20de%20la%202012" target="_blank">💬 11 7828-5589</a>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="ico">⚽</div>
+        <div style="flex:1">
+          <h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Datos de cuenta:</h4>
+          <div class="datos-cbu">
+            <div><b>CBU:</b> 0070026930004030762979</div>
+            <div><b>ALIAS:</b> escuelafilippo</div>
+            <div><b>Titular:</b> MARIA INES LOPEZ BRAVO</div>
+          </div>
+        </div>
+      </div>
+      <div class="info-row" style="margin-bottom:0">
+        <div class="ico">⚽</div>
+        <div>
+          <h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Instagram:</h4>
+          <a class="pill-blanca" href="https://instagram.com/escuelafilippo" target="_blank">📸 @escuelafilippo</a>
+        </div>
+      </div>
+    </div>
+    <div style="background:black;color:#ccc;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;border-top:3px solid var(--verde)">
+      <span>INFO / CONSULTAS → 11 5055-5166</span>
+      <a href="https://wa.me/5491150555166" target="_blank" style="color:#25D366;text-decoration:none">WhatsApp →</a>
+    </div>
   </div>
+  <div class="info-box" style="padding:16px"><h4>Filippo 2012</h4><p style="font-size:13px;color:#666">DT Jhonatan · Coord. Miguel y Hernán</p><br><h4>Cuenta</h4><p style="font-family:monospace;font-size:12px;background:#fffbeb;padding:8px;border-radius:10px;border:1px dashed #f59e0b">ALIAS: escuelafilippo<br>CBU: 0070026930004030762979</p></div>
 </div>
 </div>
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzcJNvsgKODMbuUVouVF7ZB_-6TeZOV_h-UfrIw9vb1nP3jM_7DhKPRq1mXYNevTjmA/exec";
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
 let ubicaciones = {}; let resultadosDB = {}; let goleadoresDB = {};
-function togglePanel(id){document.querySelectorAll('.panel').forEach(e=>e.classList.remove('show'));document.getElementById(id).classList.add('show');document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('t'+id.slice(1)).classList.add('active');}
+function togglePanel(id){ document.querySelectorAll('.panel').forEach(e=>e.classList.remove('show')); document.getElementById(id).classList.add('show'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById('t'+id.slice(1)).classList.add('active'); }
 const partidos=[["Escuela Tigre","LOCAL","Fecha 1"],["Argentinos Del Viso Rojo","LOCAL","Fecha 2"],["Puertos Blanco","LOCAL","Fecha 3"],["","LIBRE","Fecha 4"],["MG Fútbol","VISITANTE","Fecha 5"],["Caza y Pesca Verde","LOCAL","Fecha 6"],["Cerro Pilar","VISITANTE","Fecha 7"],["Defensores de Escobar","LOCAL","Fecha 8"],["Fair Play","VISITANTE","Fecha 9"],["Racing San Martín","VISITANTE","Fecha 10"],["Puertos Naranja","LOCAL","Fecha 11"],["Club San Fernando","LOCAL","Fecha 12"],["River Maschwitz Rojo","VISITANTE","Fecha 13"]];
-function getResultadoClassYTexto(esLocal, textoResultado){
-  if(!textoResultado || textoResultado.toLowerCase().includes('pendiente')) return {cls:'res-pendiente', txt:'Pendiente'};
-  let m = textoResultado.match(/(\d+)\s*-\s*(\d+)/);
+
+function getClaseResultado(esLocal, texto){
+  if(!texto || texto.toLowerCase().includes('pendiente')) return 'res-pendiente';
+  const m = texto.match(/(\d+)\s*-\s*(\d+)/);
   if(m){
-    let g1=parseInt(m[1]), g2=parseInt(m[2]), gFilippo=gRival;
-    if(esLocal){gFilippo=g1; gRival=g2;} else {gFilippo=g2; gRival=g1;}
-    if(gFilippo>gRival) return {cls:'res-ganado', txt:textoResultado+' · Ganado'};
-    if(gFilippo<gRival) return {cls:'res-perdido', txt:textoResultado+' · Perdido'};
-    return {cls:'res-empate', txt:textoResultado+' · Empate'};
+    const g1 = parseInt(m[1]), g2 = parseInt(m[2]);
+    let gf, gr;
+    if(esLocal){ gf=g1; gr=g2; } else { gf=g2; gr=g1; }
+    if(gf > gr) return 'res-ganado';
+    if(gf < gr) return 'res-perdido';
+    return 'res-empate';
   }
-  let low=textoResultado.toLowerCase();
-  if(low.includes('gan')) return {cls:'res-ganado', txt:textoResultado};
-  if(low.includes('per')) return {cls:'res-perdido', txt:textoResultado};
-  if(low.includes('emp')) return {cls:'res-empate', txt:textoResultado};
-  return {cls:'res-pendiente', txt:textoResultado};
+  const low = texto.toLowerCase();
+  if(low.includes('gan')) return 'res-ganado';
+  if(low.includes('per')) return 'res-perdido';
+  if(low.includes('emp')) return 'res-empate';
+  return 'res-pendiente';
 }
-function renderFixture(){
-  let h=""; partidos.forEach(p=>{
-    if(p[1]==="LIBRE"){h+=`<div class="fecha"><div class="fecha-head"><span>${p[2]}</span><span>Descanso</span></div><div class="match libre"><span>Libre - Filippo descansa</span></div></div>`; return;}
-    const esLocal=p[1]==="LOCAL", cl=esLocal?"local":"visitante", vs=esLocal?`<b>Filippo</b> vs ${p[0]}`:`${p[0]} vs <b>Filippo</b>`, rawRes=resultadosDB[p[2]]||"Pendiente", r=getResultadoClassYTexto(esLocal, rawRes);
-    h+=`<div class="fecha"><div class="fecha-head"><span>${p[2]} · ${p[0]}</span><span style="text-transform:lowercase">${p[1]}</span></div><div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span><span>›</span></div><div class="result-row"><span style="font-size:12px;color:#666">Resultado</span><span class="res-pill ${r.cls}">${r.txt}</span></div><div id="goles-${p[2]}" style="display:none"><div class="goles-box"><b>Goles:</b> ${goleadoresDB[p[2]]||"Sin datos cargados"}</div></div><div style="padding:0 14px 10px"><button onclick="verGoles('${p[2]}')" style="background:none;border:none;font-size:12px;font-weight:700;cursor:pointer;color:var(--verde)">Ver goles →</button></div></div>`;
-  }); document.getElementById('fixture').innerHTML=h;
-}
-function verGoles(f){const el=document.getElementById(`goles-${f}`); el.style.display=el.style.display=='none'?'block':'none';}
-async function cargarTodo(){
-  try{
-    const r=await fetch(API_URL); const d=await r.json(); ubicaciones={};
-    let html=`<div class="item"><div><b>Filippo LOCAL</b><br><small style="color:#888">Kiraku-en</small></div><a href="${UBICACION_FILIPPO}" target="_blank" style="font-size:11px;font-weight:800;text-decoration:none;color:var(--verde)">Maps →</a></div>`;
-    (d.ubicaciones||[]).forEach(u=>{ubicaciones[u.key]=u; html+=`<div class="item"><div><b>${u.display}</b></div><a href="${u.href}" target="_blank" style="font-size:11px;font-weight:800;text-decoration:none">Maps →</a></div>`;});
-    document.getElementById('listaUbicaciones').innerHTML=html;
-    const gal=document.getElementById('galeria'); gal.innerHTML='';
-    (d.galeria||[]).forEach(g=>{gal.innerHTML+=`<div class="thumb"><${g.type==='image'?`img src="https://drive.google.com/uc?export=view&id=${g.fileId}"`:`iframe src="https://drive.google.com/file/d/${g.fileId}/preview"`}></${g.type==='image'?'img':'iframe'}></div>`;});
-    (d.resultados||[]).forEach(rr=>{resultadosDB[rr.fecha]=rr.resultado;});
-    (d.goleadores||[]).forEach(gg=>{goleadoresDB[gg.fecha]=gg.goles;});
-    renderFixture();
-  }catch(e){renderFixture();}
-}
+
+function renderFixture(){ let h=""; partidos.forEach(p=>{ if(p[1]==="LIBRE"){ h+=`<div class="fecha"><div class="fecha-head"><span>${p[2]}</span><span>Descanso</span></div><div class="match libre"><span>Libre</span></div></div>`; return; } const cl=p[1]==="LOCAL"?"local":"visitante"; const vs=p[1]==="LOCAL"?`<b>Filippo</b> vs ${p[0]}`:`${p[0]} vs <b>Filippo</b>`; const res=resultadosDB[p[2]]||"Pendiente"; const clase = getClaseResultado(p[1]==="LOCAL", res); h+=`<div class="fecha"><div class="fecha-head"><span>${p[2]} · ${p[0]}</span><span>${p[1].toLowerCase()}</span></div><div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span></div><div class="result-row"><span style="font-size:12px;color:#999">Resultado <span class="res-pill ${clase}">${res}</span></span><button onclick="verGoles('${p[2]}')" style="background:none;border:none;font-size:12px;font-weight:700;cursor:pointer">Goles →</button></div><div id="goles-${p[2]}" style="display:none"><div class="goles-box">${goleadoresDB[p[2]]||"Sin datos"}</div></div></div>`; }); document.getElementById('fixture').innerHTML=h; }
+function verGoles(f){ const el=document.getElementById(`goles-${f}`); el.style.display=el.style.display=='none'?'block':'none'; }
+async function cargarTodo(){ try{ const r=await fetch(API_URL); const d=await r.json(); ubicaciones={}; let html=`<div class="item"><div><b>Filippo LOCAL</b></div><a href="${UBICACION_FILIPPO}" target="_blank" style="font-size:11px;font-weight:700;text-decoration:none;color:var(--verde)">Maps →</a></div>`; (d.ubicaciones||[]).forEach(u=>{ ubicaciones[u.key]=u; html+=`<div class="item"><div><b>${u.display}</b></div><a href="${u.href}" target="_blank" style="font-size:11px;font-weight:700;text-decoration:none">Maps →</a></div>`; }); document.getElementById('listaUbicaciones').innerHTML=html; const gal=document.getElementById('galeria'); gal.innerHTML=''; (d.galeria||[]).forEach(g=>{ gal.innerHTML+=`<div class="thumb"><${g.type==='image'?`img src="https://drive.google.com/uc?export=view&id=${g.fileId}"`:`iframe src="https://drive.google.com/file/d/${g.fileId}/preview"`}></${g.type==='image'?'img':'iframe'}></div>`; }); (d.resultados||[]).forEach(rr=>{ resultadosDB[rr.fecha]=rr.resultado; }); (d.goleadores||[]).forEach(gg=>{ goleadoresDB[gg.fecha]=gg.goles; }); renderFixture(); }catch(e){ renderFixture(); } }
 cargarTodo();
-function abrirPartido(n,t){if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blank'); else{const u=ubicaciones[n.toLowerCase()]; if(u) window.open(u.href,'_blank'); else alert('Sede no cargada aún');}}
+function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blank'); else{ const u=ubicaciones[n.toLowerCase()]; if(u) window.open(u.href,'_blank'); } }
+async function subirGaleria(){ const input=document.getElementById('fileInput'); if(!input.files.length) return; for(let f of input.files){ const b64=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(f); }); await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); } setTimeout(cargarTodo,2000); }
 </script>
 </body>
 </html>
