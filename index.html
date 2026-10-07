@@ -21,8 +21,6 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 .header-titulo em{font-family:'Bricolage Grotesque';font-style:normal;font-weight:800;color:var(--verde);font-size:15.5px}
 .header-titulo small{font-family:'Inter';font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase;display:block;margin-top:2px}
 .admin-btn{margin-left:auto;background:var(--negro);color:white;border:none;border-radius:999px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer}
-
-/* HERO ANCHO TOTAL - FIX ROJO */
 .hero{
   margin:10px 0 0;
   height:195px;
@@ -37,18 +35,17 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
   border-top:1px solid #efe8df;
   border-bottom:1px solid #efe8df;
 }
-.hero img{
+.hero video{
   width:100%;
   height:100%;
   max-width:100%;
-  object-fit:cover;
-  object-position:center 30%;
+  object-fit:contain;
+  object-position:center;
   display:block;
   border-radius:0;
   border:none;
   box-shadow:none;
 }
-
 .tabs-nav{display:flex;gap:20px;padding:16px 20px 0;border-bottom:1px solid var(--borde);margin:0 16px;overflow-x:auto}
 .tabs-nav::-webkit-scrollbar{display:none}
 .tab-btn{background:none;border:none;padding:0 0 10px;font-family:'Inter';font-size:13px;font-weight:500;color:#aaa;cursor:pointer;white-space:nowrap;position:relative}
@@ -67,7 +64,6 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 .match.local{border-left:4px solid var(--verde);background:#f7fcf8}
 .match.visitante{border-left:4px solid var(--rojo);background:#fff8f8}
 .match.libre{border-left:4px solid #ddd;background:#fafafa;color:#999}
-.badge{font-family:'Inter';font-size:9px;font-weight:700;opacity:.5}
 .result-row{padding:0 14px 12px;display:flex;justify-content:space-between;align-items:center}
 .res-pill{font-family:'Bricolage Grotesque';font-size:11px;font-weight:800;padding:5px 11px;border-radius:999px}
 .res-pendiente{background:var(--crema);color:#b0a89f;border:1px solid var(--borde)}
@@ -93,7 +89,7 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 </head>
 <body>
 <header><img src="escudo.png" onerror="this.src='icon-192.png'"><div class="header-titulo"><b>ESCUELA FILIPPO <em>CATEGORIA 2012</em></b><small>Clausura 2026</small></div><button class="admin-btn" onclick="activarAdmin()" id="adminBtn">•••</button></header>
-<div class="hero"><img src="equipo.jpg"></div>
+<div class="hero"><video autoplay loop muted playsinline poster="escudo.png" style="width:100%;height:100%;object-fit:contain;"><source src="escudo-hero-3d.mp4" type="video/mp4"></video></div>
 <div class="tabs-nav">
   <button class="tab-btn active" onclick="togglePanel('p1')" id="t1">Fixture</button>
   <button class="tab-btn" onclick="togglePanel('p3')" id="t3">Sedes</button>
@@ -103,7 +99,6 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 <div class="card">
 <div id="p1" class="panel show"><div id="fixture"></div><a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">Tabla oficial LUEFI →</a><a class="link dorado" href="https://www.amateurchampionscup.com.ar/" target="_blank">Amateur Champions Cup →</a></div>
 <div id="p3" class="panel"><div id="listaUbicaciones"></div><div class="add-box"><input id="nombreUbi" class="input-txt" placeholder="Nombre sede"><input id="linkUbi" class="input-txt" placeholder="Link Maps"><button onclick="agregarUbi()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Guardar</button></div></div>
-
 <div id="p2" class="panel">
   <div class="galeria" id="galeria"></div>
   <div class="add-box" id="boxGaleria" style="text-align:left">
@@ -113,7 +108,6 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
     <div id="uploadStatus" style="margin-top:8px;font-size:12px;font-weight:700;color:var(--verde);text-align:center"></div>
   </div>
 </div>
-
 <div id="p4" class="panel">
   <div class="info-box"><span class="info-label">Equipo</span><h4>Filippo 2012</h4><p style="font-size:13px;color:#666">DT Jhonatan · Coord. Miguel y Hernán</p></div>
   <div class="info-box" style="background:var(--verde);color:white;border-color:var(--verde)"><span class="info-label" style="color:rgba(255,255,255,.7)">Entrenamientos</span><h4 style="color:white">Horarios</h4><p style="color:#d7f0e0;font-size:13px">LUN 17:45-19h BBVA<br>MIÉ/VIE 17:45-19h Filippo</p><a href="https://www.google.com/maps/place/Club+de+Empleados+BBVA/@-34.5754896,-58.7063758,17z/" target="_blank" class="wa-btn" style="background:white;color:black">Lunes</a> <a href="https://www.google.com/maps/place/Filippo+Football/@-34.5526633,-58.7000079,17z/" target="_blank" class="wa-btn">Mié y Vie</a></div>
@@ -141,15 +135,12 @@ function renderFixture(){
 function verGoles(f){ const el=document.getElementById(`goles-${f}`); el.style.display=el.style.display=='none'?'block':'none'; }
 async function guardarGoles(f){ const v=document.getElementById(`input-${f}`).value.trim(); if(!v) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addGoles',pass:'filippo2012',fecha:f,goles:v})}); goleadoresDB[f]=v; renderFixture(); }
 async function guardarResultado(f){ const v=document.getElementById(`res-${f}`).value.trim(); if(!v) return; const r=partidos.find(x=>x[2]==f)?.[0]||''; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addResultado',pass:'filippo2012',fecha:f,resultado:v,rival:r})}); resultadosDB[f]=v; renderFixture(); }
-
 async function cargarTodo(){ try{ const r=await fetch(API_URL); const d=await r.json(); ubicaciones={}; let html=`<div class="item"><div><b>Filippo LOCAL</b><div style="font-size:11px;color:#999">KIRAKU-EN</div></div><a href="${UBICACION_FILIPPO}" target="_blank" style="font-size:11px;font-weight:700;text-decoration:none;color:var(--verde)">Maps →</a></div>`; (d.ubicaciones||[]).forEach(u=>{ ubicaciones[u.key]=u; html+=`<div class="item"><div><b>${u.display}</b></div><div style="display:flex;gap:8px"><a href="${u.href}" target="_blank" style="font-size:11px;font-weight:700;text-decoration:none;color:var(--negro)">Maps →</a><button class="del ubibtn" onclick="borrarUbi('${u.row}')">✕</button></div></div>`; }); document.getElementById('listaUbicaciones').innerHTML=html; const gal=document.getElementById('galeria'); gal.innerHTML=''; (d.galeria||[]).forEach(g=>{ gal.innerHTML+=`<div class="thumb"><${g.type==='image'?`img src="https://drive.google.com/uc?export=view&id=${g.fileId}" loading="lazy" onerror="this.src='https://drive.google.com/thumbnail?id=${g.fileId}&sz=w400'"`:`iframe src="https://drive.google.com/file/d/${g.fileId}/preview"`}></${g.type==='image'?'img':'iframe'}><button class="del" onclick="borrarImg('${g.fileId}',${g.row})">✕</button></div>`; }); (d.resultados||[]).forEach(rr=>{ let v=rr.resultado; if(v&&v.toString().includes('T00')) v='Pendiente'; resultadosDB[rr.fecha]=v; }); (d.goleadores||[]).forEach(gg=>{ goleadoresDB[gg.fecha]=gg.goles; }); renderFixture(); }catch(e){ renderFixture(); } refreshAdminUI(); }
 cargarTodo();
 async function agregarUbi(){ const d=document.getElementById('nombreUbi').value.trim(); const h=document.getElementById('linkUbi').value.trim(); if(!d||!h) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:d.toLowerCase(),display:d,href:h})}); setTimeout(cargarTodo,1500); }
 async function borrarUbi(id){ if(!confirm('Borrar?')) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteUbi',pass:'filippo2012',id:id})}); setTimeout(cargarTodo,1000); }
 async function borrarImg(fid,row){ if(!confirm('Borrar?')) return; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'deleteImage',pass:'filippo2012',fileId:fid,row:row})}); setTimeout(cargarTodo,1000); }
 function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blank'); else{ const u=ubicaciones[n.toLowerCase()]; if(u) window.open(u.href,'_blank'); else alert('Sin ubicación para '+n); } }
-
-// --- NUEVA FUNCION DE SUBIDA CON FEEDBACK ---
 async function subirGaleria(){
   const input = document.getElementById('fileInput');
   const status = document.getElementById('uploadStatus');
