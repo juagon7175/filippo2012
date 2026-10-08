@@ -19,7 +19,7 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 .face{position:absolute;inset:0;background-image: url('escudo.png');background-size: contain;background-position: center;background-repeat: no-repeat;backface-visibility: hidden;background-color: transparent!important;filter: drop-shadow(0 12px 18px rgba(0,0,0,.18))}
 .face.front{ transform: translateZ(14px); }.face.back{ transform: rotateY(180deg) translateZ(14px); }
 .hero-flyer{width:100%;max-width:420px;display:none;text-align:center}
-.hero-flyer-badge{display:inline-block;background:#111;color:white;font-size:11px;font-weight:800;letter-spacing:1.2px;padding:5px 12px;border-radius:999px;margin-bottom:8px;border:1px solid #333}
+.hero-flyer-badge{display:inline-block;background:#111;color:white;font-size:11px;font-weight:800;letter-spacing:1.2px;padding:6px 14px;border-radius:999px;margin-bottom:10px}
 .hero-flyer img{width:100%;height:auto;border-radius:18px;box-shadow:0 10px 25px rgba(0,0,0,.25);border:2px solid #111;display:block}
 .tabs-nav{display:flex;gap:20px;padding:16px 20px 0;border-bottom:1px solid var(--borde);margin:0 16px;overflow-x:auto}
 .tab-btn{background:none;border:none;padding:0 0 10px;font-size:13px;font-weight:500;color:#aaa;cursor:pointer;white-space:nowrap;position:relative}
@@ -63,8 +63,8 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 <div class="hero">
   <div id="heroEscudo" class="escudo-3d"><div class="face front"></div><div class="face back"></div></div>
   <div id="heroFlyer" class="hero-flyer">
-    <div class="hero-flyer-badge">⚽ PRÓXIMO PARTIDO - FECHA 6</div>
-    <img src="fecha6.jpg" alt="Fecha 6 LUEFI vs Racing San Martín">
+    <div class="hero-flyer-badge">⚽ PRÓXIMO PARTIDO</div>
+    <img id="imgFlyer" src="fecha6.jpg" alt="Próximo partido">
   </div>
 </div>
 
@@ -88,15 +88,27 @@ let ubicaciones = {}; let resultadosDB = {}; let goleadoresDB = {};
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 const CACHE_KEY = 'filippo_cache_v2';
 
+// CAMBIO AUTOMATICO HASTA 11/10
 (function(){
   const limite = new Date(2026, 9, 11, 23, 59, 59);
   const hoy = new Date();
+  const escudo = document.getElementById('heroEscudo');
+  const flyer = document.getElementById('heroFlyer');
+  const img = document.getElementById('imgFlyer');
+  // Intenta cargar fecha6.jpg, si no existe usa el nombre original de WhatsApp
+  img.onerror = function(){
+    if(this.src.includes('fecha6.jpg')){
+      this.src = 'fecha6.jpeg';
+    } else if(this.src.includes('fecha6.jpeg')){
+      this.src = 'fecha6.png';
+    } else if(this.src.includes('fecha6.png')){
+      this.src = 'fecha6.webp';
+    }
+  };
   if(hoy <= limite){
-    document.getElementById('heroEscudo').style.display='none';
-    document.getElementById('heroFlyer').style.display='block';
+    escudo.style.display='none'; flyer.style.display='block';
   } else {
-    document.getElementById('heroEscudo').style.display='block';
-    document.getElementById('heroFlyer').style.display='none';
+    escudo.style.display='block'; flyer.style.display='none';
   }
 })();
 
