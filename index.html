@@ -13,11 +13,14 @@ header{padding:14px 18px;display:flex;align-items:center;justify-content:space-b
 header img{width:44px;height:44px;border-radius:12px;background:white;border:1px solid var(--borde);padding:3px}
 .admin-btn{padding:6px 12px;border-radius:999px;border:1px solid var(--borde);background:white;font-size:11px;font-weight:700;cursor:pointer}
 .admin-btn.on{background:var(--negro);color:white;border-color:var(--negro)}
-.hero{height:200px;background: linear-gradient(90deg, #dff3e3 0%, #fdf6ef 50%, #ffe4e6 100%);display:flex;justify-content:center;align-items:center;overflow:hidden;border-top:1px solid var(--borde);border-bottom:1px solid var(--borde);perspective:1000px}
+.hero{height:auto;min-height:200px;background: linear-gradient(90deg, #dff3e3 0%, #fdf6ef 50%, #ffe4e6 100%);display:flex;justify-content:center;align-items:center;overflow:hidden;border-top:1px solid var(--borde);border-bottom:1px solid var(--borde);perspective:1000px;padding:14px}
 .escudo-3d{width:135px;height:162px;position:relative;transform-style: preserve-3d;animation: spin360 7s linear infinite}
 @keyframes spin360{0%{transform: rotateY(0deg)}100%{transform: rotateY(360deg)}}
 .face{position:absolute;inset:0;background-image: url('escudo.png');background-size: contain;background-position: center;background-repeat: no-repeat;backface-visibility: hidden;background-color: transparent!important;filter: drop-shadow(0 12px 18px rgba(0,0,0,.18))}
 .face.front{ transform: translateZ(14px); }.face.back{ transform: rotateY(180deg) translateZ(14px); }
+.hero-flyer{width:100%;max-width:420px;display:none;text-align:center}
+.hero-flyer-badge{display:inline-block;background:#111;color:white;font-size:11px;font-weight:800;letter-spacing:1.2px;padding:5px 12px;border-radius:999px;margin-bottom:8px;border:1px solid #333}
+.hero-flyer img{width:100%;height:auto;border-radius:18px;box-shadow:0 10px 25px rgba(0,0,0,.25);border:2px solid #111;display:block}
 .tabs-nav{display:flex;gap:20px;padding:16px 20px 0;border-bottom:1px solid var(--borde);margin:0 16px;overflow-x:auto}
 .tab-btn{background:none;border:none;padding:0 0 10px;font-size:13px;font-weight:500;color:#aaa;cursor:pointer;white-space:nowrap;position:relative}
 .tab-btn.active{color:var(--negro);font-weight:700}.tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2.5px;background:var(--verde);border-radius:2px}
@@ -34,7 +37,6 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 @media(min-width:600px){.galeria{grid-template-columns:repeat(6,1fr)} }
 .thumb{border-radius:10px;overflow:hidden;aspect-ratio:1/1;background:white;border:1px solid var(--borde);position:relative;cursor:pointer}
 .thumb img,.thumb iframe{width:100%;height:100%;object-fit:cover;display:block}
-.thumb:active{transform:scale(.97)}
 .item{padding:12px 14px;background:white;border:1px solid var(--borde);border-radius:14px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
 .link{display:block;text-align:center;padding:12px;border-radius:999px;text-decoration:none;font-size:12.5px;font-weight:700;margin-top:10px;border:1px solid var(--borde);background:white;color:var(--negro)}.link.dorado{background:var(--verde);color:white;border-color:var(--verde)}
 .add-box-galeria{background:white;border:1px solid var(--borde);border-radius:16px;padding:14px;margin-top:12px;text-align:center}
@@ -57,7 +59,15 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
   <div style="display:flex;align-items:center;gap:12px"><img src="escudo.png"><div style="line-height:1.05"><b style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;display:block">ESCUELA FILIPPO <span style="color:var(--verde)">CATEGORIA 2012</span></b><small style="font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase">Clausura 2026</small></div></div>
   <button id="adminBtn" class="admin-btn" onclick="toggleAdmin()">Admin</button>
 </header>
-<div class="hero"><div class="escudo-3d"><div class="face front"></div><div class="face back"></div></div></div>
+
+<div class="hero">
+  <div id="heroEscudo" class="escudo-3d"><div class="face front"></div><div class="face back"></div></div>
+  <div id="heroFlyer" class="hero-flyer">
+    <div class="hero-flyer-badge">⚽ PRÓXIMO PARTIDO - FECHA 6</div>
+    <img src="fecha6.jpg" alt="Fecha 6 LUEFI vs Racing San Martín">
+  </div>
+</div>
+
 <div class="tabs-nav">
   <button class="tab-btn active" onclick="togglePanel('p1')" id="t1">Fixture</button>
   <button class="tab-btn" onclick="togglePanel('p3')" id="t3">Sedes</button>
@@ -78,6 +88,18 @@ let ubicaciones = {}; let resultadosDB = {}; let goleadoresDB = {};
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 const CACHE_KEY = 'filippo_cache_v2';
 
+(function(){
+  const limite = new Date(2026, 9, 11, 23, 59, 59);
+  const hoy = new Date();
+  if(hoy <= limite){
+    document.getElementById('heroEscudo').style.display='none';
+    document.getElementById('heroFlyer').style.display='block';
+  } else {
+    document.getElementById('heroEscudo').style.display='block';
+    document.getElementById('heroFlyer').style.display='none';
+  }
+})();
+
 function togglePanel(id){ document.querySelectorAll('.panel').forEach(e=>e.classList.remove('show')); document.getElementById(id).classList.add('show'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById('t'+id.slice(1)).classList.add('active'); }
 function toggleAdmin(){
   if(isAdmin){ localStorage.removeItem('filippo_admin'); isAdmin=false; document.getElementById('adminBtn').textContent='Admin'; document.getElementById('adminBtn').classList.remove('on'); document.getElementById('boxUbi').classList.remove('show'); document.getElementById('ubiMsg').style.display='block'; return; }
@@ -91,7 +113,6 @@ function renderFixture(){ let h=""; partidos.forEach(p=>{ if(p[1]==="LIBRE"){ h+
 function verGoles(f){ const el=document.getElementById(`goles-${f}`); el.style.display=el.style.display=='none'?'block':'none'; }
 function buildImgTag(fileId){ return `<img src="https://lh3.googleusercontent.com/d/${fileId}" loading="lazy" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${fileId}&sz=w400'" alt="foto">`; }
 function openLightbox(fileId, type){ const lb=document.getElementById('lightbox'); const img=document.getElementById('lbImg'); const vid=document.getElementById('lbVid'); if(type==='image'){ vid.style.display='none'; img.style.display='block'; img.src=`https://lh3.googleusercontent.com/d/${fileId}`; } else { img.style.display='none'; vid.style.display='block'; vid.src=`https://drive.google.com/file/d/${fileId}/preview`; } lb.style.display='flex'; }
-
 function renderAll(d){
   ubicaciones={};
   let html=`<div class="item"><div><b>Filippo LOCAL</b></div><a href="${UBICACION_FILIPPO}" target="_blank" style="font-size:11px;font-weight:700;text-decoration:none;color:var(--verde)">Maps →</a></div>`;
@@ -103,34 +124,13 @@ function renderAll(d){
   (d.goleadores||[]).forEach(gg=>{ goleadoresDB[gg.fecha]=gg.goles; });
   renderFixture();
 }
-
 async function cargarTodo(){
-  // 1. Intentar mostrar cache instantáneo (PC y celu)
-  try{
-    const cached = localStorage.getItem(CACHE_KEY);
-    if(cached){
-      const d = JSON.parse(cached);
-      renderAll(d);
-    }
-  }catch(e){}
-
-  // 2. Buscar datos frescos en segundo plano
-  try{
-    const r=await fetch(API_URL, {cache:'no-store'});
-    const d=await r.json();
-    renderAll(d);
-    // Guardar para la próxima apertura instantánea
-    localStorage.setItem(CACHE_KEY, JSON.stringify(d));
-  }catch(e){
-    // Si falla internet, deja el cache
-    if(!localStorage.getItem(CACHE_KEY)) renderFixture();
-  }
+  try{ const cached = localStorage.getItem(CACHE_KEY); if(cached){ renderAll(JSON.parse(cached)); } }catch(e){}
+  try{ const r=await fetch(API_URL, {cache:'no-store'}); const d=await r.json(); renderAll(d); localStorage.setItem(CACHE_KEY, JSON.stringify(d)); }catch(e){ if(!localStorage.getItem(CACHE_KEY)) renderFixture(); }
 }
-
 function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blank'); else{ const u=ubicaciones[n.toLowerCase()]; if(u) window.open(u.href,'_blank'); } }
 async function subirGaleria(){ const input=document.getElementById('fileInput'); if(!input.files.length){ alert('Elegí una foto o video'); return; } document.getElementById('uploadStatus').textContent='Subiendo...'; for(let f of input.files){ const b64=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(f); }); await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); } document.getElementById('uploadStatus').textContent='¡Subido! Actualizando...'; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,2500); }
 async function agregarUbi(){ if(!isAdmin){ alert('Solo admin'); return; } const n=document.getElementById('nombreUbi').value.trim(); const l=document.getElementById('linkUbi').value.trim(); if(!n||!l){ alert('Completa nombre y link'); return; } await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:n.toLowerCase(),display:n,href:l})}); document.getElementById('nombreUbi').value=''; document.getElementById('linkUbi').value=''; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,1500); }
-
 cargarTodo(); initAdminUI();
 </script>
 </body>
