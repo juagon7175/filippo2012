@@ -58,11 +58,11 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 <header>
   <div style="display:flex;align-items:center;gap:12px"><img src="escudo.png"><div style="line-height:1.05"><b style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;display:block">ESCUELA FILIPPO <span style="color:var(--verde)">CATEGORIA 2012</span></b><small style="font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase">Clausura 2026</small></div></div>
   <div style="display:flex;align-items:center;gap:10px">
-    <div id="climaBox" style="display:none;align-items:center;gap:8px;background:#f7f7f5;border:1px solid var(--borde);padding:6px 12px;border-radius:999px;max-width:175px">
+    <div id="climaBox" onclick="window.open('https://www.windy.com/-34.571/-58.693','_blank')" style="display:flex;align-items:center;gap:8px;background:#f7f7f5;border:1px solid var(--borde);padding:6px 12px;border-radius:999px;cursor:pointer;max-width:180px" title="Ver en Windy">
       <span id="climaIcon" style="font-size:16px">⛅</span>
       <div style="line-height:1.1;overflow:hidden">
-        <div id="climaTemp" style="font-size:12px;font-weight:800;white-space:nowrap">--°</div>
-        <div id="climaDesc" style="font-size:9px;color:#777;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">San Miguel BA</div>
+        <div id="climaTemp" style="font-size:12px;font-weight:800;white-space:nowrap">Cargando...</div>
+        <div id="climaDesc" style="font-size:9px;color:#777;font-weight:700;white-space:nowrap">Bella Vista • Windy</div>
       </div>
     </div>
     <button id="adminBtn" class="admin-btn" onclick="toggleAdmin()">Admin</button>
@@ -153,57 +153,34 @@ function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blan
 async function subirGaleria(){ const input=document.getElementById('fileInput'); if(!input.files.length){ alert('Elegí una foto o video'); return; } document.getElementById('uploadStatus').textContent='Subiendo...'; for(let f of input.files){ const b64=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(f); }); await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); } document.getElementById('uploadStatus').textContent='¡Subido! Actualizando...'; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,2500); }
 async function agregarUbi(){ if(!isAdmin){ alert('Solo admin'); return; } const n=document.getElementById('nombreUbi').value.trim(); const l=document.getElementById('linkUbi').value.trim(); if(!n||!l){ alert('Completa nombre y link'); return; } await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:n.toLowerCase(),display:n,href:l})}); document.getElementById('nombreUbi').value=''; document.getElementById('linkUbi').value=''; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,1500); }
 
-// CLIMA SMN - FIX SAN MIGUEL BS AS
+// CLIMA WINDY / OPEN-METEO - Bella Vista -34.571,-58.693
 async function cargarClimaSMN(){
   try{
-    const r = await fetch('https://ws.smn.gob.ar/map_items/weather');
-    const data = await r.json();
-    console.log('SMN total estaciones', data.length);
+    // Open-Meteo usa ECMWF igual que Windy, coordenada exacta Bella Vista
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=-34.571&longitude=-58.693&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=America%2FArgentina%2FBuenos_Aires&forecast_days=1';
+    const r = await fetch(url);
+    const d = await r.json();
+    const curr = d.current;
 
-    // FILTRO EXACTO: San Miguel + Provincia Buenos Aires
-    let estacion = data.find(e => {
-      const nombre = (e.name || '').toLowerCase();
-      const prov = (e.province || '').toLowerCase();
-      return nombre === 'san miguel' && prov.includes('buenos aires');
-    });
+    const code = curr.weather_code;
+    let desc = 'Despejado', icon='☀️';
+    if([0].includes(code)){ desc='Despejado'; icon='☀️'; }
+    else if([1,2,3].includes(code)){ desc='Parcialmente nublado'; icon='⛅'; }
+    else if([45,48].includes(code)){ desc='Niebla'; icon='🌫️'; }
+    else if([51,53,55,61,63,65,80,81,82].includes(code)){ desc='Lluvia'; icon='🌧️'; }
+    else if([95,96,99].includes(code)){ desc='Tormenta'; icon='⛈️'; }
+    else if([71,73,75,85,86].includes(code)){ desc='Nieve'; icon='❄️'; }
+    else { desc='Nublado'; icon='☁️'; }
 
-    // Fallback 2: nombre contiene san miguel y provincia BA
-    if(!estacion){
-      estacion = data.find(e => {
-        const nombre = (e.name || '').toLowerCase();
-        const prov = (e.province || '').toLowerCase();
-        return nombre.includes('san miguel') && prov.includes('buenos aires');
-      });
-    }
+    document.getElementById('climaIcon').textContent = icon;
+    document.getElementById('climaTemp').textContent = Math.round(curr.temperature_2m) + '° • ' + Math.round(curr.wind_speed_10m) + ' km/h';
+    document.getElementById('climaDesc').textContent = desc + ' - Bella Vista';
+    document.getElementById('climaBox').title = `Humedad ${curr.relative_humidity_2m}% - Lluvia ${curr.precipitation}mm - Click para ver Windy`;
 
-    // Fallback 3: El Palomar / Moron que son pegados a San Miguel BA
-    if(!estacion){
-      estacion = data.find(e => e.name === "El Palomar" && (e.province||'').toLowerCase().includes('buenos')) ||
-                 data.find(e => e.name === "Morón" && (e.province||'').toLowerCase().includes('buenos')) ||
-                 data.find(e => e.name === "Moron" && (e.province||'').toLowerCase().includes('buenos'));
-    }
-
-    if(estacion && estacion.weather){
-      document.getElementById('climaBox').style.display='flex';
-      const temp = Math.round(estacion.weather.temp);
-      document.getElementById('climaTemp').textContent = temp + '° - ' + estacion.name;
-      document.getElementById('climaDesc').textContent = (estacion.weather.description || 'SMN') + ' - BA';
-      const desc = (estacion.weather.description || '').toLowerCase();
-      let icon = '⛅';
-      if(desc.includes('lluvia') || desc.includes('tormenta') || desc.includes('chaparrones')) icon='🌧️';
-      else if(desc.includes('nublado') || desc.includes('cubierto')) icon='☁️';
-      else if(desc.includes('despejado') || desc.includes('soleado') || desc.includes('algo nublado')) icon='☀️';
-      else if(desc.includes('niebla')) icon='🌫️';
-      document.getElementById('climaIcon').textContent = icon;
-      console.log('SMN usando:', estacion.name, estacion.province, estacion.weather);
-    } else {
-      throw new Error('No se encontró San Miguel BA');
-    }
   }catch(e){
-    console.log('SMN error', e);
-    document.getElementById('climaBox').style.display='flex';
-    document.getElementById('climaTemp').innerHTML = '<a href="https://www.smn.gob.ar" target="_blank" style="text-decoration:none;color:#111">Ver clima</a>';
-    document.getElementById('climaDesc').innerHTML = '<a href="https://www.smn.gob.ar" target="_blank" style="text-decoration:none;color:#777">San Miguel BA →</a>';
+    console.log('Clima error', e);
+    document.getElementById('climaTemp').textContent = 'Ver clima';
+    document.getElementById('climaDesc').textContent = 'Bella Vista • Windy →';
   }
 }
 cargarClimaSMN();
