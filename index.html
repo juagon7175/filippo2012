@@ -58,11 +58,11 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 <header>
   <div style="display:flex;align-items:center;gap:12px"><img src="escudo.png"><div style="line-height:1.05"><b style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;display:block">ESCUELA FILIPPO <span style="color:var(--verde)">CATEGORIA 2012</span></b><small style="font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase">Clausura 2026</small></div></div>
   <div style="display:flex;align-items:center;gap:10px">
-    <div id="climaBox" style="display:none;align-items:center;gap:8px;background:#f7f7f5;border:1px solid var(--borde);padding:6px 12px;border-radius:999px">
+    <div id="climaBox" style="display:none;align-items:center;gap:8px;background:#f7f7f5;border:1px solid var(--borde);padding:6px 12px;border-radius:999px;max-width:175px">
       <span id="climaIcon" style="font-size:16px">⛅</span>
-      <div style="line-height:1">
-        <div id="climaTemp" style="font-size:13px;font-weight:800">--°</div>
-        <div id="climaDesc" style="font-size:10px;color:#777;font-weight:700">SMN</div>
+      <div style="line-height:1.1;overflow:hidden">
+        <div id="climaTemp" style="font-size:12px;font-weight:800;white-space:nowrap">--°</div>
+        <div id="climaDesc" style="font-size:9px;color:#777;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">San Miguel BA</div>
       </div>
     </div>
     <button id="adminBtn" class="admin-btn" onclick="toggleAdmin()">Admin</button>
@@ -103,7 +103,6 @@ let ubicaciones = {}; let resultadosDB = {}; let goleadoresDB = {};
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 const CACHE_KEY = 'filippo_cache_v2';
 
-// CAMBIO AUTOMATICO HASTA 11/10 + CLIMA
 (function(){
   const limite = new Date(2026, 9, 11, 23, 59, 59);
   const hoy = new Date();
@@ -154,33 +153,57 @@ function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blan
 async function subirGaleria(){ const input=document.getElementById('fileInput'); if(!input.files.length){ alert('Elegí una foto o video'); return; } document.getElementById('uploadStatus').textContent='Subiendo...'; for(let f of input.files){ const b64=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(f); }); await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); } document.getElementById('uploadStatus').textContent='¡Subido! Actualizando...'; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,2500); }
 async function agregarUbi(){ if(!isAdmin){ alert('Solo admin'); return; } const n=document.getElementById('nombreUbi').value.trim(); const l=document.getElementById('linkUbi').value.trim(); if(!n||!l){ alert('Completa nombre y link'); return; } await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:n.toLowerCase(),display:n,href:l})}); document.getElementById('nombreUbi').value=''; document.getElementById('linkUbi').value=''; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,1500); }
 
-// CLIMA SMN - Superior derecha
+// CLIMA SMN - FIX SAN MIGUEL BS AS
 async function cargarClimaSMN(){
   try{
     const r = await fetch('https://ws.smn.gob.ar/map_items/weather');
     const data = await r.json();
-    let estacion = data.find(e => e.name === "San Miguel") ||
-                   data.find(e => e.name === "El Palomar") ||
-                   data.find(e => e.name === "Morón") ||
-                   data.find(e => e.name === "Buenos Aires") ||
-                   data[0];
+    console.log('SMN total estaciones', data.length);
+
+    // FILTRO EXACTO: San Miguel + Provincia Buenos Aires
+    let estacion = data.find(e => {
+      const nombre = (e.name || '').toLowerCase();
+      const prov = (e.province || '').toLowerCase();
+      return nombre === 'san miguel' && prov.includes('buenos aires');
+    });
+
+    // Fallback 2: nombre contiene san miguel y provincia BA
+    if(!estacion){
+      estacion = data.find(e => {
+        const nombre = (e.name || '').toLowerCase();
+        const prov = (e.province || '').toLowerCase();
+        return nombre.includes('san miguel') && prov.includes('buenos aires');
+      });
+    }
+
+    // Fallback 3: El Palomar / Moron que son pegados a San Miguel BA
+    if(!estacion){
+      estacion = data.find(e => e.name === "El Palomar" && (e.province||'').toLowerCase().includes('buenos')) ||
+                 data.find(e => e.name === "Morón" && (e.province||'').toLowerCase().includes('buenos')) ||
+                 data.find(e => e.name === "Moron" && (e.province||'').toLowerCase().includes('buenos'));
+    }
+
     if(estacion && estacion.weather){
       document.getElementById('climaBox').style.display='flex';
-      document.getElementById('climaTemp').textContent = Math.round(estacion.weather.temp) + '° ' + estacion.name;
-      document.getElementById('climaDesc').textContent = estacion.weather.description || 'SMN';
+      const temp = Math.round(estacion.weather.temp);
+      document.getElementById('climaTemp').textContent = temp + '° - ' + estacion.name;
+      document.getElementById('climaDesc').textContent = (estacion.weather.description || 'SMN') + ' - BA';
       const desc = (estacion.weather.description || '').toLowerCase();
       let icon = '⛅';
-      if(desc.includes('lluvia') || desc.includes('tormenta')) icon='🌧️';
+      if(desc.includes('lluvia') || desc.includes('tormenta') || desc.includes('chaparrones')) icon='🌧️';
       else if(desc.includes('nublado') || desc.includes('cubierto')) icon='☁️';
-      else if(desc.includes('despejado') || desc.includes('soleado')) icon='☀️';
+      else if(desc.includes('despejado') || desc.includes('soleado') || desc.includes('algo nublado')) icon='☀️';
       else if(desc.includes('niebla')) icon='🌫️';
       document.getElementById('climaIcon').textContent = icon;
+      console.log('SMN usando:', estacion.name, estacion.province, estacion.weather);
+    } else {
+      throw new Error('No se encontró San Miguel BA');
     }
   }catch(e){
-    console.log('SMN no disponible', e);
+    console.log('SMN error', e);
     document.getElementById('climaBox').style.display='flex';
     document.getElementById('climaTemp').innerHTML = '<a href="https://www.smn.gob.ar" target="_blank" style="text-decoration:none;color:#111">Ver clima</a>';
-    document.getElementById('climaDesc').innerHTML = '<a href="https://www.smn.gob.ar" target="_blank" style="text-decoration:none;color:#777">smn.gob.ar →</a>';
+    document.getElementById('climaDesc').innerHTML = '<a href="https://www.smn.gob.ar" target="_blank" style="text-decoration:none;color:#777">San Miguel BA →</a>';
   }
 }
 cargarClimaSMN();
