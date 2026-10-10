@@ -57,21 +57,30 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 <body>
 <header>
   <div style="display:flex;align-items:center;gap:12px"><img src="escudo.png"><div style="line-height:1.05"><b style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;display:block">ESCUELA FILIPPO <span style="color:var(--verde)">CATEGORIA 2012</span></b><small style="font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase">Clausura 2026</small></div></div>
-  <button id="adminBtn" class="admin-btn" onclick="toggleAdmin()">Admin</button>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div id="climaBox" style="display:none;align-items:center;gap:8px;background:#f7f7f5;border:1px solid var(--borde);padding:6px 12px;border-radius:999px">
+      <span id="climaIcon" style="font-size:16px">⛅</span>
+      <div style="line-height:1">
+        <div id="climaTemp" style="font-size:13px;font-weight:800">--°</div>
+        <div id="climaDesc" style="font-size:10px;color:#777;font-weight:700">SMN</div>
+      </div>
+    </div>
+    <button id="adminBtn" class="admin-btn" onclick="toggleAdmin()">Admin</button>
+  </div>
 </header>
 
 <div class="hero">
   <div id="heroEscudo" class="escudo-3d"><div class="face front"></div><div class="face back"></div></div>
- <div id="heroFlyer" class="hero-flyer" style="position:relative">
+  <div id="heroFlyer" class="hero-flyer" style="position:relative">
     <div class="hero-flyer-badge">⚽ PRÓXIMO PARTIDO</div>
     <div style="position:relative;display:inline-block;width:100%">
-      <img id="imgFlyer" src="fecha6.jpg" alt="Próximo partido" style="filter: grayscale(0.2);">
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.55);border-radius:18px">
-        <div style="background:#c41e24;color:white;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:32px;padding:10px 28px;border-radius:8px;transform:rotate(-18deg);border:4px solid white;box-shadow:0 8px 20px rgba(0,0,0,.3);letter-spacing:2px">SUSPENDIDO</div>
+      <img id="imgFlyer" src="fecha6.jpg" alt="Próximo partido" style="filter: grayscale(0.15);">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.52);border-radius:18px;border:2px solid #111">
+        <div style="background:#c41e24;color:white;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:34px;padding:10px 28px;border-radius:8px;transform:rotate(-18deg);border:4px solid white;box-shadow:0 8px 20px rgba(0,0,0,.3);letter-spacing:2px">SUSPENDIDO</div>
       </div>
     </div>
     <p style="margin-top:8px;font-size:13px;font-weight:700;color:#c41e24">Fecha 6 suspendida - se reprograma</p>
-</div>
+  </div>
 </div>
 
 <div class="tabs-nav">
@@ -94,22 +103,17 @@ let ubicaciones = {}; let resultadosDB = {}; let goleadoresDB = {};
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 const CACHE_KEY = 'filippo_cache_v2';
 
-// CAMBIO AUTOMATICO HASTA 11/10
+// CAMBIO AUTOMATICO HASTA 11/10 + CLIMA
 (function(){
   const limite = new Date(2026, 9, 11, 23, 59, 59);
   const hoy = new Date();
   const escudo = document.getElementById('heroEscudo');
   const flyer = document.getElementById('heroFlyer');
   const img = document.getElementById('imgFlyer');
-  // Intenta cargar fecha6.jpg, si no existe usa el nombre original de WhatsApp
   img.onerror = function(){
-    if(this.src.includes('fecha6.jpg')){
-      this.src = 'fecha6.jpeg';
-    } else if(this.src.includes('fecha6.jpeg')){
-      this.src = 'fecha6.png';
-    } else if(this.src.includes('fecha6.png')){
-      this.src = 'fecha6.webp';
-    }
+    if(this.src.includes('fecha6.jpg')){ this.src = 'fecha6.jpeg'; }
+    else if(this.src.includes('fecha6.jpeg')){ this.src = 'fecha6.png'; }
+    else if(this.src.includes('fecha6.png')){ this.src = 'fecha6.webp'; }
   };
   if(hoy <= limite){
     escudo.style.display='none'; flyer.style.display='block';
@@ -149,6 +153,38 @@ async function cargarTodo(){
 function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blank'); else{ const u=ubicaciones[n.toLowerCase()]; if(u) window.open(u.href,'_blank'); } }
 async function subirGaleria(){ const input=document.getElementById('fileInput'); if(!input.files.length){ alert('Elegí una foto o video'); return; } document.getElementById('uploadStatus').textContent='Subiendo...'; for(let f of input.files){ const b64=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(f); }); await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); } document.getElementById('uploadStatus').textContent='¡Subido! Actualizando...'; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,2500); }
 async function agregarUbi(){ if(!isAdmin){ alert('Solo admin'); return; } const n=document.getElementById('nombreUbi').value.trim(); const l=document.getElementById('linkUbi').value.trim(); if(!n||!l){ alert('Completa nombre y link'); return; } await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:n.toLowerCase(),display:n,href:l})}); document.getElementById('nombreUbi').value=''; document.getElementById('linkUbi').value=''; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,1500); }
+
+// CLIMA SMN - Superior derecha
+async function cargarClimaSMN(){
+  try{
+    const r = await fetch('https://ws.smn.gob.ar/map_items/weather');
+    const data = await r.json();
+    let estacion = data.find(e => e.name === "San Miguel") ||
+                   data.find(e => e.name === "El Palomar") ||
+                   data.find(e => e.name === "Morón") ||
+                   data.find(e => e.name === "Buenos Aires") ||
+                   data[0];
+    if(estacion && estacion.weather){
+      document.getElementById('climaBox').style.display='flex';
+      document.getElementById('climaTemp').textContent = Math.round(estacion.weather.temp) + '° ' + estacion.name;
+      document.getElementById('climaDesc').textContent = estacion.weather.description || 'SMN';
+      const desc = (estacion.weather.description || '').toLowerCase();
+      let icon = '⛅';
+      if(desc.includes('lluvia') || desc.includes('tormenta')) icon='🌧️';
+      else if(desc.includes('nublado') || desc.includes('cubierto')) icon='☁️';
+      else if(desc.includes('despejado') || desc.includes('soleado')) icon='☀️';
+      else if(desc.includes('niebla')) icon='🌫️';
+      document.getElementById('climaIcon').textContent = icon;
+    }
+  }catch(e){
+    console.log('SMN no disponible', e);
+    document.getElementById('climaBox').style.display='flex';
+    document.getElementById('climaTemp').innerHTML = '<a href="https://www.smn.gob.ar" target="_blank" style="text-decoration:none;color:#111">Ver clima</a>';
+    document.getElementById('climaDesc').innerHTML = '<a href="https://www.smn.gob.ar" target="_blank" style="text-decoration:none;color:#777">smn.gob.ar →</a>';
+  }
+}
+cargarClimaSMN();
+
 cargarTodo(); initAdminUI();
 </script>
 </body>
