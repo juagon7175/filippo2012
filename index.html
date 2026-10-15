@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Escuela Filippo - Categorías</title>
 <link rel="icon" href="escudo.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a7d3e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -245,6 +249,13 @@ header img{width:42px;height:42px;border-radius:12px;background:white;border:1px
 </div>
 
 <script>
+// REGISTRO DE SERVICE WORKER PARA PERMITIR INSTALAR APP
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW err', err));
+  });
+}
+
 const API_URL = "https://script.google.com/macros/s/AKfycbzcJNvsgKODMbuUVouVF7ZB_-6TeZOV_h-UfrIw9vb1nP3jM_7DhKPRq1mXYNevTjmA/exec";
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
 
@@ -253,7 +264,11 @@ let resultadosDB = [];
 let goleadoresDB = [];
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
-const CACHE_KEY = 'filippo_cache_v3';
+const CACHE_KEY = 'filippo_cache_v4';
+
+// Limpieza proactiva de cachés viejas
+localStorage.removeItem('filippo_cache_v2');
+localStorage.removeItem('filippo_cache_v3');
 
 const partidos = [
   ["Escuela Tigre","LOCAL","Fecha 1"],
@@ -367,7 +382,6 @@ function getClaseResultado(esLocal, texto){
   return 'res-pendiente'; 
 }
 
-// GOLEADORES ACUMULADOS CON PROTECCIÓN TRY/CATCH
 function renderTablaGoleadores(){
   try {
     const catBuscada = categoriaActual.toString().trim().toLowerCase();
@@ -421,9 +435,7 @@ function renderTablaGoleadores(){
     });
     html += `</div>`;
     container.innerHTML = html;
-  } catch(e) {
-    console.error("Error en renderTablaGoleadores:", e);
-  }
+  } catch(e){}
 }
 
 function renderFixture(){ 
@@ -443,6 +455,7 @@ function renderFixture(){
       let goles = "Sin datos";
       const fKey = p[2].toString().toLowerCase().trim();
 
+      // Compatibilidad flexible
       if(Array.isArray(resultadosDB)){
         let matchRes = resultadosDB.find(r => 
           r && r.fecha && r.fecha.toString().toLowerCase().trim() === fKey &&
@@ -454,6 +467,8 @@ function renderFixture(){
           );
         }
         if(matchRes && matchRes.resultado) res = matchRes.resultado;
+      } else if(resultadosDB && resultadosDB[p[2]] && catBuscada === '6ta'){
+        res = resultadosDB[p[2]];
       }
 
       if(Array.isArray(goleadoresDB)){
@@ -467,6 +482,8 @@ function renderFixture(){
           );
         }
         if(matchGol && matchGol.goles) goles = matchGol.goles;
+      } else if(goleadoresDB && goleadoresDB[p[2]] && catBuscada === '6ta'){
+        goles = goleadoresDB[p[2]];
       }
 
       const clase = getClaseResultado(p[1] === "LOCAL", res); 
@@ -492,9 +509,7 @@ function renderFixture(){
     const fixEl = document.getElementById('fixture');
     if(fixEl) fixEl.innerHTML = h; 
     renderTablaGoleadores();
-  } catch(e) {
-    console.error("Error en renderFixture:", e);
-  }
+  } catch(e){}
 }
 
 function verGoles(f){ const el=document.getElementById(`goles-${f}`); if(el) el.style.display=el.style.display=='none'?'block':'none'; }
@@ -582,6 +597,8 @@ function renderAll(d){
         categoria: (r.categoria || "6ta").toString().toLowerCase().trim(),
         resultado: r.resultado || "Pendiente"
       }));
+    } else {
+      resultadosDB = d.resultados || [];
     }
 
     if(Array.isArray(d.goleadores)){
@@ -590,18 +607,26 @@ function renderAll(d){
         categoria: (g.categoria || "6ta").toString().toLowerCase().trim(),
         goles: (g.goles || "").toString().trim()
       }));
+    } else {
+      goleadoresDB = d.goleadores || [];
     }
 
     cambiarCategoria(categoriaActual);
   } catch(e) {
-    console.error("Error en renderAll:", e);
     renderFixture();
   }
 }
 
 async function cargarTodo(){
   try{ const cached = localStorage.getItem(CACHE_KEY); if(cached){ renderAll(JSON.parse(cached)); } }catch(e){}
-  try{ const r=await fetch(API_URL, {cache:'no-store'}); const d=await r.json(); renderAll(d); localStorage.setItem(CACHE_KEY, JSON.stringify(d)); }catch(e){ if(!localStorage.getItem(CACHE_KEY)) renderFixture(); }
+  try{ 
+    const r = await fetch(API_URL, {cache:'no-store'}); 
+    const d = await r.json(); 
+    renderAll(d); 
+    localStorage.setItem(CACHE_KEY, JSON.stringify(d)); 
+  }catch(e){ 
+    if(!localStorage.getItem(CACHE_KEY)) renderFixture(); 
+  }
 }
 
 function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blank'); else{ const u=ubicaciones[n.toLowerCase()]; if(u) window.open(u.href,'_blank'); } }
