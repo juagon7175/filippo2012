@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escuela Filippo - 2012</title>
+<title>Escuela Filippo - Categorías</title>
 <link rel="icon" href="escudo.png">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -13,6 +13,12 @@ header{padding:14px 18px;display:flex;align-items:center;justify-content:space-b
 header img{width:44px;height:44px;border-radius:12px;background:white;border:1px solid var(--borde);padding:3px}
 .admin-btn{padding:6px 12px;border-radius:999px;border:1px solid var(--borde);background:white;font-size:11px;font-weight:700;cursor:pointer}
 .admin-btn.on{background:var(--negro);color:white;border-color:var(--negro)}
+
+/* BARRA DE CATEGORIAS */
+.cat-bar{display:flex;gap:8px;padding:10px 16px;background:white;border-bottom:1px solid var(--borde);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cat-btn{flex:1;min-width:60px;padding:8px 12px;border-radius:999px;border:1px solid var(--borde);background:#f9f8f6;font-size:12px;font-weight:800;color:#777;cursor:pointer;text-align:center;transition:all .2s ease}
+.cat-btn.active{background:var(--verde);color:white;border-color:var(--verde);box-shadow:0 3px 8px rgba(10,125,62,.25)}
+
 .hero{height:auto;min-height:200px;background: linear-gradient(90deg, #dff3e3 0%, #fdf6ef 50%, #ffe4e6 100%);display:flex;justify-content:center;align-items:center;overflow:hidden;border-top:1px solid var(--borde);border-bottom:1px solid var(--borde);perspective:1000px;padding:14px}
 .escudo-3d{width:135px;height:162px;position:relative;transform-style: preserve-3d;animation: spin360 7s linear infinite}
 @keyframes spin360{0%{transform: rotateY(0deg)}100%{transform: rotateY(360deg)}}
@@ -56,7 +62,15 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 </head>
 <body>
 <header>
-  <div style="display:flex;align-items:center;gap:12px"><img src="escudo.png"><div style="line-height:1.05"><b style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;display:block">ESCUELA FILIPPO <span style="color:var(--verde)">CATEGORIA 2012</span></b><small style="font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase">Clausura 2026</small></div></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="escudo.png">
+    <div style="line-height:1.05">
+      <b style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;display:block">
+        ESCUELA FILIPPO <span id="lblCategoriaHeader" style="color:var(--verde)">6TA</span>
+      </b>
+      <small style="font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase">Clausura 2026</small>
+    </div>
+  </div>
   <div style="display:flex;align-items:center;gap:10px">
     <div id="climaBox" onclick="window.open('https://www.windy.com/-34.571/-58.693','_blank')" style="display:flex;align-items:center;gap:8px;background:#f7f7f5;border:1px solid var(--borde);padding:6px 12px;border-radius:999px;cursor:pointer;max-width:180px" title="Ver en Windy">
       <span id="climaIcon" style="font-size:16px">⛅</span>
@@ -68,6 +82,14 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
     <button id="adminBtn" class="admin-btn" onclick="toggleAdmin()">Admin</button>
   </div>
 </header>
+
+<!-- BARRA DE SELECCIÓN DE CATEGORÍA -->
+<div class="cat-bar">
+  <button class="cat-btn active" onclick="cambiarCategoria('6ta')" id="cat-6ta">6ta</button>
+  <button class="cat-btn" onclick="cambiarCategoria('7ma')" id="cat-7ma">7ma</button>
+  <button class="cat-btn" onclick="cambiarCategoria('8va')" id="cat-8va">8va</button>
+  <button class="cat-btn" onclick="cambiarCategoria('9na')" id="cat-9na">9na</button>
+</div>
 
 <div class="hero">
   <div id="heroEscudo" class="escudo-3d"><div class="face front"></div><div class="face back"></div></div>
@@ -90,7 +112,7 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 <div id="p1" class="panel show"><div id="fixture"></div><a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">Tabla oficial LUEFI →</a><a class="link dorado" href="https://www.amateurchampionscup.com.ar/" target="_blank">Amateur Champions Cup →</a></div>
 <div id="p3" class="panel"><div id="listaUbicaciones"></div><div id="boxUbi" class="add-box-ubi"><p style="font-size:12px;font-weight:700;color:var(--verde)">Solo admin - Agregar sede</p><input id="nombreUbi" class="input-txt" placeholder="Nombre sede"><input id="linkUbi" class="input-txt" placeholder="Link Google Maps"><button onclick="agregarUbi()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Guardar sede</button></div><p id="ubiMsg" style="font-size:11px;color:#999;margin-top:8px;display:none">Inicia como admin para agregar sedes</p></div>
 <div id="p2" class="panel"><div class="galeria" id="galeria"></div><div class="add-box-galeria"><p style="font-size:13px;font-weight:700;margin-bottom:8px">Subir fotos / videos - Todos pueden subir</p><input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%;font-size:13px"><button id="btnSubir" onclick="subirGaleria()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Subir a galería</button><div id="uploadStatus" style="margin-top:8px;font-size:12px;text-align:center;color:#666"></div></div></div>
-<div id="p4" class="panel"><div class="info-box"><div class="info-top"><div style="display:flex;align-items:center;gap:8px"><span style="background:#c41e24;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">✔</span><b>FILIPPO INFORMACIÓN GENERAL</b></div><img src="escudo.png" style="width:28px;height:28px;background:white;border-radius:6px;padding:2px"></div><div class="info-verde"><div class="info-row"><div style="font-size:22px">⚽</div><div><h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Celular administración:</h4><a class="pill-negra" href="https://wa.me/5491178285589?text=Hola%20Filippo%20soy%20de%20la%202012" target="_blank">💬 11 7828-5589</a></div></div><div class="info-row"><div style="font-size:22px">⚽</div><div style="flex:1"><h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Datos de cuenta:</h4><div class="datos-cbu"><div><b>CBU:</b> 0070026930004030762979</div><div><b>ALIAS:</b> escuelafilippo</div><div><b>Titular:</b> MARIA INES LOPEZ BRAVO</div></div></div></div><div class="info-row" style="margin-bottom:0"><div style="font-size:22px">⚽</div><div><h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Instagram:</h4><a class="pill-blanca" href="https://instagram.com/escuelafilippo" target="_blank">📸 @escuelafilippo</a></div></div></div><div style="background:black;color:#ccc;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;border-top:3px solid var(--verde)"><span>INFO / CONSULTAS → 11 5055-5166</span><a href="https://wa.me/5491150555166" target="_blank" style="color:#25D366;text-decoration:none">WhatsApp →</a></div></div><div class="info-box" style="padding:16px"><h4>Filippo 2012</h4><p style="font-size:13px;color:#666">DT Jhonatan · Coord. Miguel y Hernán</p></div></div>
+<div id="p4" class="panel"><div class="info-box"><div class="info-top"><div style="display:flex;align-items:center;gap:8px"><span style="background:#c41e24;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">✔</span><b>FILIPPO INFORMACIÓN GENERAL</b></div><img src="escudo.png" style="width:28px;height:28px;background:white;border-radius:6px;padding:2px"></div><div class="info-verde"><div class="info-row"><div style="font-size:22px">⚽</div><div><h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Celular administración:</h4><a class="pill-negra" href="https://wa.me/5491178285589?text=Hola%20Filippo%20soy%20de%20la%202012" target="_blank">💬 11 7828-5589</a></div></div><div class="info-row"><div style="font-size:22px">⚽</div><div style="flex:1"><h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Datos de cuenta:</h4><div class="datos-cbu"><div><b>CBU:</b> 0070026930004030762979</div><div><b>ALIAS:</b> escuelafilippo</div><div><b>Titular:</b> MARIA INES LOPEZ BRAVO</div></div></div></div><div class="info-row" style="margin-bottom:0"><div style="font-size:22px">⚽</div><div><h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Instagram:</h4><a class="pill-blanca" href="https://instagram.com/escuelafilippo" target="_blank">📸 @escuelafilippo</a></div></div></div><div style="background:black;color:#ccc;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;border-top:3px solid var(--verde)"><span>INFO / CONSULTAS → 11 5055-5166</span><a href="https://wa.me/5491150555166" target="_blank" style="color:#25D366;text-decoration:none">WhatsApp →</a></div></div><div class="info-box" style="padding:16px"><h4 id="lblCategoriaInfo">Escuela Filippo - 6ta</h4><p style="font-size:13px;color:#666">Coord. Miguel y Hernán</p></div></div>
 </div>
 <div id="lightbox" onclick="this.style.display='none'"><img id="lbImg" style="display:none"><iframe id="lbVid" style="display:none;width:90%;height:70%" frameborder="0" allowfullscreen></iframe></div>
 <script>
@@ -98,6 +120,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzcJNvsgKODMbuUVouVF7ZB
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
 let ubicaciones = {}; let resultadosDB = {}; let goleadoresDB = {};
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
+let categoriaActual = '6ta';
 const CACHE_KEY = 'filippo_cache_v2';
 
 (function(){
@@ -117,6 +140,14 @@ const CACHE_KEY = 'filippo_cache_v2';
     escudo.style.display='block'; flyer.style.display='none';
   }
 })();
+
+function cambiarCategoria(cat){
+  categoriaActual = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('cat-' + cat).classList.add('active');
+  document.getElementById('lblCategoriaHeader').textContent = cat.toUpperCase();
+  document.getElementById('lblCategoriaInfo').textContent = 'Escuela Filippo - ' + cat.toUpperCase();
+}
 
 function togglePanel(id){ document.querySelectorAll('.panel').forEach(e=>e.classList.remove('show')); document.getElementById(id).classList.add('show'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById('t'+id.slice(1)).classList.add('active'); }
 function toggleAdmin(){
@@ -150,38 +181,4 @@ function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blan
 async function subirGaleria(){ const input=document.getElementById('fileInput'); if(!input.files.length){ alert('Elegí una foto o video'); return; } document.getElementById('uploadStatus').textContent='Subiendo...'; for(let f of input.files){ const b64=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(f); }); await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); } document.getElementById('uploadStatus').textContent='¡Subido! Actualizando...'; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,2500); }
 async function agregarUbi(){ if(!isAdmin){ alert('Solo admin'); return; } const n=document.getElementById('nombreUbi').value.trim(); const l=document.getElementById('linkUbi').value.trim(); if(!n||!l){ alert('Completa nombre y link'); return; } await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:n.toLowerCase(),display:n,href:l})}); document.getElementById('nombreUbi').value=''; document.getElementById('linkUbi').value=''; localStorage.removeItem(CACHE_KEY); setTimeout(cargarTodo,1500); }
 
-// CLIMA WINDY / OPEN-METEO - Bella Vista -34.571,-58.693
-async function cargarClimaSMN(){
-  try{
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=-34.571&longitude=-58.693&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=America%2FArgentina%2FBuenos_Aires&forecast_days=1';
-    const r = await fetch(url);
-    const d = await r.json();
-    const curr = d.current;
-
-    const code = curr.weather_code;
-    let desc = 'Despejado', icon='☀️';
-    if([0].includes(code)){ desc='Despejado'; icon='☀️'; }
-    else if([1,2,3].includes(code)){ desc='Parcialmente nublado'; icon='⛅'; }
-    else if([45,48].includes(code)){ desc='Niebla'; icon='🌫️'; }
-    else if([51,53,55,61,63,65,80,81,82].includes(code)){ desc='Lluvia'; icon='🌧️'; }
-    else if([95,96,99].includes(code)){ desc='Tormenta'; icon='⛈️'; }
-    else if([71,73,75,85,86].includes(code)){ desc='Nieve'; icon='❄️'; }
-    else { desc='Nublado'; icon='☁️'; }
-
-    document.getElementById('climaIcon').textContent = icon;
-    document.getElementById('climaTemp').textContent = Math.round(curr.temperature_2m) + '° • ' + Math.round(curr.wind_speed_10m) + ' km/h';
-    document.getElementById('climaDesc').textContent = desc + ' - Bella Vista';
-    document.getElementById('climaBox').title = `Humedad ${curr.relative_humidity_2m}% - Lluvia ${curr.precipitation}mm - Click para ver Windy`;
-
-  }catch(e){
-    console.log('Clima error', e);
-    document.getElementById('climaTemp').textContent = 'Ver clima';
-    document.getElementById('climaDesc').textContent = 'Bella Vista • Windy →';
-  }
-}
-cargarClimaSMN();
-
-cargarTodo(); initAdminUI();
-</script>
-</body>
-</html>
+// CL
