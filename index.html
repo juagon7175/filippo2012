@@ -317,11 +317,44 @@ function getClaseResultado(esLocal, texto){
 
 function renderFixture(){
   let h = "";
+  const catBuscada = categoriaActual.toString().trim().toLowerCase();
+
   partidosBase.forEach(p => {
     if(p[1] === "LIBRE"){
       h += `<div class="fecha"><div class="fecha-head"><span>${p[2]}</span><span>Descanso</span></div><div class="match libre"><span>Libre</span></div></div>`;
       return;
     }
+    const cl = p[1] === "LOCAL" ? "local" : "visitante";
+    const vs = p[1] === "LOCAL" ? `<b>Filippo</b> vs ${p[0]}` : `${p[0]} vs <b>Filippo</b>`;
+
+    // Buscar el resultado comparando sin importar mayúsculas/espacios
+    const resObj = resultadosDB.find(r => 
+      r.fecha.toLowerCase().trim() === p[2].toLowerCase().trim() && 
+      r.categoria.toString().toLowerCase().trim() === catBuscada
+    );
+    const res = resObj ? resObj.resultado : "Pendiente";
+    const clase = getClaseResultado(p[1] === "LOCAL", res);
+
+    // Buscar goles comparando sin importar mayúsculas/espacios
+    const golObj = goleadoresDB.find(g => 
+      g.fecha.toLowerCase().trim() === p[2].toLowerCase().trim() && 
+      g.categoria.toString().toLowerCase().trim() === catBuscada
+    );
+    const goles = golObj ? golObj.goles : "Sin datos registrados";
+
+    h += `
+    <div class="fecha">
+      <div class="fecha-head"><span>${p[2]} · ${p[0]}</span><span>${p[1].toLowerCase()}</span></div>
+      <div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span></div>
+      <div class="result-row">
+        <span style="font-size:12px;color:#999">Resultado <span class="res-pill ${clase}">${res}</span></span>
+        <button onclick="verGoles('${p[2]}')" style="background:none;border:none;font-size:12px;font-weight:700;cursor:pointer">Goles →</button>
+      </div>
+      <div id="goles-${p[2]}" style="display:none"><div class="goles-box">${goles}</div></div>
+    </div>`;
+  });
+  document.getElementById('fixture').innerHTML = h;
+}
     const cl = p[1] === "LOCAL" ? "local" : "visitante";
     const vs = p[1] === "LOCAL" ? `<b>Filippo</b> vs ${p[0]}` : `${p[0]} vs <b>Filippo</b>`;
 
@@ -404,9 +437,11 @@ async function cargarTodo(){
   try {
     const r = await fetch(API_URL, {cache: 'no-store'});
     const d = await r.json();
+    console.log("Datos recibidos del servidor:", d); // Para verificar en la consola F12
     renderAll(d);
     localStorage.setItem(CACHE_KEY, JSON.stringify(d));
   } catch(e){
+    console.error("Error al cargar datos:", e);
     if(!localStorage.getItem(CACHE_KEY)) renderFixture();
   }
 }
