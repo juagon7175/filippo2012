@@ -374,8 +374,8 @@ function renderTablaGoleadores(){
 
   if(Array.isArray(goleadoresDB)){
     goleadoresDB.forEach(g => {
-      if(g.categoria && g.categoria.toString().toLowerCase().trim() === catBuscada && g.goles){
-        // Procesar cadenas como "Thiago x2, Mateo x1" o "Mateo (2)"
+      const gCat = (g.categoria || "6ta").toString().toLowerCase().trim();
+      if((gCat === catBuscada || (catBuscada === '6ta' && !g.categoria)) && g.goles){
         const partes = g.goles.split(',');
         partes.forEach(p => {
           const mX = p.match(/([a-záéíóúñ\s]+)\s*x\s*(\d+)/i);
@@ -388,7 +388,7 @@ function renderTablaGoleadores(){
             const nombre = mP[1].trim();
             const cant = parseInt(mP[2]);
             conteoGoles[nombre] = (conteoGoles[nombre] || 0) + cant;
-          } else if(p.trim()){
+          } else if(p.trim() && p.trim().toLowerCase() !== "sin datos"){
             const nombre = p.trim();
             conteoGoles[nombre] = (conteoGoles[nombre] || 0) + 1;
           }
@@ -434,20 +434,42 @@ function renderFixture(){
     let res = "Pendiente";
     let goles = "Sin datos";
 
+    const fKey = p[2].toString().toLowerCase().trim();
+
     if(Array.isArray(resultadosDB)){
-      const matchRes = resultadosDB.find(r => 
-        r.fecha && r.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim() &&
+      // 1. Intentar coincidencia exacta por fecha y categoría
+      let matchRes = resultadosDB.find(r => 
+        r.fecha && r.fecha.toString().toLowerCase().trim() === fKey &&
         r.categoria && r.categoria.toString().toLowerCase().trim() === catBuscada
       );
-      if(matchRes) res = matchRes.resultado || "Pendiente";
+
+      // 2. Si no encuentra por categoría (o la celda de categoría en Sheets está vacía/NaN) y estamos en 6ta
+      if(!matchRes && catBuscada === '6ta'){
+        matchRes = resultadosDB.find(r => 
+          r.fecha && r.fecha.toString().toLowerCase().trim() === fKey
+        );
+      }
+
+      if(matchRes && matchRes.resultado) {
+        res = matchRes.resultado;
+      }
     }
 
     if(Array.isArray(goleadoresDB)){
-      const matchGol = goleadoresDB.find(g => 
-        g.fecha && g.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim() &&
+      let matchGol = goleadoresDB.find(g => 
+        g.fecha && g.fecha.toString().toLowerCase().trim() === fKey &&
         g.categoria && g.categoria.toString().toLowerCase().trim() === catBuscada
       );
-      if(matchGol) goles = matchGol.goles || "Sin datos";
+
+      if(!matchGol && catBuscada === '6ta'){
+        matchGol = goleadoresDB.find(g => 
+          g.fecha && g.fecha.toString().toLowerCase().trim() === fKey
+        );
+      }
+
+      if(matchGol && matchGol.goles) {
+        goles = matchGol.goles;
+      }
     }
 
     const clase = getClaseResultado(p[1] === "LOCAL", res); 
@@ -550,18 +572,29 @@ function renderAll(d){
   });
 
   if(Array.isArray(d.resultados)){
-    resultadosDB = d.resultados.map(r => ({
-      fecha: r.fecha || "",
-      categoria: (r.categoria || "6ta").toString().toLowerCase().trim(),
-      resultado: r.resultado || "Pendiente"
-    }));
+    resultadosDB = d.resultados.map(r => {
+      let rawCat = (r.categoria || "").toString().toLowerCase().trim();
+      let rawRes = (r.resultado || "").toString().trim();
+
+      // Si por desfase de columnas la categoría viene en la variable resultado
+      if(['6ta','7ma','8va','9na'].includes(rawRes.toLowerCase())){
+        rawCat = rawRes.toLowerCase();
+        rawRes = (r.rival || "Pendiente").toString().trim();
+      }
+
+      return {
+        fecha: (r.fecha || "").toString().trim(),
+        categoria: rawCat,
+        resultado: rawRes || "Pendiente"
+      };
+    });
   }
 
   if(Array.isArray(d.goleadores)){
     goleadoresDB = d.goleadores.map(g => ({
-      fecha: g.fecha || "",
-      categoria: (g.categoria || "6ta").toString().toLowerCase().trim(),
-      goles: g.goles || ""
+      fecha: (g.fecha || "").toString().trim(),
+      categoria: (g.categoria || "").toString().toLowerCase().trim(),
+      goles: (g.goles || "").toString().trim()
     }));
   }
 
