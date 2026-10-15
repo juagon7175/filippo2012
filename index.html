@@ -1,74 +1,105 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Escuela Filippo - Categorías</title>
 <link rel="icon" href="escudo.png">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--verde:#0a7d3e;--borde:#efe8df;--negro:#1a1a1a}
-body{background:#fdf6ef;font-family:'Inter',sans-serif}
-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);position:sticky;top:0;z-index:20;border-bottom:1px solid var(--borde)}
-header img{width:44px;height:44px;border-radius:12px;background:white;border:1px solid var(--borde);padding:3px}
-.admin-btn{padding:6px 12px;border-radius:999px;border:1px solid var(--borde);background:white;font-size:11px;font-weight:700;cursor:pointer}
+:root{--verde:#0a7d3e;--verde-claro:#e8f5e9;--borde:#efe8df;--negro:#1a1a1a;--rojo:#c41e24}
+body{background:#fdf6ef;font-family:'Inter',sans-serif;color:var(--negro);-webkit-tap-highlight-color:transparent}
+
+/* HEADER */
+header{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);position:sticky;top:0;z-index:20;border-bottom:1px solid var(--borde)}
+header img{width:42px;height:42px;border-radius:12px;background:white;border:1px solid var(--borde);padding:2px}
+.brand-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:14px;line-height:1.1}
+.brand-sub{font-size:10px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase}
+
+.admin-btn{padding:6px 12px;border-radius:999px;border:1px solid var(--borde);background:white;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s ease}
 .admin-btn.on{background:var(--negro);color:white;border-color:var(--negro)}
 
 /* BARRA DE CATEGORIAS */
 .cat-bar{display:flex;gap:8px;padding:10px 16px;background:white;border-bottom:1px solid var(--borde);overflow-x:auto;-webkit-overflow-scrolling:touch}
-.cat-btn{flex:1;min-width:60px;padding:8px 12px;border-radius:999px;border:1px solid var(--borde);background:#f9f8f6;font-size:12px;font-weight:800;color:#777;cursor:pointer;text-align:center;transition:all .2s ease}
+.cat-btn{flex:1;min-width:65px;padding:8px 12px;border-radius:999px;border:1px solid var(--borde);background:#f9f8f6;font-size:12px;font-weight:800;color:#777;cursor:pointer;text-align:center;transition:all .2s ease}
 .cat-btn.active{background:var(--verde);color:white;border-color:var(--verde);box-shadow:0 3px 8px rgba(10,125,62,.25)}
 
-.hero{height:auto;min-height:200px;background: linear-gradient(90deg, #dff3e3 0%, #fdf6ef 50%, #ffe4e6 100%);display:flex;justify-content:center;align-items:center;overflow:hidden;border-top:1px solid var(--borde);border-bottom:1px solid var(--borde);perspective:1000px;padding:14px}
-.escudo-3d{width:135px;height:162px;position:relative;transform-style: preserve-3d;animation: spin360 7s linear infinite}
-@keyframes spin360{0%{transform: rotateY(0deg)}100%{transform: rotateY(360deg)}}
-.face{position:absolute;inset:0;background-image: url('escudo.png');background-size: contain;background-position: center;background-repeat: no-repeat;backface-visibility: hidden;background-color: transparent!important;filter: drop-shadow(0 12px 18px rgba(0,0,0,.18))}
-.face.front{ transform: translateZ(14px); }.face.back{ transform: rotateY(180deg) translateZ(14px); }
-.hero-flyer{width:100%;max-width:420px;display:none;text-align:center}
-.hero-flyer-badge{display:inline-block;background:#111;color:white;font-size:11px;font-weight:800;letter-spacing:1.2px;padding:6px 14px;border-radius:999px;margin-bottom:10px}
-.hero-flyer img{width:100%;height:auto;border-radius:18px;box-shadow:0 10px 25px rgba(0,0,0,.25);border:2px solid #111;display:block}
-.tabs-nav{display:flex;gap:20px;padding:16px 20px 0;border-bottom:1px solid var(--borde);margin:0 16px;overflow-x:auto}
-.tab-btn{background:none;border:none;padding:0 0 10px;font-size:13px;font-weight:500;color:#aaa;cursor:pointer;white-space:nowrap;position:relative}
-.tab-btn.active{color:var(--negro);font-weight:700}.tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2.5px;background:var(--verde);border-radius:2px}
-.card{padding:12px 16px 24px}.panel{display:none}.panel.show{display:block}
-.fecha{background:white;border:1px solid var(--borde);border-radius:18px;margin-top:12px;overflow:hidden}
-.fecha-head{padding:9px 14px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#e8f5e9,#fff);border-bottom:1px solid var(--borde)}
+/* HERO & FLYER */
+.hero{height:auto;min-height:180px;background:linear-gradient(90deg,#dff3e3 0%,#fdf6ef 50%,#ffe4e6 100%);display:flex;justify-content:center;align-items:center;overflow:hidden;border-bottom:1px solid var(--borde);perspective:1000px;padding:14px}
+.escudo-3d{width:120px;height:145px;position:relative;transform-style:preserve-3d;animation:spin360 7s linear infinite}
+@keyframes spin360{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
+.face{position:absolute;inset:0;background-image:url('escudo.png');background-size:contain;background-position:center;background-repeat:no-repeat;backface-visibility:hidden;filter:drop-shadow(0 10px 15px rgba(0,0,0,.15))}
+.face.front{transform:translateZ(12px)}.face.back{transform:rotateY(180deg) translateZ(12px)}
+.hero-flyer{width:100%;max-width:400px;display:none;text-align:center}
+.hero-flyer-badge{display:inline-block;background:#111;color:white;font-size:10px;font-weight:800;letter-spacing:1px;padding:5px 12px;border-radius:999px;margin-bottom:8px}
+.hero-flyer img{width:100%;height:auto;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.2);border:2px solid #111;display:block}
+
+/* TABS DE NAVEGACION */
+.tabs-nav{display:flex;gap:16px;padding:14px 16px 0;border-bottom:1px solid var(--borde);margin:0 12px;overflow-x:auto}
+.tab-btn{background:none;border:none;padding:0 0 10px;font-size:13px;font-weight:600;color:#aaa;cursor:pointer;white-space:nowrap;position:relative}
+.tab-btn.active{color:var(--negro);font-weight:800}.tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:3px;background:var(--verde);border-radius:3px}
+
+/* TARJETAS Y PANELES */
+.card{padding:12px 14px 24px}.panel{display:none}.panel.show{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+.fecha{background:white;border:1px solid var(--borde);border-radius:16px;margin-top:12px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.02)}
+.fecha-head{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,var(--verde-claro),#fff);border-bottom:1px solid var(--borde);font-size:12px;font-weight:700}
 .match{padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-.match.local{border-left:4px solid var(--verde);background:#f7fcf8}.match.visitante{border-left:4px solid #c41e24;background:#fff8f8}.match.libre{border-left:4px solid #ddd;background:#fafafa;color:#999}
-.result-row{padding:0 14px 12px;display:flex;justify-content:space-between;align-items:center}
-.res-pill{font-size:11px;font-weight:800;padding:5px 11px;border-radius:999px}
-.res-pendiente{background:#fdf6ef;color:#b0a89f;border:1px solid var(--borde)}.res-ganado{background:var(--verde);color:white}.res-perdido{background:#c41e24;color:white}.res-empate{background:#ffcc33;color:#5a4a00}
-.goles-box{margin:0 10px 10px;background:#fdf6ef;border-radius:14px;padding:12px;border:1px solid var(--borde)}
+.match.local{border-left:4px solid var(--verde);background:#f7fcf8}.match.visitante{border-left:4px solid var(--rojo);background:#fff8f8}.match.libre{border-left:4px solid #ddd;background:#fafafa;color:#999}
+.result-row{padding:0 14px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.res-pill{font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;transition:transform .2s ease}
+.res-pill:active{transform:scale(.95)}
+.res-pendiente{background:#fdf6ef;color:#b0a89f;border:1px solid var(--borde)}
+.res-ganado{background:var(--verde);color:white}
+.res-perdido{background:var(--rojo);color:white}
+.res-empate{background:#ffcc33;color:#5a4a00}
+.goles-box{margin:0 10px 10px;background:#fdf6ef;border-radius:12px;padding:10px 12px;border:1px solid var(--borde);font-size:12px;line-height:1.4}
+
+/* TABLA GOLEADORES ACUMULADOS */
+.tabla-goleadores{width:100%;background:white;border-radius:16px;border:1px solid var(--borde);margin-bottom:14px;overflow:hidden}
+.tabla-goleadores-head{background:var(--negro);color:white;padding:10px 14px;font-size:12px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.gol-row{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--borde);font-size:12.5px}
+.gol-row:last-child{border-bottom:none}
+
+/* GALERIA Y ELEMENTOS */
 .galeria{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-@media(min-width:600px){.galeria{grid-template-columns:repeat(6,1fr)} }
-.thumb{border-radius:10px;overflow:hidden;aspect-ratio:1/1;background:white;border:1px solid var(--borde);position:relative;cursor:pointer}
+@media(min-width:600px){.galeria{grid-template-columns:repeat(6,1fr)}}
+.thumb{border-radius:10px;overflow:hidden;aspect-ratio:1/1;background:white;border:1px solid var(--borde);position:relative;cursor:pointer;transition:transform .2s ease}
+.thumb:active{transform:scale(.96)}
 .thumb img,.thumb iframe{width:100%;height:100%;object-fit:cover;display:block}
-.item{padding:12px 14px;background:white;border:1px solid var(--borde);border-radius:14px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
-.link{display:block;text-align:center;padding:12px;border-radius:999px;text-decoration:none;font-size:12.5px;font-weight:700;margin-top:10px;border:1px solid var(--borde);background:white;color:var(--negro)}.link.dorado{background:var(--verde);color:white;border-color:var(--verde)}
+.item{padding:12px 14px;background:white;border:1px solid var(--borde);border-radius:14px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.link{display:block;text-align:center;padding:12px;border-radius:999px;text-decoration:none;font-size:12.5px;font-weight:700;margin-top:10px;border:1px solid var(--borde);background:white;color:var(--negro)}
+.link.dorado{background:var(--verde);color:white;border-color:var(--verde)}
 .add-box-galeria{background:white;border:1px solid var(--borde);border-radius:16px;padding:14px;margin-top:12px;text-align:center}
-.add-box-ubi{display:none;background:#dff3e3;border:1px dashed var(--verde);border-radius:16px;padding:14px;margin-top:10px;text-align:center}
+.add-box-ubi{display:none;background:var(--verde-claro);border:1px dashed var(--verde);border-radius:16px;padding:14px;margin-top:10px;text-align:center}
 .add-box-ubi.show{display:block}
 .input-txt{width:100%;padding:10px 14px;border-radius:999px;border:1px solid var(--borde);margin-top:8px;font-size:13px;outline:none}
+
+/* INFO BOX */
 .info-box{background:white;border:1px solid var(--borde);border-radius:18px;padding:0;margin:10px 0;overflow:hidden}
-.info-top{background:#111;color:white;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #c41e24}
-.info-verde{background:#0a7d3e;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 22px,rgba(0,0,0,.07) 22px 44px);color:white;padding:18px}
-.info-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:22px}
-.pill-negra{background:#111;color:white;padding:10px 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:900;font-size:17px}
-.pill-blanca{background:white;color:#111;padding:10px 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:900;font-size:17px}
-.datos-cbu{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:12px;font-size:13px;line-height:1.6}
-#lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:100;justify-content:center;align-items:center;padding:12px}
-#lightbox img,#lightbox iframe{max-width:95%;max-height:90%;border-radius:12px}
+.info-top{background:#111;color:white;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--rojo)}
+.info-verde{background:var(--verde);background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 22px,rgba(0,0,0,.07) 22px 44px);color:white;padding:18px}
+.info-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px}
+.pill-negra,.pill-blanca{padding:10px 16px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:900;font-size:15px}
+.pill-negra{background:#111;color:white}.pill-blanca{background:white;color:#111}
+.datos-cbu{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:12px;font-size:12.5px;line-height:1.6}
+
+/* LIGHTBOX Y MODAL ADMIN */
+#lightbox,#modalAdmin{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:100;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(6px)}
+#lightbox img,#lightbox iframe{max-width:95%;max-height:85%;border-radius:14px}
+.modal-content{background:white;border-radius:20px;padding:18px;width:100%;max-width:380px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
+
 <header>
   <div style="display:flex;align-items:center;gap:12px">
-    <img src="escudo.png">
-    <div style="line-height:1.05">
-      <b style="font-family:'Bricolage Grotesque';font-weight:800;font-size:15px;display:block">
-        ESCUELA FILIPPO <span id="lblCategoriaHeader" style="color:var(--verde)">6TA</span>
-      </b>
-      <small style="font-size:11px;font-weight:700;color:#8a8a8a;letter-spacing:.6px;text-transform:uppercase">Clausura 2026</small>
+    <img src="escudo.png" alt="Escudo Filippo">
+    <div>
+      <div class="brand-title">ESCUELA FILIPPO <span id="lblCategoriaHeader" style="color:var(--verde)">6TA</span></div>
+      <div class="brand-sub">Clausura 2026</div>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:10px">
@@ -96,9 +127,9 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
   <div id="heroFlyer" class="hero-flyer" style="position:relative">
     <div class="hero-flyer-badge">⚽ PRÓXIMO PARTIDO</div>
     <div style="position:relative;display:inline-block;width:100%">
-      <img id="imgFlyer" src="fecha6.jpg" alt="Próximo partido" style="filter: grayscale(0.15);">
+      <img id="imgFlyer" src="fecha6.jpg" alt="Próximo partido">
     </div>
-    <p style="margin-top:8px;font-size:11px;font-weight:700;color:#666">Citacion vs Puertos Naranja - Hasta 18/10 - El 19/10 vuelve el escudo</p>
+    <p style="margin-top:8px;font-size:11px;font-weight:700;color:#666">Citacion vs Puertos Naranja - Consultar horarios por categoría</p>
   </div>
 </div>
 
@@ -110,21 +141,135 @@ header img{width:44px;height:44px;border-radius:12px;background:white;border:1px
 </div>
 
 <div class="card">
-<div id="p1" class="panel show"><div id="fixture"></div><a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">Tabla oficial LUEFI →</a><a class="link dorado" href="https://www.amateurchampionscup.com.ar/" target="_blank">Amateur Champions Cup →</a></div>
-<div id="p3" class="panel"><div id="listaUbicaciones"></div><div id="boxUbi" class="add-box-ubi"><p style="font-size:12px;font-weight:700;color:var(--verde)">Solo admin - Agregar sede</p><input id="nombreUbi" class="input-txt" placeholder="Nombre sede"><input id="linkUbi" class="input-txt" placeholder="Link Google Maps"><button onclick="agregarUbi()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Guardar sede</button></div><p id="ubiMsg" style="font-size:11px;color:#999;margin-top:8px;display:none">Inicia como admin para agregar sedes</p></div>
-<div id="p2" class="panel"><div class="galeria" id="galeria"></div><div class="add-box-galeria"><p style="font-size:13px;font-weight:700;margin-bottom:8px">Subir fotos / videos - Todos pueden subir</p><input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%;font-size:13px"><button id="btnSubir" onclick="subirGaleria()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Subir a galería</button><div id="uploadStatus" style="margin-top:8px;font-size:12px;text-align:center;color:#666"></div></div></div>
-<div id="p4" class="panel"><div class="info-box"><div class="info-top"><div style="display:flex;align-items:center;gap:8px"><span style="background:#c41e24;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">✔</span><b>FILIPPO INFORMACIÓN GENERAL</b></div><img src="escudo.png" style="width:28px;height:28px;background:white;border-radius:6px;padding:2px"></div><div class="info-verde"><div class="info-row"><div style="font-size:22px">⚽</div><div><h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Celular administración:</h4><a class="pill-negra" href="https://wa.me/5491178285589?text=Hola%20Filippo" target="_blank">💬 11 7828-5589</a></div></div><div class="info-row"><div style="font-size:22px">⚽</div><div style="flex:1"><h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Datos de cuenta:</h4><div class="datos-cbu"><div><b>CBU:</b> 0070026930004030762979</div><div><b>ALIAS:</b> escuelafilippo</div><div><b>Titular:</b> MARIA INES LOPEZ BRAVO</div></div></div></div><div class="info-row" style="margin-bottom:0"><div style="font-size:22px">⚽</div><div><h4 style="margin:0 0 6px;font-size:16px;font-weight:800">Instagram:</h4><a class="pill-blanca" href="https://instagram.com/escuelafilippo" target="_blank">📸 @escuelafilippo</a></div></div></div><div style="background:black;color:#ccc;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;border-top:3px solid var(--verde)"><span>INFO / CONSULTAS → 11 5055-5166</span><a href="https://wa.me/5491150555166" target="_blank" style="color:#25D366;text-decoration:none">WhatsApp →</a></div></div><div class="info-box" style="padding:16px"><h4 id="lblCategoriaInfo">Escuela Filippo - 6ta</h4><p style="font-size:13px;color:#666">Coord. Miguel y Hernán</p></div></div>
+  <!-- FIXTURE -->
+  <div id="p1" class="panel show">
+    <div id="tablaGoleadoresAcumulada"></div>
+    <div id="fixture"></div>
+    <a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">Tabla oficial LUEFI →</a>
+    <a class="link dorado" href="https://www.amateurchampionscup.com.ar/" target="_blank">Amateur Champions Cup →</a>
+  </div>
+
+  <!-- SEDES -->
+  <div id="p3" class="panel">
+    <div id="listaUbicaciones"></div>
+    <div id="boxUbi" class="add-box-ubi">
+      <p style="font-size:12px;font-weight:700;color:var(--verde)">Solo admin - Agregar sede</p>
+      <input id="nombreUbi" class="input-txt" placeholder="Nombre sede">
+      <input id="linkUbi" class="input-txt" placeholder="Link Google Maps">
+      <button onclick="agregarUbi()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Guardar sede</button>
+    </div>
+    <p id="ubiMsg" style="font-size:11px;color:#999;margin-top:8px;display:none">Inicia como admin para agregar sedes</p>
+  </div>
+
+  <!-- GALERIA -->
+  <div id="p2" class="panel">
+    <div class="galeria" id="galeria"></div>
+    <div class="add-box-galeria">
+      <p style="font-size:13px;font-weight:700;margin-bottom:8px">Subir fotos / videos - General</p>
+      <input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%;font-size:13px">
+      <button id="btnSubir" onclick="subirGaleria()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700">Subir a galería</button>
+      <div id="uploadStatus" style="margin-top:8px;font-size:12px;text-align:center;color:#666"></div>
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div id="p4" class="panel">
+    <div class="info-box">
+      <div class="info-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--rojo);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px">✔</span>
+          <b>FILIPPO INFORMACIÓN GENERAL</b>
+        </div>
+        <img src="escudo.png" style="width:26px;height:26px;background:white;border-radius:6px;padding:2px">
+      </div>
+      <div class="info-verde">
+        <div class="info-row">
+          <div style="font-size:20px">⚽</div>
+          <div>
+            <h4 style="margin:0 0 6px;font-size:15px;font-weight:800">Celular administración:</h4>
+            <a class="pill-negra" href="https://wa.me/5491178285589?text=Hola%20Filippo" target="_blank">💬 11 7828-5589</a>
+          </div>
+        </div>
+        <div class="info-row">
+          <div style="font-size:20px">⚽</div>
+          <div style="flex:1">
+            <h4 style="margin:0 0 6px;font-size:15px;font-weight:800">Datos de cuenta:</h4>
+            <div class="datos-cbu">
+              <div><b>CBU:</b> 0070026930004030762979</div>
+              <div><b>ALIAS:</b> escuelafilippo</div>
+              <div><b>Titular:</b> MARIA INES LOPEZ BRAVO</div>
+            </div>
+          </div>
+        </div>
+        <div class="info-row" style="margin-bottom:0">
+          <div style="font-size:20px">⚽</div>
+          <div>
+            <h4 style="margin:0 0 6px;font-size:15px;font-weight:800">Instagram:</h4>
+            <a class="pill-blanca" href="https://instagram.com/escuelafilippo" target="_blank">📸 @escuelafilippo</a>
+          </div>
+        </div>
+      </div>
+      <div style="background:black;color:#ccc;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:700;border-top:3px solid var(--verde)">
+        <span>CONSULTAS → 11 5055-5166</span>
+        <a href="https://wa.me/5491150555166" target="_blank" style="color:#25D366;text-decoration:none">WhatsApp →</a>
+      </div>
+    </div>
+    <div class="info-box" style="padding:16px">
+      <h4 id="lblCategoriaInfo">Escuela Filippo - 6ta</h4>
+      <p style="font-size:13px;color:#666">Coord. Miguel y Hernán</p>
+    </div>
+  </div>
 </div>
 
-<div id="lightbox" onclick="this.style.display='none'"><img id="lbImg" style="display:none"><iframe id="lbVid" style="display:none;width:90%;height:70%" frameborder="0" allowfullscreen></iframe></div>
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="this.style.display='none'">
+  <img id="lbImg" style="display:none">
+  <iframe id="lbVid" style="display:none;width:90%;height:70%" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<!-- MODAL CARGAR RESULTADO (ADMIN) -->
+<div id="modalAdmin">
+  <div class="modal-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <b style="font-size:14px">Editar Resultado (Admin)</b>
+      <button onclick="cerrarModalAdmin()" style="background:none;border:none;font-size:18px;cursor:pointer">✕</button>
+    </div>
+    <input id="editFecha" type="hidden">
+    <div style="font-size:12px;margin-bottom:8px;color:#555">Partido: <b id="lblEditPartido"></b></div>
+    <label style="font-size:11px;font-weight:700">Resultado (Ej: 3-1):</label>
+    <input id="editRes" class="input-txt" style="margin-bottom:10px" placeholder="3 - 1">
+    <label style="font-size:11px;font-weight:700">Goleadores (Ej: Thiago x2, Mateo x1):</label>
+    <input id="editGol" class="input-txt" style="margin-bottom:14px" placeholder="Thiago x2, Mateo x1">
+    <button onclick="guardarResultadoAdmin()" style="width:100%;padding:11px;background:var(--verde);color:white;border:none;border-radius:999px;font-weight:800;cursor:pointer">Guardar cambios</button>
+  </div>
+</div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzcJNvsgKODMbuUVouVF7ZB_-6TeZOV_h-UfrIw9vb1nP3jM_7DhKPRq1mXYNevTjmA/exec";
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
-let ubicaciones = {}; let resultadosDB = {}; let goleadoresDB = {};
+
+let ubicaciones = {}; 
+let resultadosDB = []; 
+let goleadoresDB = [];
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
-let categoriaActual = '6ta';
-const CACHE_KEY = 'filippo_cache_v2';
+let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
+const CACHE_KEY = 'filippo_cache_v3';
+
+const partidos = [
+  ["Escuela Tigre","LOCAL","Fecha 1"],
+  ["Argentinos Del Viso Rojo","LOCAL","Fecha 2"],
+  ["Puertos Blanco","LOCAL","Fecha 3"],
+  ["","LIBRE","Fecha 4"],
+  ["MG Fútbol","VISITANTE","Fecha 5"],
+  ["Caza y Pesca Verde","LOCAL","Fecha 6"],
+  ["Cerro Pilar","VISITANTE","Fecha 7"],
+  ["Defensores de Escobar","LOCAL","Fecha 8"],
+  ["Fair Play","VISITANTE","Fecha 9"],
+  ["Racing San Martín","VISITANTE","Fecha 10"],
+  ["Puertos Naranja","LOCAL","Fecha 11"],
+  ["Club San Fernando","LOCAL","Fecha 12"],
+  ["River Maschwitz Rojo","VISITANTE","Fecha 13"]
+];
 
 (function(){
   try {
@@ -147,21 +292,21 @@ const CACHE_KEY = 'filippo_cache_v2';
       if(escudo) escudo.style.display='block'; 
       if(flyer) flyer.style.display='none';
     }
-  } catch(e){ console.error(e); }
+  } catch(e){}
 })();
 
 function cambiarCategoria(cat){
   categoriaActual = cat;
+  localStorage.setItem('filippo_cat', cat);
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   const btnActive = document.getElementById('cat-' + cat);
   if(btnActive) btnActive.classList.add('active');
-  
   const lblH = document.getElementById('lblCategoriaHeader');
   if(lblH) lblH.textContent = cat.toUpperCase();
   const lblI = document.getElementById('lblCategoriaInfo');
   if(lblI) lblI.textContent = 'Escuela Filippo - ' + cat.toUpperCase();
   
-  renderFixture(); // Re-dibuja con el filtro de la categoría seleccionada
+  renderFixture();
 }
 
 function togglePanel(id){ 
@@ -180,6 +325,7 @@ function toggleAdmin(){
     document.getElementById('adminBtn').classList.remove('on'); 
     document.getElementById('boxUbi').classList.remove('show'); 
     document.getElementById('ubiMsg').style.display='block'; 
+    renderFixture();
     return; 
   }
   const pass = prompt('Contraseña admin:'); 
@@ -189,6 +335,7 @@ function toggleAdmin(){
     document.getElementById('adminBtn').classList.add('on'); 
     document.getElementById('boxUbi').classList.add('show'); 
     document.getElementById('ubiMsg').style.display='none'; 
+    renderFixture();
   } else if(pass!==null){ alert('Contraseña incorrecta'); }
 }
 
@@ -201,8 +348,6 @@ function initAdminUI(){
     document.getElementById('ubiMsg').style.display='block'; 
   } 
 }
-
-const partidos=[["Escuela Tigre","LOCAL","Fecha 1"],["Argentinos Del Viso Rojo","LOCAL","Fecha 2"],["Puertos Blanco","LOCAL","Fecha 3"],["","LIBRE","Fecha 4"],["MG Fútbol","VISITANTE","Fecha 5"],["Caza y Pesca Verde","LOCAL","Fecha 6"],["Cerro Pilar","VISITANTE","Fecha 7"],["Defensores de Escobar","LOCAL","Fecha 8"],["Fair Play","VISITANTE","Fecha 9"],["Racing San Martín","VISITANTE","Fecha 10"],["Puertos Naranja","LOCAL","Fecha 11"],["Club San Fernando","LOCAL","Fecha 12"],["River Maschwitz Rojo","VISITANTE","Fecha 13"]];
 
 function getClaseResultado(esLocal, texto){ 
   if(!texto || texto.toLowerCase().includes('pendiente')) return 'res-pendiente'; 
@@ -222,6 +367,58 @@ function getClaseResultado(esLocal, texto){
   return 'res-pendiente'; 
 }
 
+// CALCULO AUTOMATICO DE TABLA DE GOLEADORES ACUMULADA
+function renderTablaGoleadores(){
+  const catBuscada = categoriaActual.toString().trim().toLowerCase();
+  const conteoGoles = {};
+
+  if(Array.isArray(goleadoresDB)){
+    goleadoresDB.forEach(g => {
+      if(g.categoria && g.categoria.toString().toLowerCase().trim() === catBuscada && g.goles){
+        // Procesar cadenas como "Thiago x2, Mateo x1" o "Mateo (2)"
+        const partes = g.goles.split(',');
+        partes.forEach(p => {
+          const mX = p.match(/([a-záéíóúñ\s]+)\s*x\s*(\d+)/i);
+          const mP = p.match(/([a-záéíóúñ\s]+)\s*\((\d+)\)/i);
+          if(mX){
+            const nombre = mX[1].trim();
+            const cant = parseInt(mX[2]);
+            conteoGoles[nombre] = (conteoGoles[nombre] || 0) + cant;
+          } else if(mP){
+            const nombre = mP[1].trim();
+            const cant = parseInt(mP[2]);
+            conteoGoles[nombre] = (conteoGoles[nombre] || 0) + cant;
+          } else if(p.trim()){
+            const nombre = p.trim();
+            conteoGoles[nombre] = (conteoGoles[nombre] || 0) + 1;
+          }
+        });
+      }
+    });
+  }
+
+  const lista = Object.keys(conteoGoles).map(k => ({ nombre: k, goles: conteoGoles[k] }));
+  lista.sort((a,b) => b.goles - a.goles);
+
+  const container = document.getElementById('tablaGoleadoresAcumulada');
+  if(!lista.length){
+    container.innerHTML = '';
+    return;
+  }
+
+  let html = `
+  <div class="tabla-goleadores">
+    <div class="tabla-goleadores-head">
+      <span>⚽ GOLEADORES DESTACADOS - ${categoriaActual.toUpperCase()}</span>
+      <span>GOLES</span>
+    </div>`;
+  lista.forEach(item => {
+    html += `<div class="gol-row"><b>${item.nombre}</b><span><b>${item.goles}</b> ⚽</span></div>`;
+  });
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
 function renderFixture(){ 
   let h = ""; 
   const catBuscada = categoriaActual.toString().trim().toLowerCase();
@@ -238,31 +435,25 @@ function renderFixture(){
     let goles = "Sin datos";
 
     if(Array.isArray(resultadosDB)){
-      // Buscar coincidencia por fecha y categoría activa (6ta, 7ma, 8va, 9na)
       const matchRes = resultadosDB.find(r => 
         r.fecha && r.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim() &&
         r.categoria && r.categoria.toString().toLowerCase().trim() === catBuscada
       );
-
-      if(matchRes){
-        res = matchRes.resultado || "Pendiente";
-      }
-    } else if(resultadosDB[p[2]] && catBuscada === '6ta'){
-      res = resultadosDB[p[2]];
+      if(matchRes) res = matchRes.resultado || "Pendiente";
     }
 
-    // Mismo tratamiento para goles
     if(Array.isArray(goleadoresDB)){
       const matchGol = goleadoresDB.find(g => 
         g.fecha && g.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim() &&
         g.categoria && g.categoria.toString().toLowerCase().trim() === catBuscada
       );
       if(matchGol) goles = matchGol.goles || "Sin datos";
-    } else if(goleadoresDB[p[2]] && catBuscada === '6ta'){
-      goles = goleadoresDB[p[2]];
     }
 
     const clase = getClaseResultado(p[1] === "LOCAL", res); 
+    const btnAdminHtml = isAdmin 
+      ? `<button onclick="abrirModalAdmin('${p[2]}','${p[0]}','${res}','${goles}')" style="background:#111;color:white;border:none;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:700;cursor:pointer">✏️ Editar</button>` 
+      : '';
 
     h += `
     <div class="fecha">
@@ -270,13 +461,17 @@ function renderFixture(){
       <div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span></div>
       <div class="result-row">
         <span style="font-size:12px;color:#999">Resultado <span class="res-pill ${clase}">${res}</span></span>
-        <button onclick="verGoles('${p[2]}')" style="background:none;border:none;font-size:12px;font-weight:700;cursor:pointer">Goles →</button>
+        <div style="display:flex;gap:6px;align-items:center">
+          ${btnAdminHtml}
+          <button onclick="verGoles('${p[2]}')" style="background:none;border:none;font-size:12px;font-weight:700;cursor:pointer">Goles →</button>
+        </div>
       </div>
       <div id="goles-${p[2]}" style="display:none"><div class="goles-box">${goles}</div></div>
     </div>`; 
   }); 
 
   document.getElementById('fixture').innerHTML = h; 
+  renderTablaGoleadores();
 }
 
 function verGoles(f){ const el=document.getElementById(`goles-${f}`); if(el) el.style.display=el.style.display=='none'?'block':'none'; }
@@ -294,6 +489,45 @@ function openLightbox(fileId, type){
     vid.src=`https://drive.google.com/file/d/${fileId}/preview`; 
   } 
   lb.style.display='flex'; 
+}
+
+function abrirModalAdmin(fecha, rival, res, goles){
+  document.getElementById('editFecha').value = fecha;
+  document.getElementById('lblEditPartido').textContent = `${fecha} vs ${rival} (${categoriaActual.toUpperCase()})`;
+  document.getElementById('editRes').value = res === 'Pendiente' ? '' : res;
+  document.getElementById('editGol').value = goles === 'Sin datos' ? '' : goles;
+  document.getElementById('modalAdmin').style.display = 'flex';
+}
+
+function cerrarModalAdmin(){
+  document.getElementById('modalAdmin').style.display = 'none';
+}
+
+async function guardarResultadoAdmin(){
+  const fecha = document.getElementById('editFecha').value;
+  const res = document.getElementById('editRes').value.trim();
+  const gol = document.getElementById('editGol').value.trim();
+
+  if(!res){ alert('Ingresá un resultado'); return; }
+
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify({
+        action: 'saveResult',
+        pass: 'filippo2012',
+        fecha: fecha,
+        categoria: categoriaActual,
+        resultado: res,
+        goles: gol
+      })
+    });
+    cerrarModalAdmin();
+    alert('¡Resultado guardado!');
+    localStorage.removeItem(CACHE_KEY);
+    setTimeout(cargarTodo, 1500);
+  } catch(e) { alert('Error al guardar'); }
 }
 
 function renderAll(d){
@@ -315,34 +549,23 @@ function renderAll(d){
     } 
   });
 
-  // Normalización adaptativa que reconoce 6ta, 7ma, 8va y 9na
   if(Array.isArray(d.resultados)){
-    resultadosDB = d.resultados.map(r => {
-      let rawCat = (r.categoria || "").toString().toLowerCase().trim();
-      let rawRes = (r.resultado || "").toString().trim();
-
-      // Si la categoría viene guardada dentro del resultado por desfasaje de columnas
-      if(['6ta','7ma','8va','9na'].includes(rawRes.toLowerCase())){
-        rawCat = rawRes.toLowerCase();
-        rawRes = (r.rival || "Pendiente").toString().trim();
-      }
-
-      // Si no especificó categoría, asumimos 6ta por defecto
-      if(!rawCat) rawCat = '6ta';
-
-      return {
-        fecha: r.fecha || "",
-        categoria: rawCat,
-        resultado: rawRes || "Pendiente"
-      };
-    });
-  } else {
-    resultadosDB = d.resultados || [];
+    resultadosDB = d.resultados.map(r => ({
+      fecha: r.fecha || "",
+      categoria: (r.categoria || "6ta").toString().toLowerCase().trim(),
+      resultado: r.resultado || "Pendiente"
+    }));
   }
 
-  goleadoresDB = d.goleadores || [];
+  if(Array.isArray(d.goleadores)){
+    goleadoresDB = d.goleadores.map(g => ({
+      fecha: g.fecha || "",
+      categoria: (g.categoria || "6ta").toString().toLowerCase().trim(),
+      goles: g.goles || ""
+    }));
+  }
 
-  renderFixture();
+  cambiarCategoria(categoriaActual);
 }
 
 async function cargarTodo(){
@@ -377,7 +600,6 @@ async function agregarUbi(){
   setTimeout(cargarTodo,1500); 
 }
 
-// Carga del clima no bloqueante (async silenciosa)
 function cargarClimaSMN(){
   fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.571&longitude=-58.693&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=America%2FArgentina%2FBuenos_Aires&forecast_days=1')
     .then(r => r.json())
@@ -396,13 +618,11 @@ function cargarClimaSMN(){
       document.getElementById('climaDesc').textContent = desc + ' - Bella Vista';
     })
     .catch(e => {
-      console.log('Clima no disponible', e);
       document.getElementById('climaTemp').textContent = 'Bella Vista';
       document.getElementById('climaDesc').textContent = 'Windy →';
     });
 }
 
-// Ejecución limpia
 renderFixture();
 cargarTodo();
 initAdminUI();
