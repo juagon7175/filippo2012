@@ -1,9 +1,21 @@
 {
-  "name": "Escuela Filippo 2012",
-  "short_name": "Filippo 2012",
-  "start_url": "./",
+  "name": "Escuela Filippo",
+  "short_name": "Filippo",
+  "description": "App oficial de la Escuela de Fútbol Filippo",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#1ca15a",
-  "theme_color": "#1ca15a",
-  "icons": [{"src": "escudo.png","sizes": "512x512","type": "image/png"}]
+  "background_color": "#0a7d3e",
+  "theme_color": "#0a7d3e",
+  "icons": [
+    {
+      "src": "escudo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "escudo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
