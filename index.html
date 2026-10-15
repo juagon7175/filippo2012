@@ -455,20 +455,25 @@ function renderFixture(){
       let goles = "Sin datos";
       const fKey = p[2].toString().toLowerCase().trim();
 
-      // Compatibilidad flexible
       if(Array.isArray(resultadosDB)){
+        // 1. Buscar coincidencia exacta de Fecha y Categoria
         let matchRes = resultadosDB.find(r => 
           r && r.fecha && r.fecha.toString().toLowerCase().trim() === fKey &&
           r.categoria && r.categoria.toString().toLowerCase().trim() === catBuscada
         );
-        if(!matchRes && catBuscada === '6ta'){
+
+        // 2. Si no encuentra por categoría (porque la celda está vacía en Sheets)
+        // y estamos en 6ta o no especifica, toma la fecha que tenga un resultado real
+        if(!matchRes){
           matchRes = resultadosDB.find(r => 
-            r && r.fecha && r.fecha.toString().toLowerCase().trim() === fKey
+            r && r.fecha && r.fecha.toString().toLowerCase().trim() === fKey &&
+            (!r.categoria || r.categoria === "" || catBuscada === "6ta")
           );
         }
-        if(matchRes && matchRes.resultado) res = matchRes.resultado;
-      } else if(resultadosDB && resultadosDB[p[2]] && catBuscada === '6ta'){
-        res = resultadosDB[p[2]];
+
+        if(matchRes && matchRes.resultado && matchRes.resultado !== "") {
+          res = matchRes.resultado;
+        }
       }
 
       if(Array.isArray(goleadoresDB)){
@@ -476,14 +481,15 @@ function renderFixture(){
           g && g.fecha && g.fecha.toString().toLowerCase().trim() === fKey &&
           g.categoria && g.categoria.toString().toLowerCase().trim() === catBuscada
         );
-        if(!matchGol && catBuscada === '6ta'){
+
+        if(!matchGol){
           matchGol = goleadoresDB.find(g => 
-            g && g.fecha && g.fecha.toString().toLowerCase().trim() === fKey
+            g && g.fecha && g.fecha.toString().toLowerCase().trim() === fKey &&
+            (!g.categoria || g.categoria === "" || catBuscada === "6ta")
           );
         }
+
         if(matchGol && matchGol.goles) goles = matchGol.goles;
-      } else if(goleadoresDB && goleadoresDB[p[2]] && catBuscada === '6ta'){
-        goles = goleadoresDB[p[2]];
       }
 
       const clase = getClaseResultado(p[1] === "LOCAL", res); 
@@ -509,7 +515,7 @@ function renderFixture(){
     const fixEl = document.getElementById('fixture');
     if(fixEl) fixEl.innerHTML = h; 
     renderTablaGoleadores();
-  } catch(e){}
+  } catch(e){ console.error(e); }
 }
 
 function verGoles(f){ const el=document.getElementById(`goles-${f}`); if(el) el.style.display=el.style.display=='none'?'block':'none'; }
@@ -591,28 +597,31 @@ function renderAll(d){
       });
     }
 
+    // Normalización de Resultados
     if(Array.isArray(d.resultados)){
       resultadosDB = d.resultados.map(r => ({
         fecha: (r.fecha || "").toString().trim(),
-        categoria: (r.categoria || "6ta").toString().toLowerCase().trim(),
-        resultado: r.resultado || "Pendiente"
+        categoria: (r.categoria || "").toString().toLowerCase().trim(),
+        resultado: (r.resultado || r.res || "Pendiente").toString().trim()
       }));
     } else {
-      resultadosDB = d.resultados || [];
+      resultadosDB = [];
     }
 
+    // Normalización de Goleadores
     if(Array.isArray(d.goleadores)){
       goleadoresDB = d.goleadores.map(g => ({
         fecha: (g.fecha || "").toString().trim(),
-        categoria: (g.categoria || "6ta").toString().toLowerCase().trim(),
+        categoria: (g.categoria || "").toString().toLowerCase().trim(),
         goles: (g.goles || "").toString().trim()
       }));
     } else {
-      goleadoresDB = d.goleadores || [];
+      goleadoresDB = [];
     }
 
     cambiarCategoria(categoriaActual);
   } catch(e) {
+    console.error(e);
     renderFixture();
   }
 }
