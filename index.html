@@ -220,19 +220,45 @@ function getClaseResultado(esLocal, texto){
 }
 
 function renderFixture(){ 
-  let h=""; 
-  partidos.forEach(p=>{ 
-    if(p[1]==="LIBRE"){ 
-      h+=`<div class="fecha"><div class="fecha-head"><span>${p[2]}</span><span>Descanso</span></div><div class="match libre"><span>Libre</span></div></div>`; 
+  let h = ""; 
+  const catBuscada = categoriaActual.toString().trim().toLowerCase();
+
+  partidos.forEach(p => { 
+    if(p[1] === "LIBRE"){ 
+      h += `<div class="fecha"><div class="fecha-head"><span>${p[2]}</span><span>Descanso</span></div><div class="match libre"><span>Libre</span></div></div>`; 
       return; 
     } 
-    const cl=p[1]==="LOCAL"?"local":"visitante"; 
-    const vs=p[1]==="LOCAL"?`<b>Filippo</b> vs ${p[0]}`:`${p[0]} vs <b>Filippo</b>`; 
-    const res=resultadosDB[p[2]]||"Pendiente"; 
-    const clase=getClaseResultado(p[1]==="LOCAL",res); 
-    h+=`<div class="fecha"><div class="fecha-head"><span>${p[2]} · ${p[0]}</span><span>${p[1].toLowerCase()}</span></div><div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span></div><div class="result-row"><span style="font-size:12px;color:#999">Resultado <span class="res-pill ${clase}">${res}</span></span><button onclick="verGoles('${p[2]}')" style="background:none;border:none;font-size:12px;font-weight:700;cursor:pointer">Goles →</button></div><div id="goles-${p[2]}" style="display:none"><div class="goles-box">${goleadoresDB[p[2]]||"Sin datos"}</div></div></div>`; 
+    const cl = p[1] === "LOCAL" ? "local" : "visitante"; 
+    const vs = p[1] === "LOCAL" ? `<b>Filippo</b> vs ${p[0]}` : `${p[0]} vs <b>Filippo</b>`; 
+
+    // Buscar el resultado correspondiente a la fecha y a la categoría seleccionada
+    const resObj = Array.isArray(resultadosDB) 
+      ? resultadosDB.find(r => r.fecha && r.fecha.toLowerCase().trim() === p[2].toLowerCase().trim() && r.categoria && r.categoria.toLowerCase().trim() === catBuscada)
+      : null;
+
+    const res = resObj ? resObj.resultado : (resultadosDB[p[2]] || "Pendiente"); 
+    const clase = getClaseResultado(p[1] === "LOCAL", res); 
+
+    // Buscar los goles correspondientes a la fecha y a la categoría seleccionada
+    const golObj = Array.isArray(goleadoresDB)
+      ? goleadoresDB.find(g => g.fecha && g.fecha.toLowerCase().trim() === p[2].toLowerCase().trim() && g.categoria && g.categoria.toLowerCase().trim() === catBuscada)
+      : null;
+
+    const goles = golObj ? golObj.goles : (goleadoresDB[p[2]] || "Sin datos");
+
+    h += `
+    <div class="fecha">
+      <div class="fecha-head"><span>${p[2]} · ${p[0]}</span><span>${p[1].toLowerCase()}</span></div>
+      <div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span></div>
+      <div class="result-row">
+        <span style="font-size:12px;color:#999">Resultado <span class="res-pill ${clase}">${res}</span></span>
+        <button onclick="verGoles('${p[2]}')" style="background:none;border:none;font-size:12px;font-weight:700;cursor:pointer">Goles →</button>
+      </div>
+      <div id="goles-${p[2]}" style="display:none"><div class="goles-box">${goles}</div></div>
+    </div>`; 
   }); 
-  document.getElementById('fixture').innerHTML=h; 
+
+  document.getElementById('fixture').innerHTML = h; 
 }
 
 function verGoles(f){ const el=document.getElementById(`goles-${f}`); if(el) el.style.display=el.style.display=='none'?'block':'none'; }
