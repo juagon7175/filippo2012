@@ -597,22 +597,33 @@ function renderAll(d){
       });
     }
 
-    // Normalización de Resultados
     if(Array.isArray(d.resultados)){
-      resultadosDB = d.resultados.map(r => ({
-        fecha: (r.fecha || "").toString().trim(),
-        categoria: (r.categoria || "").toString().toLowerCase().trim(),
-        resultado: (r.resultado || r.res || "Pendiente").toString().trim()
-      }));
+      resultadosDB = d.resultados.map(r => {
+        let cat = (r.categoria || "").toString().toLowerCase().trim();
+        let res = (r.resultado || "").toString().trim();
+
+        // Si la propiedad 'resultado' recibió por error la palabra de la categoría ('6ta', '7ma', etc.)
+        if(['6ta','7ma','8va','9na'].includes(res.toLowerCase())){
+          cat = res.toLowerCase();
+          res = (r.rival || "Pendiente").toString().trim();
+        }
+
+        if(!cat) cat = "6ta";
+
+        return {
+          fecha: (r.fecha || "").toString().trim(),
+          categoria: cat,
+          resultado: res || "Pendiente"
+        };
+      });
     } else {
       resultadosDB = [];
     }
 
-    // Normalización de Goleadores
     if(Array.isArray(d.goleadores)){
       goleadoresDB = d.goleadores.map(g => ({
         fecha: (g.fecha || "").toString().trim(),
-        categoria: (g.categoria || "").toString().toLowerCase().trim(),
+        categoria: (g.categoria || "6ta").toString().toLowerCase().trim(),
         goles: (g.goles || "").toString().trim()
       }));
     } else {
@@ -621,7 +632,6 @@ function renderAll(d){
 
     cambiarCategoria(categoriaActual);
   } catch(e) {
-    console.error(e);
     renderFixture();
   }
 }
