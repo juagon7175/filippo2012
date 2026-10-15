@@ -234,27 +234,44 @@ function renderFixture(){
     const cl = p[1] === "LOCAL" ? "local" : "visitante"; 
     const vs = p[1] === "LOCAL" ? `<b>Filippo</b> vs ${p[0]}` : `${p[0]} vs <b>Filippo</b>`; 
 
-    // Buscar el resultado correspondiente a la fecha y categoría activa
     let res = "Pendiente";
+    let goles = "Sin datos";
+
     if(Array.isArray(resultadosDB)){
-      const resObj = resultadosDB.find(r => 
+      // 1. Buscar coincidencia exacta por Fecha y Categoria
+      let matchRes = resultadosDB.find(r => 
         r.fecha && r.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim() &&
-        (r.categoria ? r.categoria.toString().toLowerCase().trim() === catBuscada : catBuscada === '6ta')
+        r.categoria && r.categoria.toString().toLowerCase().trim() === catBuscada
       );
-      if(resObj && resObj.resultado) res = resObj.resultado;
-    } else if(resultadosDB[p[2]]){
+
+      // 2. Fallback: Si no tiene categoría asignada en la planilla pero estamos en 6ta
+      if(!matchRes && catBuscada === '6ta'){
+        matchRes = resultadosDB.find(r => 
+          r.fecha && r.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim()
+        );
+      }
+
+      if(matchRes){
+        // Si el Apps Script devolvió el objeto {fecha, resultado} o {fecha, categoria, resultado}
+        res = matchRes.resultado || matchRes.categoria || "Pendiente";
+      }
+    } else if(resultadosDB[p[2]] && catBuscada === '6ta'){
       res = resultadosDB[p[2]];
     }
 
-    // Buscar los goles correspondientes a la fecha y categoría activa
-    let goles = "Sin datos";
+    // Mismo tratamiento para los goles
     if(Array.isArray(goleadoresDB)){
-      const golObj = goleadoresDB.find(g => 
+      let matchGol = goleadoresDB.find(g => 
         g.fecha && g.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim() &&
-        (g.categoria ? g.categoria.toString().toLowerCase().trim() === catBuscada : catBuscada === '6ta')
+        g.categoria && g.categoria.toString().toLowerCase().trim() === catBuscada
       );
-      if(golObj && golObj.goles) goles = golObj.goles;
-    } else if(goleadoresDB[p[2]]){
+      if(!matchGol && catBuscada === '6ta'){
+        matchGol = goleadoresDB.find(g => 
+          g.fecha && g.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim()
+        );
+      }
+      if(matchGol) goles = matchGol.goles || "Sin datos";
+    } else if(goleadoresDB[p[2]] && catBuscada === '6ta'){
       goles = goleadoresDB[p[2]];
     }
 
@@ -311,7 +328,6 @@ function renderAll(d){
     } 
   });
 
-  // Guardar arreglos completos para poder filtrar por categoría
   resultadosDB = d.resultados || [];
   goleadoresDB = d.goleadores || [];
 
