@@ -159,6 +159,8 @@ function cambiarCategoria(cat){
   if(lblH) lblH.textContent = cat.toUpperCase();
   const lblI = document.getElementById('lblCategoriaInfo');
   if(lblI) lblI.textContent = 'Escuela Filippo - ' + cat.toUpperCase();
+  
+  renderFixture(); // <-- Re-dibuja el fixture según la nueva categoría
 }
 
 function togglePanel(id){ 
