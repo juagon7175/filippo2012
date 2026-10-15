@@ -238,30 +238,24 @@ function renderFixture(){
     let goles = "Sin datos";
 
     if(Array.isArray(resultadosDB)){
-      // Buscar coincidencia por fecha
+      // Buscar coincidencia por fecha y categoría activa (6ta, 7ma, 8va, 9na)
       const matchRes = resultadosDB.find(r => 
         r.fecha && r.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim() &&
-        (r.categoria ? r.categoria.toString().toLowerCase().trim() === catBuscada : catBuscada === '6ta')
+        r.categoria && r.categoria.toString().toLowerCase().trim() === catBuscada
       );
 
       if(matchRes){
-        // Si 'resultado' trae '6ta' o similar por desfase de columnas, tomamos el valor real de la otra propiedad
-        let valorRes = matchRes.resultado || matchRes.res || "";
-        if(valorRes.toLowerCase().includes('ta') || valorRes.toLowerCase().includes('va') || valorRes.toLowerCase().includes('ma') || valorRes.toLowerCase().includes('na')){
-          // Significa que en resultado vino la categoría ('6ta', '7ma', etc.), entonces el score real está en la propiedad rival o en otra columna
-          valorRes = matchRes.rival || matchRes.score || "Pendiente";
-        }
-        res = valorRes || "Pendiente";
+        res = matchRes.resultado || "Pendiente";
       }
     } else if(resultadosDB[p[2]] && catBuscada === '6ta'){
       res = resultadosDB[p[2]];
     }
 
-    // Mismo tratamiento inteligente para los goles
+    // Mismo tratamiento para goles
     if(Array.isArray(goleadoresDB)){
       const matchGol = goleadoresDB.find(g => 
         g.fecha && g.fecha.toString().toLowerCase().trim() === p[2].toLowerCase().trim() &&
-        (g.categoria ? g.categoria.toString().toLowerCase().trim() === catBuscada : catBuscada === '6ta')
+        g.categoria && g.categoria.toString().toLowerCase().trim() === catBuscada
       );
       if(matchGol) goles = matchGol.goles || "Sin datos";
     } else if(goleadoresDB[p[2]] && catBuscada === '6ta'){
@@ -321,14 +315,25 @@ function renderAll(d){
     } 
   });
 
-  // Mapeo adaptativo
+  // Normalización adaptativa que reconoce 6ta, 7ma, 8va y 9na
   if(Array.isArray(d.resultados)){
     resultadosDB = d.resultados.map(r => {
-      // Normalizar las propiedades independientemente de la versión del servidor
+      let rawCat = (r.categoria || "").toString().toLowerCase().trim();
+      let rawRes = (r.resultado || "").toString().trim();
+
+      // Si la categoría viene guardada dentro del resultado por desfasaje de columnas
+      if(['6ta','7ma','8va','9na'].includes(rawRes.toLowerCase())){
+        rawCat = rawRes.toLowerCase();
+        rawRes = (r.rival || "Pendiente").toString().trim();
+      }
+
+      // Si no especificó categoría, asumimos 6ta por defecto
+      if(!rawCat) rawCat = '6ta';
+
       return {
         fecha: r.fecha || "",
-        categoria: r.categoria || (r.resultado && (r.resultado.includes('ta')||r.resultado.includes('ma')) ? r.resultado : "6ta"),
-        resultado: (r.resultado && !(r.resultado.includes('ta')||r.resultado.includes('ma'))) ? r.resultado : (r.rival || "Pendiente")
+        categoria: rawCat,
+        resultado: rawRes || "Pendiente"
       };
     });
   } else {
