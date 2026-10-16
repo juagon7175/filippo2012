@@ -364,16 +364,7 @@ let goleadoresDB = [];
 let asistenciaDB = [];
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
-const CACHE_KEY = 'filippo_cache_v9';
-
-// Limpieza proactiva de cachés viejas
-localStorage.removeItem('filippo_cache_v2');
-localStorage.removeItem('filippo_cache_v3');
-localStorage.removeItem('filippo_cache_v4');
-localStorage.removeItem('filippo_cache_v5');
-localStorage.removeItem('filippo_cache_v6');
-localStorage.removeItem('filippo_cache_v7');
-localStorage.removeItem('filippo_cache_v8');
+const CACHE_KEY = 'filippo_cache_v10';
 
 const partidos = [
   ["Escuela Tigre","LOCAL","Fecha 1"],
@@ -586,18 +577,8 @@ function renderTablaGoleadores(){
   } catch(e){}
 }
 
-// Funciones de Asistencia conectadas a Google Sheets
-async function agregarAsistencia(fecha) {
-  const inputId = `input-asis-${fecha.replace(/\s+/g, '_')}`;
-  const inputEl = document.getElementById(inputId);
-  if(!inputEl || !inputEl.value.trim()) {
-    alert('Por favor ingresá el nombre del jugador');
-    return;
-  }
-  const nombre = inputEl.value.trim();
-  
-  // Guardado local inmediato para persistencia en pantalla
-  function getAsistenciaKey(fecha) {
+// Funciones de Asistencia seguras
+function getAsistenciaKey(fecha) {
   return `filippo_asis_${categoriaActual}_${fecha}`;
 }
 
@@ -610,7 +591,6 @@ async function agregarAsistencia(fecha) {
   }
   const nombre = inputEl.value.trim();
   
-  // Guardado local inmediato para persistencia en pantalla
   const asisKey = getAsistenciaKey(fecha);
   let listaLocal = JSON.parse(localStorage.getItem(asisKey) || '[]');
   if(!listaLocal.includes(nombre)) {
@@ -622,7 +602,6 @@ async function agregarAsistencia(fecha) {
   renderFixture();
   inputEl.value = '';
 
-  // Envío global al Google Sheet mediante GET
   try {
     const url = `${API_URL}?action=addAsistencia&fecha=${encodeURIComponent(fecha)}&categoria=${encodeURIComponent(categoriaActual)}&nombre=${encodeURIComponent(nombre)}`;
     fetch(url, { method: 'GET', mode: 'no-cors' });
@@ -635,7 +614,6 @@ async function eliminarAsistencia(fecha, nombre) {
   asistenciaDB = asistenciaDB.filter(a => !(a.fecha === fecha && a.categoria.toLowerCase() === categoriaActual.toLowerCase() && a.nombre === nombre));
   renderFixture();
 
-  // Eliminación global en el Google Sheet mediante GET
   try {
     const url = `${API_URL}?action=removeAsistencia&fecha=${encodeURIComponent(fecha)}&categoria=${encodeURIComponent(categoriaActual)}&nombre=${encodeURIComponent(nombre)}`;
     fetch(url, { method: 'GET', mode: 'no-cors' });
@@ -643,6 +621,7 @@ async function eliminarAsistencia(fecha, nombre) {
     console.error('Error al eliminar en sheet', e); 
   }
 }
+
 function renderFixture(){ 
   try {
     let h = ""; 
@@ -695,14 +674,13 @@ function renderFixture(){
         ? `<button onclick="abrirModalAdmin('${p[2]}','${p[0]}','${res}','${goles}')" style="background:#111;color:white;border:none;padding:4px 10px;border-radius:999px;font-size:10.5px;font-weight:700;cursor:pointer">✏️ Editar</button>` 
         : '';
 
-      // Filtrar la asistencia global para este partido y categoría
       const listaAsis = asistenciaDB.filter(a => 
         a.fecha && a.fecha.toString().toLowerCase().trim() === fKey &&
         a.categoria && a.categoria.toString().toLowerCase().trim() === catBuscada
       );
 
       let asistenciaHtml = listaAsis.map(a => `<span style="display:inline-block; background:white; padding:2px 8px; border-radius:6px; border:1px solid #bbf7d0; margin:2px; font-weight:600;">⚽ ${a.nombre} <a href="javascript:void(0)" onclick="eliminarAsistencia('${p[2]}','${a.nombre}')" style="color:red; text-decoration:none; margin-left:4px;">×</a></span>`).join('');
-      if(!asistenciaHtml) asistenciaHtml = '<span style="color:#777; font-style:italic;">Aún no hay jugadores anotados para esta fecha. ¡Anotá al tuyo!</span>';
+      if(!asistenciaHtml) asistenciaHtml = '<span style="color:#777; font-style:italic;">Aún no hay jugadores anotados para esta fecha. ¡Anótate!</span>';
 
       const inputIdSafe = `input-asis-${p[2].replace(/\s+/g, '_')}`;
 
@@ -719,7 +697,7 @@ function renderFixture(){
         </div>
         <div id="goles-${p[2]}" style="display:none"><div class="goles-box">${goles}</div></div>
         
-        <!-- Panel de Anotarse / Asistencia -->
+        <!-- Panel de Asistencia -->
         <div class="asistencia-box">
           <div style="font-weight:800; color:#166534; margin-bottom:4px;">📋 Lista de Disponibles (${categoriaActual.toUpperCase()})</div>
           <div class="asistencia-input-row">
