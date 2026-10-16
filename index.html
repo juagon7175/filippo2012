@@ -596,11 +596,20 @@ async function agregarAsistencia(fecha) {
   }
   const nombre = inputEl.value.trim();
   
-  // Agregamos localmente de forma temporal para respuesta inmediata
+  // Guardado local inmediato para persistencia instantánea
+  const asisKey = getAsistenciaKey(fecha);
+  let listaLocal = JSON.parse(localStorage.getItem(asisKey) || '[]');
+  if(!listaLocal.includes(nombre)) {
+    listaLocal.push(nombre);
+    localStorage.setItem(asisKey, JSON.stringify(listaLocal));
+  }
+
+  // Agregamos también en la lista en memoria para renderizar al toque
   asistenciaDB.push({ fecha: fecha, categoria: categoriaActual, nombre: nombre });
   renderFixture();
   inputEl.value = '';
 
+  // Enviamos al Google Sheet en segundo plano
   try {
     await fetch(API_URL, {
       method: 'POST',
@@ -612,9 +621,9 @@ async function agregarAsistencia(fecha) {
         nombre: nombre
       })
     });
-    localStorage.removeItem(CACHE_KEY);
-    setTimeout(cargarTodo, 1500);
-  } catch(e) { console.error('Error al registrar asistencia', e); }
+  } catch(e) { 
+    console.error('Error al registrar en sheet', e); 
+  }
 }
 
 async function eliminarAsistencia(fecha, nombre) {
