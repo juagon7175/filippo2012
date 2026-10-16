@@ -596,7 +596,7 @@ async function agregarAsistencia(fecha) {
   }
   const nombre = inputEl.value.trim();
   
-  // Guardado local inmediato para persistencia instantánea
+  // Guardado local inmediato para persistencia en pantalla
   const asisKey = getAsistenciaKey(fecha);
   let listaLocal = JSON.parse(localStorage.getItem(asisKey) || '[]');
   if(!listaLocal.includes(nombre)) {
@@ -604,23 +604,14 @@ async function agregarAsistencia(fecha) {
     localStorage.setItem(asisKey, JSON.stringify(listaLocal));
   }
 
-  // Agregamos también en la lista en memoria para renderizar al toque
   asistenciaDB.push({ fecha: fecha, categoria: categoriaActual, nombre: nombre });
   renderFixture();
   inputEl.value = '';
 
-  // Enviamos al Google Sheet en segundo plano
+  // Envío global al Google Sheet mediante GET
   try {
-    await fetch(API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify({
-        action: 'addAsistencia',
-        fecha: fecha,
-        categoria: categoriaActual,
-        nombre: nombre
-      })
-    });
+    const url = `${API_URL}?action=addAsistencia&fecha=${encodeURIComponent(fecha)}&categoria=${encodeURIComponent(categoriaActual)}&nombre=${encodeURIComponent(nombre)}`;
+    fetch(url, { method: 'GET', mode: 'no-cors' });
   } catch(e) { 
     console.error('Error al registrar en sheet', e); 
   }
@@ -630,20 +621,13 @@ async function eliminarAsistencia(fecha, nombre) {
   asistenciaDB = asistenciaDB.filter(a => !(a.fecha === fecha && a.categoria.toLowerCase() === categoriaActual.toLowerCase() && a.nombre === nombre));
   renderFixture();
 
+  // Eliminación global en el Google Sheet mediante GET
   try {
-    await fetch(API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify({
-        action: 'removeAsistencia',
-        fecha: fecha,
-        categoria: categoriaActual,
-        nombre: nombre
-      })
-    });
-    localStorage.removeItem(CACHE_KEY);
-    setTimeout(cargarTodo, 1500);
-  } catch(e) { console.error('Error al eliminar asistencia', e); }
+    const url = `${API_URL}?action=removeAsistencia&fecha=${encodeURIComponent(fecha)}&categoria=${encodeURIComponent(categoriaActual)}&nombre=${encodeURIComponent(nombre)}`;
+    fetch(url, { method: 'GET', mode: 'no-cors' });
+  } catch(e) { 
+    console.error('Error al eliminar en sheet', e); 
+  }
 }
 
 function renderFixture(){ 
