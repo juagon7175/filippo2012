@@ -597,6 +597,20 @@ async function agregarAsistencia(fecha) {
   const nombre = inputEl.value.trim();
   
   // Guardado local inmediato para persistencia en pantalla
+  function getAsistenciaKey(fecha) {
+  return `filippo_asis_${categoriaActual}_${fecha}`;
+}
+
+async function agregarAsistencia(fecha) {
+  const inputId = `input-asis-${fecha.replace(/\s+/g, '_')}`;
+  const inputEl = document.getElementById(inputId);
+  if(!inputEl || !inputEl.value.trim()) {
+    alert('Por favor ingresá el nombre del jugador');
+    return;
+  }
+  const nombre = inputEl.value.trim();
+  
+  // Guardado local inmediato para persistencia en pantalla
   const asisKey = getAsistenciaKey(fecha);
   let listaLocal = JSON.parse(localStorage.getItem(asisKey) || '[]');
   if(!listaLocal.includes(nombre)) {
@@ -629,7 +643,6 @@ async function eliminarAsistencia(fecha, nombre) {
     console.error('Error al eliminar en sheet', e); 
   }
 }
-
 function renderFixture(){ 
   try {
     let h = ""; 
