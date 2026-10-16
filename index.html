@@ -348,7 +348,6 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
 </div>
 
 <script>
-// REGISTRO DE SERVICE WORKER PARA PERMITIR INSTALAR APP
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW err', err));
@@ -409,25 +408,26 @@ const partidos = [
   } catch(e){}
 })();
 
-// Lógica Cuenta Regresiva
 function iniciarCountdown() {
-  const ahora = new Date();
-  let partidoDate = new Date();
-  partidoDate.setDate(ahora.getDate() + (6 - ahora.getDay() + 7) % 7);
-  partidoDate.setHours(10, 0, 0, 0);
-  if(ahora > partidoDate) partidoDate.setDate(partidoDate.getDate() + 7);
+  try {
+    const ahora = new Date();
+    let partidoDate = new Date();
+    partidoDate.setDate(ahora.getDate() + (6 - ahora.getDay() + 7) % 7);
+    partidoDate.setHours(10, 0, 0, 0);
+    if(ahora > partidoDate) partidoDate.setDate(partidoDate.getDate() + 7);
 
-  const diff = partidoDate - ahora;
-  const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutos = Math.floor((diff / 1000 / 60) % 60);
+    const diff = partidoDate - ahora;
+    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutos = Math.floor((diff / 1000 / 60) % 60);
 
-  const dEl = document.getElementById('cdDias');
-  const hEl = document.getElementById('cdHoras');
-  const mEl = document.getElementById('cdMin');
-  if(dEl) dEl.textContent = String(dias).padStart(2, '0');
-  if(hEl) hEl.textContent = String(horas).padStart(2, '0');
-  if(mEl) mEl.textContent = String(minutos).padStart(2, '0');
+    const dEl = document.getElementById('cdDias');
+    const hEl = document.getElementById('cdHoras');
+    const mEl = document.getElementById('cdMin');
+    if(dEl) dEl.textContent = String(dias).padStart(2, '0');
+    if(hEl) hEl.textContent = String(horas).padStart(2, '0');
+    if(mEl) mEl.textContent = String(minutos).padStart(2, '0');
+  } catch(e){}
 }
 setInterval(iniciarCountdown, 60000);
 iniciarCountdown();
@@ -505,162 +505,414 @@ function getClaseResultado(esLocal, texto){
 }
 
 function renderTablaPosiciones(){
-  const container = document.getElementById('¡Es una excelente idea, Juan! Así evitamos que se sigan anotando jugadores una vez que el partido ya pasó, pero la lista con los que asistieron queda a la vista como un historial definitivo.
+  const container = document.getElementById('tablaPosicionesContainer');
+  if(!container) return;
 
-Para lograr esto de forma limpia y con el **código completo**, vamos a modificar la función `renderFixture()` en tu `index.html`. Lo que hará es verificar si el resultado del partido es distinto de "Pendiente"; si ya se jugó, oculta los inputs de carga ("¡Voy!") pero muestra la lista completa de quienes se anotaron.
-
-Acá tenés el **archivo `index.html` completo** con esa lógica aplicada y lista para usar:
-
-```html
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escuela Filippo - Categorías</title>
-<link rel="icon" href="escudo.png">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0a7d3e">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link href="[https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Inter:wght@400;500;600;700;800&display=swap)" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--verde:#0a7d3e;--verde-claro:#e8f5e9;--borde:#e5ded6;--negro:#111111;--rojo:#c41e24;--fondo:#fbf7f2;--card-bg:#ffffff}
-body{background:var(--fondo);font-family:'Inter',sans-serif;color:var(--negro);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
-
-/* HEADER MODERNO */
-header{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:20;border-bottom:1px solid var(--borde);box-shadow:0 1px 3px rgba(0,0,0,.02)}
-header img{width:40px;height:40px;border-radius:10px;background:white;border:1px solid var(--borde);padding:2px;object-fit:contain}
-.brand-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:15px;line-height:1.1}
-.brand-sub{font-size:10px;font-weight:700;color:#7a7a7a;letter-spacing:.8px;text-transform:uppercase}
-
-.admin-btn{padding:6px 14px;border-radius:999px;border:1px solid var(--borde);background:white;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s ease}
-.admin-btn:active{transform:scale(0.95)}
-.admin-btn.on{background:var(--negro);color:white;border-color:var(--negro)}
-
-/* BARRA DE CATEGORIAS FLUIDA */
-.cat-bar{display:flex;gap:8px;padding:12px 16px;background:white;border-bottom:1px solid var(--borde);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.cat-bar::-webkit-scrollbar{display:none}
-.cat-btn{flex:1;min-width:70px;padding:8px 14px;border-radius:999px;border:1px solid var(--borde);background:#f6f4f0;font-size:12px;font-weight:800;color:#666;cursor:pointer;text-align:center;transition:all .2s cubic-bezier(0.4, 0, 0.2, 1)}
-.cat-btn:active{transform:scale(0.95)}
-.cat-btn.active{background:var(--verde);color:white;border-color:var(--verde);box-shadow:0 4px 12px rgba(10,125,62,.28)}
-
-/* HERO & FLYER CON FONDO ANIMADO TRICOLOR Y COUNTDOWN */
-.hero{
-  height:auto;
-  min-height:240px;
-  background: linear-gradient(135deg, #0b1a11 0%, #151515 50%, #1c0d0e 100%);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-wrap: wrap;
-  gap: 20px;
-  overflow:hidden;
-  border-bottom:1px solid var(--borde);
-  position:relative;
-  padding:20px 16px;
-}
-.hero::before, .hero::after {
-  content: '';
-  position: absolute;
-  width: 250%;
-  height: 250%;
-  top: -75%;
-  left: -75%;
-  z-index: 1;
-  opacity: 0.45;
-  pointer-events: none;
-}
-.hero::before {
-  background: linear-gradient(45deg, transparent 30%, rgba(10,125,62,0.8) 40%, rgba(255,255,255,0.95) 48%, rgba(196,30,36,0.8) 56%, transparent 65%);
-  transform: rotate(25deg);
-  animation: shootingStar 7s linear infinite;
-}
-.hero::after {
-  background: linear-gradient(135deg, transparent 30%, rgba(196,30,36,0.8) 40%, rgba(255,255,255,0.95) 48%, rgba(10,125,62,0.8) 56%, transparent 65%);
-  transform: rotate(-25deg);
-  animation: shootingStar 9s linear infinite reverse;
-}
-@keyframes shootingStar {
-  0% { transform: translate(-25%, -25%) rotate(25deg); }
-  100% { transform: translate(25%, 25%) rotate(25deg); }
+  let html = `
+  <div class="tabla-posiciones">
+    <div class="tabla-pos-head">
+      <span>🏆 POSICIONES ZONA - ${categoriaActual.toUpperCase()}</span>
+      <span>PTS</span>
+    </div>
+    <div class="pos-row"><span>1. Escuela Filippo</span><b>--</b></div>
+    <div class="pos-row"><span>2. Rival de Zona</span><b>--</b></div>
+    <div class="pos-row"><span>3. Zona Metropolitana</span><b>--</b></div>
+  </div>`;
+  container.innerHTML = html;
 }
 
-.escudo-3d{width:110px;height:135px;position:relative;transform-style:preserve-3d;animation:spin360 8s linear infinite; z-index: 2;}
-@keyframes spin360{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
-.face{position:absolute;inset:0;background-image:url('escudo.png');background-size:contain;background-position:center;background-repeat:no-repeat;backface-visibility:hidden;filter:drop-shadow(0 8px 12px rgba(0,0,0,.3))}
-.face.front{transform:translateZ(10px)}.face.back{transform:rotateY(180deg) translateZ(10px)}
+function renderTablaGoleadores(){
+  try {
+    const catBuscada = categoriaActual.toString().trim().toLowerCase();
+    const conteoGoles = {};
 
-.hero-flyer{width:100%;max-width:280px;display:none;text-align:center;position:relative;z-index:2;}
-.hero-flyer-badge{display:inline-block;background:var(--verde);color:white;font-size:10px;font-weight:800;letter-spacing:1px;padding:5px 12px;border-radius:999px;margin-bottom:8px;box-shadow:0 3px 10px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.3)}
-.hero-flyer img{width:100%;height:auto;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.25);display:block}
+    if(Array.isArray(goleadoresDB)){
+      goleadoresDB.forEach(g => {
+        if(!g || !g.goles) return;
+        const gCat = (g.categoria || "6ta").toString().toLowerCase().trim();
+        if((gCat === catBuscada || (catBuscada === '6ta' && !g.categoria))){
+          const partes = g.goles.toString().split(',');
+          partes.forEach(p => {
+            const txt = p.trim();
+            const mX = txt.match(/([a-záéíóúñ\s]+)\s*x\s*(\d+)/i);
+            const mP = txt.match(/([a-záéíóúñ\s]+)\s*\((\d+)\)/i);
+            if(mX){
+              const nombre = mX[1].trim();
+              const cant = parseInt(mX[2]);
+              conteoGoles[nombre] = (conteoGoles[nombre] || 0) + cant;
+            } else if(mP){
+              const nombre = mP[1].trim();
+              const cant = parseInt(mP[2]);
+              conteoGoles[nombre] = (conteoGoles[nombre] || 0) + cant;
+            } else if(txt && txt.toLowerCase() !== "sin datos"){
+              conteoGoles[txt] = (conteoGoles[txt] || 0) + 1;
+            }
+          });
+        }
+      });
+    }
 
-.hero-countdown {
-  background: rgba(20, 20, 20, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  padding: 16px;
-  color: white;
-  text-align: center;
-  max-width: 240px;
-  width: 100%;
-  position: relative;
-  z-index: 2;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-  backdrop-filter: blur(8px);
-  display: none;
+    const lista = Object.keys(conteoGoles).map(k => ({ nombre: k, goles: conteoGoles[k] }));
+    lista.sort((a,b) => b.goles - a.goles);
+
+    const container = document.getElementById('tablaGoleadoresAcumulada');
+    if(!container) return;
+
+    if(!lista.length){
+      container.innerHTML = '';
+      return;
+    }
+
+    let html = `
+    <div class="tabla-goleadores">
+      <div class="tabla-goleadores-head">
+        <span>⚽ GOLEADORES DESTACADOS - ${categoriaActual.toUpperCase()}</span>
+        <span>GOLES</span>
+      </div>`;
+    lista.forEach(item => {
+      html += `<div class="gol-row"><b>${item.nombre}</b><span><b>${item.goles}</b> ⚽</span></div>`;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+  } catch(e){}
 }
-.countdown-title { font-size: 11px; font-weight: 800; color: #4ade80; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-.countdown-grid { display: flex; justify-content: space-around; gap: 8px; margin-top: 8px; }
-.countdown-box { background: rgba(255, 255, 255, 0.1); padding: 8px; border-radius: 10px; flex: 1; }
-.countdown-num { font-size: 18px; font-weight: 800; font-family: 'Bricolage Grotesque', sans-serif; }
-.countdown-lbl { font-size: 9px; color: #ccc; text-transform: uppercase; }
 
-/* TABS DE NAVEGACION */
-.tabs-nav{display:flex;gap:18px;padding:14px 16px 0;border-bottom:1px solid var(--borde);margin:0 12px;overflow-x:auto;scrollbar-width:none}
-.tabs-nav::-webkit-scrollbar{display:none}
-.tab-btn{background:none;border:none;padding:0 2px 10px;font-size:13.5px;font-weight:600;color:#888;cursor:pointer;white-space:nowrap;position:relative;transition:color .2s}
-.tab-btn.active{color:var(--negro);font-weight:800}
-.tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:3px;background:var(--verde);border-radius:3px}
+function getAsistenciaKey(fecha) {
+  return `filippo_asis_${categoriaActual}_${fecha}`;
+}
 
-/* TARJETAS Y PANELES */
-.card{padding:14px 12px 28px;max-width:600px;margin:0 auto}
-.panel{display:none}.panel.show{display:block;animation:fadeIn .25s cubic-bezier(0.16, 1, 0.3, 1)}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+async function agregarAsistencia(fecha) {
+  const inputId = `input-asis-${fecha.replace(/\s+/g, '_')}`;
+  const inputEl = document.getElementById(inputId);
+  if(!inputEl || !inputEl.value.trim()) {
+    alert('Por favor ingresá el nombre del jugador');
+    return;
+  }
+  const nombre = inputEl.value.trim();
+  
+  const asisKey = getAsistenciaKey(fecha);
+  let listaLocal = JSON.parse(localStorage.getItem(asisKey) || '[]');
+  if(!listaLocal.includes(nombre)) {
+    listaLocal.push(nombre);
+    localStorage.setItem(asisKey, JSON.stringify(listaLocal));
+  }
 
-/* FIXTURE & PARTIDOS */
-.fecha{background:var(--card-bg);border:1px solid var(--borde);border-radius:16px;margin-top:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.02);transition:box-shadow .2s}
-.fecha:hover{box-shadow:0 4px 12px rgba(0,0,0,.04)}
-.fecha-head{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,var(--verde-claro),#ffffff);border-bottom:1px solid var(--borde);font-size:12px;font-weight:700;color:#333}
-.match{padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background .15s}
-.match.local{border-left:4px solid var(--verde);background:#f7fcf8}
-.match.local:active{background:#edf7ef}
-.match.visitante{border-left:4px solid var(--rojo);background:#fff9f9}
-.match.visitante:active{background:#fef2f2}
-.match.libre{border-left:4px solid #ccc;background:#fafafa;color:#888}
-.result-row{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px dashed var(--borde);background:#fff}
-.res-pill{font-size:11.5px;font-weight:800;padding:5px 12px;border-radius:999px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:inline-block}
-.res-pendiente{background:#f3ede6;color:#887c72;border:1px solid var(--borde)}
-.res-ganado{background:var(--verde);color:white}
-.res-perdido{background:var(--rojo);color:white}
-.res-empate{background:#f59e0b;color:white}
-.goles-box{margin:0 12px 12px;background:#fbf7f2;border-radius:12px;padding:10px 14px;border:1px solid var(--borde);font-size:12.5px;line-height:1.45;color:#444}
+  asistenciaDB.push({ fecha: fecha, categoria: categoriaActual, nombre: nombre });
+  renderFixture();
+  inputEl.value = '';
 
-/* PANEL DE ASISTENCIA / ANOTARSE */
-.asistencia-box { margin: 0 12px 12px; background: #f0fdf4; border-radius: 12px; padding: 12px; border: 1px solid #bbf7d0; font-size: 12.5px; }
-.asistencia-input-row { display: flex; gap: 6px; margin-top: 6px; }
-.asistencia-input { flex: 1; padding: 7px 12px; border-radius: 999px; border: 1px solid #cbd5e1; font-size: 12px; outline: none; }
-.asistencia-btn { background: var(--verde); color: white; border: none; padding: 7px 14px; border-radius: 999px; font-weight: 700; cursor: pointer; font-size: 12px; }
-.lista-convocados { margin-top: 8px; font-size: 11.5px; color: #334155; line-height: 1.5; }
+  try {
+    const url = `${API_URL}?action=addAsistencia&fecha=${encodeURIComponent(fecha)}&categoria=${encodeURIComponent(categoriaActual)}&nombre=${encodeURIComponent(nombre)}`;
+    fetch(url, { method: 'GET', mode: 'no-cors' });
+  } catch(e) { 
+    console.error('Error al registrar en sheet', e); 
+  }
+}
 
-/* TABLA DE POSICIONES INTEGRADA */
-.tabla-posiciones { width: 100%; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--borde); margin-bottom: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.02); }
-.tabla-pos-head { background: #1f2937; color: white; padding: 11px 14px; font-size: 11.5px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; letter-spacing: .5px; }
-.pos-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--borde); font-size: 12.5px; }
-.pos-row:last-child { border-bottom: none; }
+async function eliminarAsistencia(fecha, nombre) {
+  asistenciaDB = asistenciaDB.filter(a => !(a.fecha === fecha && a.categoria.toLowerCase() === categoriaActual.toLowerCase() && a.nombre === nombre));
+  renderFixture();
 
-/* TABLA GOLEADORES ACUMULADOS */
-.tabla-goleadores{width:100%;background:var(--card-bg);border-radius:16px;border:1px solid var(--borde);margin-bottom:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.02)}
-.tabla-goleadores-head{background:var(--negro);color:white;padding:11px 14px;font-size:11.5px;font-weight:800;display:flex;justify-content:space-between;align-items:center;letter-spacing:.5px}
-.gol-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var
+  try {
+    const url = `${API_URL}?action=removeAsistencia&fecha=${encodeURIComponent(fecha)}&categoria=${encodeURIComponent(categoriaActual)}&nombre=${encodeURIComponent(nombre)}`;
+    fetch(url, { method: 'GET', mode: 'no-cors' });
+  } catch(e) { 
+    console.error('Error al eliminar en sheet', e); 
+  }
+}
+
+function renderFixture(){ 
+  try {
+    let h = ""; 
+    const catBuscada = categoriaActual.toString().trim().toLowerCase();
+
+    partidos.forEach(p => { 
+      if(p[1] === "LIBRE"){ 
+        h += `<div class="fecha"><div class="fecha-head"><span>${p[2]}</span><span>Descanso</span></div><div class="match libre"><span>Libre</span></div></div>`; 
+        return; 
+      } 
+      const cl = p[1] === "LOCAL" ? "local" : "visitante"; 
+      const vs = p[1] === "LOCAL" ? `<b>Filippo</b> vs ${p[0]}` : `${p[0]} vs <b>Filippo</b>`; 
+
+      let res = "Pendiente";
+      let goles = "Sin datos";
+      const fKey = p[2].toString().toLowerCase().trim();
+
+      if(Array.isArray(resultadosDB)){
+        let matchRes = resultadosDB.find(r => 
+          r && r.fecha && r.fecha.toString().toLowerCase().trim() === fKey &&
+          r.categoria && r.categoria.toString().toLowerCase().trim() === catBuscada
+        );
+        if(!matchRes){
+          matchRes = resultadosDB.find(r => 
+            r && r.fecha && r.fecha.toString().toLowerCase().trim() === fKey &&
+            (!r.categoria || r.categoria === "" || catBuscada === "6ta")
+          );
+        }
+        if(matchRes && matchRes.resultado && matchRes.resultado !== "") {
+          res = matchRes.resultado;
+        }
+      }
+
+      if(Array.isArray(goleadoresDB)){
+        let matchGol = goleadoresDB.find(g => 
+          g && g.fecha && g.fecha.toString().toLowerCase().trim() === fKey &&
+          g.categoria && g.categoria.toString().toLowerCase().trim() === catBuscada
+        );
+        if(!matchGol){
+          matchGol = goleadoresDB.find(g => 
+            g && g.fecha && g.fecha.toString().toLowerCase().trim() === fKey &&
+            (!g.categoria || g.categoria === "" || catBuscada === "6ta")
+          );
+        }
+        if(matchGol && matchGol.goles) goles = matchGol.goles;
+      }
+
+      const clase = getClaseResultado(p[1] === "LOCAL", res); 
+      const btnAdminHtml = isAdmin 
+        ? `<button onclick="abrirModalAdmin('${p[2]}','${p[0]}','${res}','${goles}')" style="background:#111;color:white;border:none;padding:4px 10px;border-radius:999px;font-size:10.5px;font-weight:700;cursor:pointer">✏️ Editar</button>` 
+        : '';
+
+      const listaAsis = (asistenciaDB || []).filter(a => 
+        a && a.fecha && a.fecha.toString().toLowerCase().trim() === fKey &&
+        a.categoria && a.categoria.toString().toLowerCase().trim() === catBuscada
+      );
+
+      let asistenciaHtml = listaAsis.map(a => `<span style="display:inline-block; background:white; padding:2px 8px; border-radius:6px; border:1px solid #bbf7d0; margin:2px; font-weight:600;">⚽ ${a.nombre} <a href="javascript:void(0)" onclick="eliminarAsistencia('${p[2]}','${a.nombre}')" style="color:red; text-decoration:none; margin-left:4px;">×</a></span>`).join('');
+      if(!asistenciaHtml) asistenciaHtml = '<span style="color:#777; font-style:italic;">Aún no hay jugadores anotados para esta fecha. ¡Anótate!</span>';
+
+      const inputIdSafe = `input-asis-${p[2].replace(/\s+/g, '_')}`;
+
+      h += `
+      <div class="fecha">
+        <div class="fecha-head"><span>${p[2]} · ${p[0]}</span><span>${p[1].toLowerCase()}</span></div>
+        <div class="match ${cl}" onclick="abrirPartido('${p[0]}','${p[1]}')"><span>${vs}</span></div>
+        <div class="result-row">
+          <span style="font-size:12px;color:#777">Resultado <span class="res-pill ${clase}">${res}</span></span>
+          <div style="display:flex;gap:6px;align-items:center">
+            ${btnAdminHtml}
+            <button onclick="verGoles('${p[2]}')" style="background:none;border:none;font-size:12px;font-weight:700;color:var(--verde);cursor:pointer">Goles →</button>
+          </div>
+        </div>
+        <div id="goles-${p[2]}" style="display:none"><div class="goles-box">${goles}</div></div>
+        
+        <!-- Panel de Asistencia -->
+        <div class="asistencia-box">
+          <div style="font-weight:800; color:#166534; margin-bottom:4px;">📋 Lista de Disponibles (${categoriaActual.toUpperCase()})</div>
+          <div class="asistencia-input-row">
+            <input type="text" id="${inputIdSafe}" class="asistencia-input" placeholder="Nombre y Apellido del jugador...">
+            <button class="asistencia-btn" onclick="agregarAsistencia('${p[2]}')">¡Voy! 🙋‍♂️</button>
+          </div>
+          <div class="lista-convocados">${asistenciaHtml}</div>
+        </div>
+      </div>`; 
+    }); 
+
+    const fixEl = document.getElementById('fixture');
+    if(fixEl) fixEl.innerHTML = h; 
+    renderTablaPosiciones();
+    renderTablaGoleadores();
+  } catch(e){ console.error(e); }
+}
+
+function verGoles(f){ const el=document.getElementById(`goles-${f}`); if(el) el.style.display=el.style.display=='none'?'block':'none'; }
+function buildImgTag(fileId){ return `<img src="https://lh3.googleusercontent.com/d/${fileId}" loading="lazy" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${fileId}&sz=w400'" alt="foto">`; }
+
+function openLightbox(fileId, type){ 
+  const lb=document.getElementById('lightbox'); 
+  const img=document.getElementById('lbImg'); 
+  const vid=document.getElementById('lbVid'); 
+  if(type==='image'){ 
+    vid.style.display='none'; img.style.display='block'; 
+    img.src=`https://lh3.googleusercontent.com/d/${fileId}`; 
+  } else { 
+    img.style.display='none'; vid.style.display='block'; 
+    vid.src=`https://drive.google.com/file/d/${fileId}/preview`; 
+  } 
+  lb.style.display='flex'; 
+}
+
+function abrirModalAdmin(fecha, rival, res, goles){
+  document.getElementById('editFecha').value = fecha;
+  document.getElementById('lblEditPartido').textContent = `${fecha} vs ${rival} (${categoriaActual.toUpperCase()})`;
+  document.getElementById('editRes').value = res === 'Pendiente' ? '' : res;
+  document.getElementById('editGol').value = goles === 'Sin datos' ? '' : goles;
+  document.getElementById('modalAdmin').style.display = 'flex';
+}
+
+function cerrarModalAdmin(){
+  document.getElementById('modalAdmin').style.display = 'none';
+}
+
+async function guardarResultadoAdmin(){
+  const fecha = document.getElementById('editFecha').value;
+  const res = document.getElementById('editRes').value.trim();
+  const gol = document.getElementById('editGol').value.trim();
+
+  if(!res){ alert('Ingresá un resultado'); return; }
+
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify({
+        action: 'saveResult',
+        pass: 'filippo2012',
+        fecha: fecha,
+        categoria: categoriaActual,
+        resultado: res,
+        goles: gol
+      })
+    });
+    cerrarModalAdmin();
+    alert('¡Resultado guardado!');
+    localStorage.removeItem(CACHE_KEY);
+    setTimeout(cargarTodo, 1500);
+  } catch(e) { alert('Error al guardar'); }
+}
+
+function renderAll(d){
+  try {
+    if(!d) return;
+    ubicaciones = {};
+    let html = `<div class="item"><div><b>Filippo LOCAL</b></div><a href="${UBICACION_FILIPPO}" target="_blank" style="font-size:11.5px;font-weight:700;text-decoration:none;color:var(--verde)">Maps →</a></div>`;
+    (d.ubicaciones || []).forEach(u => { 
+      ubicaciones[u.key] = u; 
+      html += `<div class="item"><div><b>${u.display}</b></div><a href="${u.href}" target="_blank" style="font-size:11.5px;font-weight:700;text-decoration:none;color:var(--verde)">Maps →</a></div>`; 
+    });
+    const listUbi = document.getElementById('listaUbicaciones');
+    if(listUbi) listUbi.innerHTML = html;
+
+    const gal = document.getElementById('galeria'); 
+    if(gal){
+      gal.innerHTML = '';
+      (d.galeria || []).forEach(g => { 
+        if(g.type === 'image'){ 
+          gal.innerHTML += `<div class="thumb" onclick="openLightbox('${g.fileId}','image')">${buildImgTag(g.fileId)}</div>`; 
+        } else { 
+          gal.innerHTML += `<div class="thumb" onclick="openLightbox('${g.fileId}','video')"><iframe src="https://drive.google.com/file/d/${g.fileId}/preview" loading="lazy"></iframe></div>`; 
+        } 
+      });
+    }
+
+    if(Array.isArray(d.resultados)){
+      resultadosDB = d.resultados.map(r => {
+        let cat = (r.categoria || "").toString().toLowerCase().trim();
+        let res = (r.resultado || "").toString().trim();
+        if(['6ta','7ma','8va','9na'].includes(res.toLowerCase())){
+          cat = res.toLowerCase();
+          res = (r.rival || "Pendiente").toString().trim();
+        }
+        if(!cat) cat = "6ta";
+        return {
+          fecha: (r.fecha || "").toString().trim(),
+          categoria: cat,
+          resultado: res || "Pendiente"
+        };
+      });
+    } else { resultadosDB = []; }
+
+    if(Array.isArray(d.goleadores)){
+      goleadoresDB = d.goleadores.map(g => ({
+        fecha: (g.fecha || "").toString().trim(),
+        categoria: (g.categoria || "6ta").toString().toLowerCase().trim(),
+        goles: (g.goles || "").toString().trim()
+      }));
+    } else { goleadoresDB = []; }
+
+    if(Array.isArray(d.asistencia)){
+      asistenciaDB = d.asistencia.map(a => ({
+        fecha: (a.fecha || "").toString().trim(),
+        categoria: (a.categoria || "6ta").toString().toLowerCase().trim(),
+        nombre: (a.nombre || "").toString().trim()
+      }));
+    } else { asistenciaDB = []; }
+
+    cambiarCategoria(categoriaActual);
+  } catch(e) {
+    renderFixture();
+  }
+}
+
+async function cargarTodo(){
+  // Primer intento: dibujar fixture inmediatamente
+  renderFixture();
+  
+  try{ 
+    const cached = localStorage.getItem(CACHE_KEY); 
+    if(cached){ renderAll(JSON.parse(cached)); } 
+  }catch(e){}
+
+  try{ 
+    const r = await fetch(API_URL, {cache:'no-store'}); 
+    const d = await r.json(); 
+    renderAll(d); 
+    localStorage.setItem(CACHE_KEY, JSON.stringify(d)); 
+  }catch(e){ 
+    renderFixture(); 
+  }
+}
+
+function abrirPartido(n,t){ if(t==='LOCAL') window.open(UBICACION_FILIPPO,'_blank'); else{ const u=ubicaciones[n.toLowerCase()]; if(u) window.open(u.href,'_blank'); } }
+
+async function subirGaleria(){ 
+  const input=document.getElementById('fileInput'); 
+  if(!input.files.length){ alert('Elegí una foto o video'); return; } 
+  document.getElementById('uploadStatus').textContent='Subiendo...'; 
+  for(let f of input.files){ 
+    const b64=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(f); }); 
+    await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); 
+  } 
+  document.getElementById('uploadStatus').textContent='¡Subido! Actualizando...'; 
+  localStorage.removeItem(CACHE_KEY); 
+  setTimeout(cargarTodo,2500); 
+}
+
+async function agregarUbi(){ 
+  if(!isAdmin){ alert('Solo admin'); return; } 
+  const n=document.getElementById('nombreUbi').value.trim(); 
+  const l=document.getElementById('linkUbi').value.trim(); 
+  if(!n||!l){ alert('Completa nombre y link'); return; } 
+  await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addUbi',pass:'filippo2012',key:n.toLowerCase(),display:n,href:l})}); 
+  document.getElementById('nombreUbi').value=''; 
+  document.getElementById('linkUbi').value=''; 
+  localStorage.removeItem(CACHE_KEY); 
+  setTimeout(cargarTodo,1500); 
+}
+
+function cargarClimaSMN(){
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.571&longitude=-58.693&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=America%2FArgentina%2FBuenos_Aires&forecast_days=1')
+    .then(r => r.json())
+    .then(d => {
+      const curr = d.current;
+      const code = curr.weather_code;
+      let desc = 'Despejado', icon='☀️';
+      if([0].includes(code)){ desc='Despejado'; icon='☀️'; }
+      else if([1,2,3].includes(code)){ desc='Parcialmente nublado'; icon='⛅'; }
+      else if([45,48].includes(code)){ desc='Niebla'; icon='🌫️'; }
+      else if([51,53,55,61,63,65,80,81,82].includes(code)){ desc='Lluvia'; icon='🌧️'; }
+      else if([95,96,99].includes(code)){ desc='Tormenta'; icon='⛈️'; }
+
+      const iconEl = document.getElementById('climaIcon');
+      const tempEl = document.getElementById('climaTemp');
+      const descEl = document.getElementById('climaDesc');
+      if(iconEl) iconEl.textContent = icon;
+      if(tempEl) tempEl.textContent = Math.round(curr.temperature_2m) + '° • ' + Math.round(curr.wind_speed_10m) + ' km/h';
+      if(descEl) descEl.textContent = desc + ' - Bella Vista';
+    })
+    .catch(e => {
+      const tempEl = document.getElementById('climaTemp');
+      const descEl = document.getElementById('climaDesc');
+      if(tempEl) tempEl.textContent = 'Bella Vista';
+      if(descEl) descEl.textContent = 'Windy →';
+    });
+}
+
+// Ejecución
+renderFixture();
+cargarTodo();
+initAdminUI();
+cargarClimaSMN();
+</script>
+</body>
+</html>
