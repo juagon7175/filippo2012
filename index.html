@@ -737,9 +737,26 @@ function renderFixture(){
 function verGoles(f){ const el=document.getElementById(`goles-${f}`); if(el) el.style.display=el.style.display=='none'?'block':'none'; }
 
 function buildImgTag(fileId){ 
-  return `<img src="https://lh3.googleusercontent.com/d/${fileId}=w800" loading="lazy" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=${fileId}&sz=w800'" alt="foto">`; 
+  // Limpiamos por si acaso pegaron una URL entera en lugar del ID
+  let id = fileId.toString().trim();
+  if(id.includes('id=')) {
+    const parts = id.split('id=');
+    id = parts[1].split('&')[0];
+  } else if(id.includes('/d/')) {
+    const parts = id.split('/d/');
+    id = parts[1].split('/')[0];
+  }
+  
+  return `<img src="https://drive.google.com/uc?export=view&id=${id}" loading="lazy" onerror="this.thisProxyError(this, '${id}')" alt="foto">`; 
 }
 
+// Función auxiliar de respaldo por si falla el enlace directo
+function thisProxyError(imgEl, id) {
+  imgEl.onerror = function() {
+    this.src = 'https://lh3.googleusercontent.com/d/' + id;
+  };
+  imgEl.src = 'https://drive.google.com/thumbnail?id=' + id + '&sz=w1000';
+}
 function openLightbox(fileId, type){ 
   const lb=document.getElementById('lightbox'); 
   const img=document.getElementById('lbImg'); 
