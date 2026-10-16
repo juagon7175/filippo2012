@@ -365,7 +365,7 @@ let goleadoresDB = [];
 let posicionesDB = [];
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
-const CACHE_KEY = 'filippo_cache_v7';
+const CACHE_KEY = 'filippo_cache_v8';
 
 // Limpieza proactiva de cachés viejas
 localStorage.removeItem('filippo_cache_v2');
@@ -373,6 +373,7 @@ localStorage.removeItem('filippo_cache_v3');
 localStorage.removeItem('filippo_cache_v4');
 localStorage.removeItem('filippo_cache_v5');
 localStorage.removeItem('filippo_cache_v6');
+localStorage.removeItem('filippo_cache_v7');
 
 const partidos = [
   ["Escuela Tigre","LOCAL","Fecha 1"],
@@ -421,7 +422,7 @@ const partidos = [
 function iniciarCountdown() {
   const ahora = new Date();
   let partidoDate = new Date();
-  partidoDate.setDate(ahora.getDate() + (6 - ahora.getDay() + 7) % 7); // Próximo sábado
+  partidoDate.setDate(ahora.getDate() + (6 - ahora.getDay() + 7) % 7);
   partidoDate.setHours(10, 0, 0, 0);
   if(ahora > partidoDate) partidoDate.setDate(partidoDate.getDate() + 7);
 
@@ -516,7 +517,6 @@ function renderTablaPosiciones(){
   const container = document.getElementById('tablaPosicionesContainer');
   if(!container) return;
 
-  // Si no hay datos de posiciones en el Sheet todavía, mostramos un resumen orientativo por categoría
   let html = `
   <div class="tabla-posiciones">
     <div class="tabla-pos-head">
@@ -586,7 +586,6 @@ function renderTablaGoleadores(){
   } catch(e){}
 }
 
-// Funciones para anotarse a la lista de asistencia por partido
 function getAsistenciaKey(fecha) {
   return `filippo_asis_${categoriaActual}_${fecha}`.replace(/\s+/g, '_');
 }
@@ -673,7 +672,6 @@ function renderFixture(){
         ? `<button onclick="abrirModalAdmin('${p[2]}','${p[0]}','${res}','${goles}')" style="background:#111;color:white;border:none;padding:4px 10px;border-radius:999px;font-size:10.5px;font-weight:700;cursor:pointer">✏️ Editar</button>` 
         : '';
 
-      // Recuperar lista de asistencia guardada localmente
       const asisKey = getAsistenciaKey(p[2]);
       const listaAsis = JSON.parse(localStorage.getItem(asisKey) || '[]');
       let asistenciaHtml = listaAsis.map(n => `<span style="display:inline-block; background:white; padding:2px 8px; border-radius:6px; border:1px solid #bbf7d0; margin:2px; font-weight:600;">⚽ ${n} <a href="javascript:void(0)" onclick="eliminarAsistencia('${p[2]}','${n}')" style="color:red; text-decoration:none; margin-left:4px;">×</a></span>`).join('');
@@ -893,7 +891,7 @@ function cargarClimaSMN(){
       const tempEl = document.getElementById('climaTemp');
       const descEl = document.getElementById('climaDesc');
       if(tempEl) tempEl.textContent = 'Bella Vista';
-      if(descEl) descEl.textContent = Windy →;
+      if(descEl) descEl.textContent = 'Windy →';
     });
 }
 
