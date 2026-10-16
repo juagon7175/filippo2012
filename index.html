@@ -145,6 +145,7 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
 .tabla-pos-head { background: #1f2937; color: white; padding: 11px 14px; font-size: 11.5px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; letter-spacing: .5px; }
 .pos-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--borde); font-size: 12.5px; }
 .pos-row:last-child { border-bottom: none; }
+.pos-row.filippo-highlight { background: var(--verde-claro); font-weight: 800; color: var(--verde); border-left: 4px solid var(--verde); }
 
 /* TABLA GOLEADORES ACUMULADOS */
 .tabla-goleadores{width:100%;background:var(--card-bg);border-radius:16px;border:1px solid var(--borde);margin-bottom:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.02)}
@@ -354,16 +355,17 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwEft6U5k3jMCwRMenl827lLVrZPvPWWkkyOGBSY8Lu1W6Oa21iV5pshm4zdzLew_DA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzcJNvsgKODMbuUVouVF7ZB_-6TeZOV_h-UfrIw9vb1nP3jM_7DhKPRq1mXYNevTjmA/exec";
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
 
 let ubicaciones = {}; 
 let resultadosDB = []; 
 let goleadoresDB = [];
 let asistenciaDB = [];
+let posicionesDB = {};
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
-const CACHE_KEY = 'filippo_cache_v14';
+const CACHE_KEY = 'filippo_cache_v15';
 
 const partidos = [
   ["Escuela Tigre","LOCAL","Fecha 1"],
@@ -508,16 +510,33 @@ function renderTablaPosiciones(){
   const container = document.getElementById('tablaPosicionesContainer');
   if(!container) return;
 
+  const lista = (posicionesDB && posicionesDB[categoriaActual]) ? posicionesDB[categoriaActual] : [];
+
   let html = `
   <div class="tabla-posiciones">
     <div class="tabla-pos-head">
-      <span>🏆 POSICIONES ZONA - ${categoriaActual.toUpperCase()}</span>
+      <span>🏆 POSICIONES LUEFI - ${categoriaActual.toUpperCase()}</span>
       <span>PTS</span>
-    </div>
-    <div class="pos-row"><span>1. Escuela Filippo</span><b>--</b></div>
+    </div>`;
+
+  if(lista && lista.length > 0) {
+    lista.forEach(item => {
+      const esFilippo = item.equipo.toLowerCase().includes('filippo');
+      const claseFilippo = esFilippo ? 'filippo-highlight' : '';
+      html += `
+      <div class="pos-row ${claseFilippo}">
+        <span>${item.pos}. ${item.equipo}</span>
+        <b>${item.pts !== undefined ? item.pts : '--'}</b>
+      </div>`;
+    });
+  } else {
+    html += `
+    <div class="pos-row filippo-highlight"><span>1. Escuela Filippo</span><b>--</b></div>
     <div class="pos-row"><span>2. Rival de Zona</span><b>--</b></div>
-    <div class="pos-row"><span>3. Zona Metropolitana</span><b>--</b></div>
-  </div>`;
+    <div class="pos-row"><span>3. Zona Metropolitana</span><b>--</b></div>`;
+  }
+
+  html += `</div>`;
   container.innerHTML = html;
 }
 
@@ -841,6 +860,10 @@ function renderAll(d){
         nombre: (a.nombre || "").toString().trim()
       }));
     } else { asistenciaDB = []; }
+
+    if(d.posiciones) {
+      posicionesDB = d.posiciones;
+    }
 
     cambiarCategoria(categoriaActual);
   } catch(e) {
