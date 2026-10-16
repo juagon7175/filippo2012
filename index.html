@@ -140,13 +140,6 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
 .asistencia-btn { background: var(--verde); color: white; border: none; padding: 7px 14px; border-radius: 999px; font-weight: 700; cursor: pointer; font-size: 12px; }
 .lista-convocados { margin-top: 8px; font-size: 11.5px; color: #334155; line-height: 1.5; }
 
-/* TABLA DE POSICIONES INTEGRADA */
-.tabla-posiciones { width: 100%; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--borde); margin-bottom: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.02); }
-.tabla-pos-head { background: #1f2937; color: white; padding: 11px 14px; font-size: 11.5px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; letter-spacing: .5px; }
-.pos-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--borde); font-size: 12.5px; }
-.pos-row:last-child { border-bottom: none; }
-.pos-row.filippo-highlight { background: var(--verde-claro); font-weight: 800; color: var(--verde); border-left: 4px solid var(--verde); }
-
 /* TABLA GOLEADORES ACUMULADOS */
 .tabla-goleadores{width:100%;background:var(--card-bg);border-radius:16px;border:1px solid var(--borde);margin-bottom:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.02)}
 .tabla-goleadores-head{background:var(--negro);color:white;padding:11px 14px;font-size:11.5px;font-weight:800;display:flex;justify-content:space-between;align-items:center;letter-spacing:.5px}
@@ -244,9 +237,8 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
 </div>
 
 <div class="card">
-  <!-- FIXTURE -->
+  <!-- FIXTURE Y GOLEADORES -->
   <div id="p1" class="panel show">
-    <div id="tablaPosicionesContainer"></div>
     <div id="tablaGoleadoresAcumulada"></div>
     <div id="fixture"></div>
     <a class="link" href="https://ligaluefi.com/competicion/masculino-infantil-zona-metropolitana-clausura-2026/" target="_blank">Tabla oficial LUEFI →</a>
@@ -355,17 +347,16 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwEft6U5k3jMCwRMenl827lLVrZPvPWWkkyOGBSY8Lu1W6Oa21iV5pshm4zdzLew_DA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzcJNvsgKODMbuUVouVF7ZB_-6TeZOV_h-UfrIw9vb1nP3jM_7DhKPRq1mXYNevTjmA/exec";
 const UBICACION_FILIPPO = "https://www.google.com/maps/place/Asociación+Japonesa+Sarmiento+KIRAKU-EN/@-34.5326371,-58.7657489,17z/";
 
 let ubicaciones = {}; 
 let resultadosDB = []; 
 let goleadoresDB = [];
 let asistenciaDB = [];
-let posicionesDB = {};
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
-const CACHE_KEY = 'filippo_cache_v15';
+const CACHE_KEY = 'filippo_cache_v16';
 
 const partidos = [
   ["Escuela Tigre","LOCAL","Fecha 1"],
@@ -506,40 +497,6 @@ function getClaseResultado(esLocal, texto){
   return 'res-pendiente'; 
 }
 
-function renderTablaPosiciones(){
-  const container = document.getElementById('tablaPosicionesContainer');
-  if(!container) return;
-
-  const lista = (posicionesDB && posicionesDB[categoriaActual]) ? posicionesDB[categoriaActual] : [];
-
-  let html = `
-  <div class="tabla-posiciones">
-    <div class="tabla-pos-head">
-      <span>🏆 POSICIONES LUEFI - ${categoriaActual.toUpperCase()}</span>
-      <span>PTS</span>
-    </div>`;
-
-  if(lista && lista.length > 0) {
-    lista.forEach(item => {
-      const esFilippo = item.equipo.toLowerCase().includes('filippo');
-      const claseFilippo = esFilippo ? 'filippo-highlight' : '';
-      html += `
-      <div class="pos-row ${claseFilippo}">
-        <span>${item.pos}. ${item.equipo}</span>
-        <b>${item.pts !== undefined ? item.pts : '--'}</b>
-      </div>`;
-    });
-  } else {
-    html += `
-    <div class="pos-row filippo-highlight"><span>1. Escuela Filippo</span><b>--</b></div>
-    <div class="pos-row"><span>2. Rival de Zona</span><b>--</b></div>
-    <div class="pos-row"><span>3. Zona Metropolitana</span><b>--</b></div>`;
-  }
-
-  html += `</div>`;
-  container.innerHTML = html;
-}
-
 function renderTablaGoleadores(){
   try {
     const catBuscada = categoriaActual.toString().trim().toLowerCase();
@@ -563,7 +520,7 @@ function renderTablaGoleadores(){
               const nombre = mP[1].trim();
               const cant = parseInt(mP[2]);
               conteoGoles[nombre] = (conteoGoles[nombre] || 0) + cant;
-            } else if(txt && txt.toLowerCase() !== "sin datos"){
+            } else if(txt && txt.toLowerCase() !== "sin datos" && txt !== ""){
               conteoGoles[txt] = (conteoGoles[txt] || 0) + 1;
             }
           });
@@ -578,18 +535,29 @@ function renderTablaGoleadores(){
     if(!container) return;
 
     if(!lista.length){
-      container.innerHTML = '';
+      container.innerHTML = `
+      <div class="tabla-goleadores">
+        <div class="tabla-goleadores-head">
+          <span>⚽ TABLA DE GOLEADORES - ${categoriaActual.toUpperCase()}</span>
+          <span>GOLES</span>
+        </div>
+        <div class="gol-row" style="color:#888; font-style:italic;">
+          <span>Aún no hay goles registrados en esta categoría</span>
+          <b>0</b>
+        </div>
+      </div>`;
       return;
     }
 
     let html = `
     <div class="tabla-goleadores">
       <div class="tabla-goleadores-head">
-        <span>⚽ GOLEADORES DESTACADOS - ${categoriaActual.toUpperCase()}</span>
+        <span>⚽ TABLA DE GOLEADORES - ${categoriaActual.toUpperCase()}</span>
         <span>GOLES</span>
       </div>`;
-    lista.forEach(item => {
-      html += `<div class="gol-row"><b>${item.nombre}</b><span><b>${item.goles}</b> ⚽</span></div>`;
+    lista.forEach((item, index) => {
+      const medalla = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '';
+      html += `<div class="gol-row"><b>${medalla}${item.nombre}</b><span><b>${item.goles}</b> ⚽</span></div>`;
     });
     html += `</div>`;
     container.innerHTML = html;
@@ -740,7 +708,6 @@ function renderFixture(){
 
     const fixEl = document.getElementById('fixture');
     if(fixEl) fixEl.innerHTML = h; 
-    renderTablaPosiciones();
     renderTablaGoleadores();
   } catch(e){ console.error(e); }
 }
@@ -860,10 +827,6 @@ function renderAll(d){
         nombre: (a.nombre || "").toString().trim()
       }));
     } else { asistenciaDB = []; }
-
-    if(d.posiciones) {
-      posicionesDB = d.posiciones;
-    }
 
     cambiarCategoria(categoriaActual);
   } catch(e) {
