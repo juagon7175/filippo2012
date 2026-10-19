@@ -398,12 +398,14 @@ const partidos = [
 
 (function(){
   try {
-    const limite = new Date(2026, 9, 19, 23, 59, 59);
+    // Definimos el límite exacto: ayer 18 de octubre de 2026 a las 23:59:59
+    const limite = new Date(2026, 9, 18, 23, 59, 59);
     const hoy = new Date();
     const videoEscudo = document.getElementById('heroVideoEscudo');
     const flyer = document.getElementById('heroFlyer');
     const countdown = document.getElementById('heroCountdown');
     const img = document.getElementById('imgFlyer');
+    
     if(img){
       img.onerror = function(){
         if(this.src.includes('fecha6.jpg')){ this.src = 'fecha6.jpeg'; }
@@ -411,6 +413,8 @@ const partidos = [
         else if(this.src.includes('fecha6.png')){ this.src = 'fecha6.webp'; }
       };
     }
+
+    // Si hoy es ANTERIOR o IGUAL al límite, muestra el flyer y el contador. Si ya pasó, muestra el escudo webm.
     if(hoy <= limite){
       if(videoEscudo) videoEscudo.style.display='none'; 
       if(flyer) flyer.style.display='block';
