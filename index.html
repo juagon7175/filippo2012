@@ -398,31 +398,17 @@ const partidos = [
 ];
 
 (function(){
-  try {
-    const limite = new Date(2026, 9, 19, 23, 59, 59);
-    const hoy = new Date();
-    const videoEscudo = document.getElementById('heroVideoEscudo');
-    const flyer = document.getElementById('heroFlyer');
-    const countdown = document.getElementById('heroCountdown');
-    const img = document.getElementById('imgFlyer');
-    if(img){
-      img.onerror = function(){
-        if(this.src.includes('fecha6.jpg')){ this.src = 'fecha6.jpeg'; }
-        else if(this.src.includes('fecha6.jpeg')){ this.src = 'fecha6.png'; }
-        else if(this.src.includes('fecha6.png')){ this.src = 'fecha6.webp'; }
-      };
-    }
-    if(hoy <= limite){
-      if(videoEscudo) videoEscudo.style.display='none'; 
-      if(flyer) flyer.style.display='block';
-      if(countdown) countdown.style.display='block';
-    } else {
-      if(videoEscudo) videoEscudo.style.display='flex'; 
-      if(flyer) flyer.style.display='none';
-      if(countdown) countdown.style.display='none';
-    }
-  } catch(e){}
-})();
+      try {
+        const videoEscudo = document.getElementById('heroVideoEscudo');
+        const flyer = document.getElementById('heroFlyer');
+        const countdown = document.getElementById('heroCountdown');
+        
+        // Forzamos que siempre se muestre el escudo webm y se oculte el flyer y el contador
+        if(videoEscudo) videoEscudo.style.display='flex'; 
+        if(flyer) flyer.style.display='none';
+        if(countdown) countdown.style.display='none';
+      } catch(e){}
+    })();
 
 function iniciarCountdown() {
   try {
