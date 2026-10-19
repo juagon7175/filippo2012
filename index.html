@@ -168,7 +168,7 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
 @media(min-width:500px){.galeria{grid-template-columns:repeat(5,1fr)}}
 .thumb{border-radius:12px;overflow:hidden;aspect-ratio:1/1;background:white;border:1px solid var(--borde);position:relative;cursor:pointer;transition:transform .2s ease, box-shadow .2s ease;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .thumb:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
-.thumb img,.thumb iframe{width:100%;height:100%;object-fit:cover;display:block}
+.thumb img,.thumb iframe{width:100%;height:100%;object-fit:cover;display:block;border:none}
 .item{padding:12px 14px;background:var(--card-bg);border:1px solid var(--borde);border-radius:14px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.02)}
 .link{display:block;text-align:center;padding:12px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;margin-top:12px;border:1px solid var(--borde);background:white;color:var(--negro);transition:all .2s}
 .link.dorado{background:var(--verde);color:white;border-color:var(--verde);box-shadow:0 4px 12px rgba(10,125,62,.2)}
@@ -283,7 +283,7 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
   <div id="p2" class="panel">
     <div class="galeria" id="galeria"></div>
     <div class="add-box-galeria">
-      <p style="font-size:13px;font-weight:700;margin-bottom:8px">Subir fotos / videos - General</p>
+      <p style="font-size:13px;font-weight:700;margin-bottom:8px">Subir fotos / videos - Categoría Activa</p>
       <input type="file" id="fileInput" accept="image/*,video/*" multiple style="width:100%;font-size:12.5px">
       <button id="btnSubir" onclick="subirGaleria()" style="width:100%;margin-top:10px;padding:11px;background:var(--negro);color:white;border:none;border-radius:999px;font-weight:700;cursor:pointer">Subir a galería</button>
       <div id="uploadStatus" style="margin-top:8px;font-size:12px;text-align:center;color:#666"></div>
@@ -376,9 +376,10 @@ let ubicaciones = {};
 let resultadosDB = []; 
 let goleadoresDB = [];
 let asistenciaDB = [];
+let galeriaDB = [];
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
-const CACHE_KEY = 'filippo_cache_v18';
+const CACHE_KEY = 'filippo_cache_v19';
 
 const partidos = [
   ["Escuela Tigre","LOCAL","Fecha 1"],
@@ -398,14 +399,12 @@ const partidos = [
 
 (function(){
   try {
-    // Definimos el límite exacto: ayer 18 de octubre de 2026 a las 23:59:59
-    const limite = new Date(2026, 9, 18, 23, 59, 59);
+    const limite = new Date(2026, 9, 19, 23, 59, 59);
     const hoy = new Date();
     const videoEscudo = document.getElementById('heroVideoEscudo');
     const flyer = document.getElementById('heroFlyer');
     const countdown = document.getElementById('heroCountdown');
     const img = document.getElementById('imgFlyer');
-    
     if(img){
       img.onerror = function(){
         if(this.src.includes('fecha6.jpg')){ this.src = 'fecha6.jpeg'; }
@@ -413,8 +412,6 @@ const partidos = [
         else if(this.src.includes('fecha6.png')){ this.src = 'fecha6.webp'; }
       };
     }
-
-    // Si hoy es ANTERIOR o IGUAL al límite, muestra el flyer y el contador. Si ya pasó, muestra el escudo webm.
     if(hoy <= limite){
       if(videoEscudo) videoEscudo.style.display='none'; 
       if(flyer) flyer.style.display='block';
@@ -463,6 +460,7 @@ function cambiarCategoria(cat){
   if(lblI) lblI.textContent = 'Escuela Filippo - ' + cat.toUpperCase();
   
   renderFixture();
+  renderGaleria();
 }
 
 function togglePanel(id){ 
@@ -747,17 +745,9 @@ function buildImgTag(fileId){
   } else if(id.includes('/d/')) {
     id = id.split('/d/')[1].split('/')[0];
   }
-  // Usamos el visor embebido de Drive que esquiva cualquier bloqueo de CORS
   return `<img src="https://lh3.googleusercontent.com/d/${id}=w1000" loading="lazy" onerror="this.src='https://drive.google.com/uc?export=view&id=${id}'" alt="foto">`; 
 }
 
-// Función auxiliar de respaldo por si falla el enlace directo
-function thisProxyError(imgEl, id) {
-  imgEl.onerror = function() {
-    this.src = 'https://lh3.googleusercontent.com/d/' + id;
-  };
-  imgEl.src = 'https://drive.google.com/thumbnail?id=' + id + '&sz=w1000';
-}
 function openLightbox(fileId, type){ 
   const lb=document.getElementById('lightbox'); 
   const img=document.getElementById('lbImg'); 
@@ -811,6 +801,32 @@ async function guardarResultadoAdmin(){
   } catch(e) { alert('Error al guardar'); }
 }
 
+function renderGaleria() {
+  const gal = document.getElementById('galeria'); 
+  if(!gal) return;
+  gal.innerHTML = '';
+  
+  const catBuscada = categoriaActual.toString().trim().toLowerCase();
+  
+  const galeriaFiltrada = (galeriaDB || []).filter(g => {
+    const catItem = (g.categoria || 'general').toString().trim().toLowerCase();
+    return catItem === catBuscada || catItem === 'general';
+  });
+
+  if(galeriaFiltrada.length === 0){
+    gal.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#888; padding: 20px;">No hay fotos o videos para la ${categoriaActual.toUpperCase()}.</p>`;
+    return;
+  }
+
+  galeriaFiltrada.forEach(g => { 
+    if(g.type === 'image'){ 
+      gal.innerHTML += `<div class="thumb" onclick="openLightbox('${g.fileId}','image')">${buildImgTag(g.fileId)}</div>`; 
+    } else { 
+      gal.innerHTML += `<div class="thumb" onclick="openLightbox('${g.fileId}','video')"><iframe src="https://drive.google.com/file/d/${g.fileId}/preview" loading="lazy"></iframe></div>`; 
+    } 
+  });
+}
+
 function renderAll(d){
   try {
     if(!d) return;
@@ -823,17 +839,7 @@ function renderAll(d){
     const listUbi = document.getElementById('listaUbicaciones');
     if(listUbi) listUbi.innerHTML = html;
 
-    const gal = document.getElementById('galeria'); 
-    if(gal){
-      gal.innerHTML = '';
-      (d.galeria || []).forEach(g => { 
-        if(g.type === 'image'){ 
-          gal.innerHTML += `<div class="thumb" onclick="openLightbox('${g.fileId}','image')">${buildImgTag(g.fileId)}</div>`; 
-        } else { 
-          gal.innerHTML += `<div class="thumb" onclick="openLightbox('${g.fileId}','video')"><iframe src="https://drive.google.com/file/d/${g.fileId}/preview" loading="lazy"></iframe></div>`; 
-        } 
-      });
-    }
+    galeriaDB = d.galeria || [];
 
     if(Array.isArray(d.resultados)){
       resultadosDB = d.resultados.map(r => {
@@ -900,7 +906,19 @@ async function subirGaleria(){
   document.getElementById('uploadStatus').textContent='Subiendo...'; 
   for(let f of input.files){ 
     const b64=await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(f); }); 
-    await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'addImage',pass:'filippo2012',base64:b64,mime:f.type,name:f.name,type:f.type.startsWith('image')?'image':'video'})}); 
+    await fetch(API_URL,{
+      method:'POST',
+      mode:'no-cors',
+      body:JSON.stringify({
+        action:'addImage',
+        pass:'filippo2012',
+        base64:b64,
+        mime:f.type,
+        name:f.name,
+        type:f.type.startsWith('image')?'image':'video',
+        categoria: categoriaActual
+      })
+    }); 
   } 
   document.getElementById('uploadStatus').textContent='¡Subido! Actualizando...'; 
   localStorage.removeItem(CACHE_KEY); 
