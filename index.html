@@ -805,10 +805,24 @@ function renderGaleria() {
   }
 
   galeriaFiltrada.forEach(g => { 
+    let id = g.fileId.toString().trim();
+    if(id.includes('id=')) {
+      id = id.split('id=')[1].split('&')[0];
+    } else if(id.includes('/d/')) {
+      id = id.split('/d/')[1].split('/')[0];
+    }
+
     if(g.type === 'image'){ 
-      gal.innerHTML += `<div class="thumb" onclick="openLightbox('${g.fileId}','image')">${buildImgTag(g.fileId)}</div>`; 
+      gal.innerHTML += `<div class="thumb" onclick="openLightbox('${id}','image')">${buildImgTag(id)}</div>`; 
     } else { 
-      gal.innerHTML += `<div class="thumb" onclick="openLightbox('${g.fileId}','video')"><iframe src="https://drive.google.com/file/d/${g.fileId}/preview" loading="lazy"></iframe></div>`; 
+      // Para videos: miniatura de portada limpia con ícono Play sobrepuesto
+      gal.innerHTML += `
+        <div class="thumb" onclick="openLightbox('${id}','video')" style="position:relative; background:#000;">
+          <img src="https://lh3.googleusercontent.com/d/${id}=w500" loading="lazy" style="width:100%; height:100%; object-fit:cover; opacity:0.85;" alt="video">
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+            <div style="background:rgba(0,0,0,0.65); color:white; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; border:2px solid white; box-shadow:0 4px 10px rgba(0,0,0,0.3);">▶</div>
+          </div>
+        </div>`; 
     } 
   });
 }
