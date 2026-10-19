@@ -204,11 +204,11 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
-    <div id="climaBox" onclick="window.open('https://weather.com/es-AR/ar/buenos-aires-province/city/muniz/today','_blank')" style="display:flex;align-items:center;gap:6px;background:#f6f4f0;border:1px solid var(--borde);padding:6px 12px;border-radius:999px;cursor:pointer" title="Ver Clima Muñiz">
-      <span style="font-size:15px">🌤️</span>
-      <div style="line-height:1.1">
-        <div style="font-size:11.5px;font-weight:800;white-space:nowrap">Muñiz</div>
-        <div style="font-size:9px;color:var(--verde);font-weight:700;white-space:nowrap">Weather.com →</div>
+   <div id="climaBox" onclick="window.open('https://weather.com/es-AR/ar/buenos-aires-province/city/muniz/today','_blank')" style="display:flex;align-items:center;gap:6px;background:#f6f4f0;border:1px solid var(--borde);padding:5px 10px;border-radius:999px;cursor:pointer;max-width:170px" title="Ver Clima Muñiz">
+      <span id="climaIcon" style="font-size:15px">⛅</span>
+      <div style="line-height:1.1;overflow:hidden">
+        <div id="climaTemp" style="font-size:11.5px;font-weight:800;white-space:nowrap">Muñiz</div>
+        <div id="climaDesc" style="font-size:9px;color:#777;font-weight:700;white-space:nowrap">Cargando...</div>
       </div>
     </div>
     <button id="adminBtn" class="admin-btn" onclick="toggleAdmin()">Admin</button>
@@ -937,15 +937,17 @@ async function agregarUbi(){
   setTimeout(cargarTodo,1500); 
 }
 
-function cargarClimaSMN(){
-  fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.571&longitude=-58.693&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=America%2FArgentina%2FBuenos_Aires&forecast_days=1')
+function cargarClimaActual(){
+  // Coordenadas aproximadas de Muñiz / San Miguel
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.542&longitude=-58.712&current=temperature_2m,weather_code&timezone=America%2FArgentina%2FBuenos_Aires')
     .then(r => r.json())
     .then(d => {
       const curr = d.current;
       const code = curr.weather_code;
       let desc = 'Despejado', icon='☀️';
+
       if([0].includes(code)){ desc='Despejado'; icon='☀️'; }
-      else if([1,2,3].includes(code)){ desc='Parcialmente nublado'; icon='⛅'; }
+      else if([1,2,3].includes(code)){ desc='Nublado'; icon='⛅'; }
       else if([45,48].includes(code)){ desc='Niebla'; icon='🌫️'; }
       else if([51,53,55,61,63,65,80,81,82].includes(code)){ desc='Lluvia'; icon='🌧️'; }
       else if([95,96,99].includes(code)){ desc='Tormenta'; icon='⛈️'; }
@@ -953,17 +955,19 @@ function cargarClimaSMN(){
       const iconEl = document.getElementById('climaIcon');
       const tempEl = document.getElementById('climaTemp');
       const descEl = document.getElementById('climaDesc');
+
       if(iconEl) iconEl.textContent = icon;
-      if(tempEl) tempEl.textContent = Math.round(curr.temperature_2m) + '° • ' + Math.round(curr.wind_speed_10m) + ' km/h';
-      if(descEl) descEl.textContent = desc + ' - Bella Vista';
+      if(tempEl) tempEl.textContent = Math.round(curr.temperature_2m) + '° • Muñiz';
+      if(descEl) descEl.textContent = desc + ' (Weather.com →)';
     })
     .catch(e => {
-      const tempEl = document.getElementById('climaTemp');
       const descEl = document.getElementById('climaDesc');
-      if(tempEl) tempEl.textContent = 'Bella Vista';
-      if(descEl) descEl.textContent = 'Windy →';
+      if(descEl) descEl.textContent = 'Weather.com →';
     });
 }
+
+// Llamar a la función al cargar la página
+cargarClimaActual();
 
 // Ejecución
 renderFixture();
