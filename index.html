@@ -164,7 +164,53 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
 
 /* LIGHTBOX Y MODAL ADMIN */
 #lightbox,#modalAdmin{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;justify-content:center;align-items:center;padding:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-#lightbox img,#lightbox iframe{max-width:95%;max-height:85%;border-radius:14px}
+#lightbox img,#lightbox iframe{max-width:90%;max-height:85%;border-radius:14px}
+
+/* BOTONES DE NAVEGACION Y CERRAR EN LIGHTBOX */
+.lb-btn-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(255,255,255,0.25);
+  color:white;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  user-select:none;
+  transition:background .2s, transform .2s;
+  z-index:110;
+  backdrop-filter:blur(4px);
+}
+.lb-btn-nav:hover{background:rgba(255,255,255,0.5);transform:translateY(-50%) scale(1.08);}
+.lb-prev{left:12px;}
+.lb-next{right:12px;}
+.lb-close{
+  position:absolute;
+  top:16px;
+  right:16px;
+  background:rgba(255,255,255,0.25);
+  color:white;
+  border:none;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  font-size:20px;
+  font-weight:bold;
+  cursor:pointer;
+  z-index:110;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(4px);
+}
+
 .modal-content{background:white;border-radius:20px;padding:20px;width:100%;max-width:380px;box-shadow:0 15px 35px rgba(0,0,0,.3)}
 </style>
 </head>
@@ -295,10 +341,13 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
   </div>
 </div>
 
-<!-- LIGHTBOX -->
-<div id="lightbox" onclick="this.style.display='none'">
+<!-- LIGHTBOX CON NAVEGACION -->
+<div id="lightbox" onclick="cerrarLightbox(event)">
+  <button class="lb-close" onclick="cerrarLightboxForzado()">✕</button>
+  <button class="lb-btn-nav lb-prev" onclick="navGaleria(-1, event)">❮</button>
   <img id="lbImg" style="display:none">
   <iframe id="lbVid" style="display:none;width:90%;height:70%" frameborder="0" allowfullscreen></iframe>
+  <button class="lb-btn-nav lb-next" onclick="navGaleria(1, event)">❯</button>
 </div>
 
 <!-- MODAL CARGAR RESULTADO (ADMIN) -->
@@ -333,9 +382,12 @@ let resultadosDB = [];
 let goleadoresDB = [];
 let asistenciaDB = [];
 let galeriaDB = [];
+let galeriaFiltradaActual = [];
+let indiceGaleriaActual = 0;
+
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
-const CACHE_KEY = 'filippo_cache_v20';
+const CACHE_KEY = 'filippo_cache_v21';
 
 const partidos = [
   ["Escuela Tigre","LOCAL","Fecha 1"],
@@ -657,28 +709,74 @@ function renderFixture(){
 function verGoles(f){ const el=document.getElementById(`goles-${f}`); if(el) el.style.display=el.style.display=='none'?'block':'none'; }
 
 function buildImgTag(fileId){ 
+  let id = limpiarFileId(fileId);
+  return `<img src="https://lh3.googleusercontent.com/d/${id}=w1000" loading="lazy" onerror="this.src='https://drive.google.com/uc?export=view&id=${id}'" alt="foto">`; 
+}
+
+function limpiarFileId(fileId){
   let id = fileId.toString().trim();
   if(id.includes('id=')) {
     id = id.split('id=')[1].split('&')[0];
   } else if(id.includes('/d/')) {
     id = id.split('/d/')[1].split('/')[0];
   }
-  return `<img src="https://lh3.googleusercontent.com/d/${id}=w1000" loading="lazy" onerror="this.src='https://drive.google.com/uc?export=view&id=${id}'" alt="foto">`; 
+  return id;
 }
 
-function openLightbox(fileId, type){ 
-  const lb=document.getElementById('lightbox'); 
-  const img=document.getElementById('lbImg'); 
-  const vid=document.getElementById('lbVid'); 
-  if(type==='image'){ 
-    vid.style.display='none'; img.style.display='block'; 
-    img.src=`https://lh3.googleusercontent.com/d/${fileId}=w1200`; 
+// NAVEGACION EN LIGHTBOX
+function openLightboxPorIndice(index){ 
+  if(!galeriaFiltradaActual || galeriaFiltradaActual.length === 0) return;
+  if(index < 0) index = galeriaFiltradaActual.length - 1;
+  if(index >= galeriaFiltradaActual.length) index = 0;
+  
+  indiceGaleriaActual = index;
+  const item = galeriaFiltradaActual[indiceGaleriaActual];
+  const fileId = limpiarFileId(item.fileId);
+  
+  const lb = document.getElementById('lightbox'); 
+  const img = document.getElementById('lbImg'); 
+  const vid = document.getElementById('lbVid'); 
+
+  if(item.type === 'image'){ 
+    vid.style.display = 'none'; 
+    vid.src = '';
+    img.style.display = 'block'; 
+    img.src = `https://lh3.googleusercontent.com/d/${fileId}=w1200`; 
   } else { 
-    img.style.display='none'; vid.style.display='block'; 
-    vid.src=`https://drive.google.com/file/d/${fileId}/preview`; 
+    img.style.display = 'none'; 
+    vid.style.display = 'block'; 
+    vid.src = `https://drive.google.com/file/d/${fileId}/preview`; 
   } 
-  lb.style.display='flex'; 
+  lb.style.display = 'flex'; 
 }
+
+function navGaleria(dir, e){
+  if(e) e.stopPropagation();
+  openLightboxPorIndice(indiceGaleriaActual + dir);
+}
+
+function cerrarLightbox(e){
+  if(e.target.id === 'lightbox'){
+    cerrarLightboxForzado();
+  }
+}
+
+function cerrarLightboxForzado(){
+  const lb = document.getElementById('lightbox');
+  const vid = document.getElementById('lbVid');
+  if(vid) vid.src = '';
+  if(lb) lb.style.display = 'none';
+}
+
+// Soportar flechas del teclado para navegar
+document.addEventListener('keydown', function(e){
+  const lb = document.getElementById('lightbox');
+  if(lb && lb.style.display === 'flex'){
+    if(e.key === 'ArrowLeft') navGaleria(-1);
+    if(e.key === 'ArrowRight') navGaleria(1);
+    if(e.key === 'Escape') cerrarLightboxForzado();
+  }
+});
 
 function abrirModalAdmin(fecha, rival, res, goles){
   document.getElementById('editFecha').value = fecha;
@@ -726,29 +824,24 @@ function renderGaleria() {
   
   const catBuscada = categoriaActual.toString().trim().toLowerCase();
   
-  const galeriaFiltrada = (galeriaDB || []).filter(g => {
+  galeriaFiltradaActual = (galeriaDB || []).filter(g => {
     const catItem = (g.categoria || 'general').toString().trim().toLowerCase();
     return catItem === catBuscada || catItem === 'general';
   });
 
-  if(galeriaFiltrada.length === 0){
+  if(galeriaFiltradaActual.length === 0){
     gal.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#888; padding: 20px;">No hay fotos o videos para la ${categoriaActual.toUpperCase()}.</p>`;
     return;
   }
 
-  galeriaFiltrada.forEach(g => { 
-    let id = g.fileId.toString().trim();
-    if(id.includes('id=')) {
-      id = id.split('id=')[1].split('&')[0];
-    } else if(id.includes('/d/')) {
-      id = id.split('/d/')[1].split('/')[0];
-    }
+  galeriaFiltradaActual.forEach((g, idx) => { 
+    let id = limpiarFileId(g.fileId);
 
     if(g.type === 'image'){ 
-      gal.innerHTML += `<div class="thumb" onclick="openLightbox('${id}','image')">${buildImgTag(id)}</div>`; 
+      gal.innerHTML += `<div class="thumb" onclick="openLightboxPorIndice(${idx})">${buildImgTag(id)}</div>`; 
     } else { 
       gal.innerHTML += `
-        <div class="thumb" onclick="openLightbox('${id}','video')" style="position:relative; background:#000;">
+        <div class="thumb" onclick="openLightboxPorIndice(${idx})" style="position:relative; background:#000;">
           <img src="https://lh3.googleusercontent.com/d/${id}=w500" loading="lazy" style="width:100%; height:100%; object-fit:cover; opacity:0.85;" alt="video">
           <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
             <div style="background:rgba(0,0,0,0.65); color:white; width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; border:2px solid white; box-shadow:0 4px 10px rgba(0,0,0,0.3);">▶</div>
