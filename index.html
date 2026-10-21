@@ -32,7 +32,7 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
 .cat-btn:active{transform:scale(0.95)}
 .cat-btn.active{background:var(--verde);color:white;border-color:var(--verde);box-shadow:0 4px 12px rgba(10,125,62,.28)}
 
-/* HERO & ESCUDO WEBM FIJO */
+/* HERO & CONTENEDOR DINAMICO DE HERO */
 .hero{
   height:auto;
   min-height:240px;
@@ -73,10 +73,10 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
   100% { transform: translate(25%, 25%) rotate(25deg); }
 }
 
-/* VIDEO DEL ESCUDO EN FORMATO WEBM */
-.hero-video-container {
-  width: 140px;
-  height: 140px;
+/* ESTILOS PARA ESCUDO Y FLYER EN EL HERO */
+.hero-media-container {
+  width: 180px;
+  max-width: 90%;
   border-radius: 20px;
   overflow: hidden;
   position: relative;
@@ -88,10 +88,11 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
   align-items: center;
   justify-content: center;
 }
-.hero-video-container video {
+.hero-media-container video, .hero-media-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 /* TABS DE NAVEGACION */
@@ -229,6 +230,7 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
     <img src="escudo.png" alt="Escudo Filippo">
     <div>
       <div class="brand-title">ESCUELA FILIPPO <span id="lblCategoriaHeader" style="color:var(--verde)">6TA</span></div>
+      <div class="brand-sub">Clausura 2026</div>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
@@ -251,12 +253,10 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
   <button class="cat-btn" onclick="cambiarCategoria('9na')" id="cat-9na">9na</button>
 </div>
 
-<!-- HERO CON VIDEO DE ESCUDO (.WEBM) FIJO -->
+<!-- HERO CON CONTENIDO DINÁMICO (FLYER O ESCUDO BUCLE) -->
 <div class="hero">
-  <div id="heroVideoEscudo" class="hero-video-container">
-    <video autoplay muted loop playsinline>
-      <source src="escudo-movil.webm" type="video/webm">
-    </video>
+  <div id="heroMediaBox" class="hero-media-container">
+    <!-- Se llena dinámicamente según la fecha por JavaScript -->
   </div>
 </div>
 
@@ -278,7 +278,7 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
       <img src="banner-luefi.jpg" alt="Esto es LUEFI - Fútbol Formativo">
     </a>
 
-    <!-- BANNER AMATEUR CHAMPIONS CUP (FONDO BLANCO Y LOGO CENTRADO) -->
+    <!-- BANNER AMATEUR CHAMPIONS CUP -->
     <a class="link-banner-acc" href="https://www.amateurchampionscup.com.ar/" target="_blank" title="Ver Amateur Champions Cup">
       <img src="logo-acc.jpg" alt="Amateur Champions Cup">
     </a>
@@ -402,7 +402,7 @@ let indiceGaleriaActual = 0;
 
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
-const CACHE_KEY = 'filippo_cache_v23';
+const CACHE_KEY = 'filippo_cache_v24';
 
 const partidos = [
   ["Escuela Tigre","LOCAL","Fecha 1"],
@@ -419,6 +419,27 @@ const partidos = [
   ["Club San Fernando","LOCAL","Fecha 12"],
   ["River Maschwitz Rojo","VISITANTE","Fecha 13"]
 ];
+
+// FUNCION PARA ACTIVAR FLYER O ESCUDO SEGUN LA FECHA
+function actualizarHeroSegunFecha(){
+  const mediaBox = document.getElementById('heroMediaBox');
+  if(!mediaBox) return;
+
+  const hoy = new Date();
+  // Fecha limite: 24 de Octubre de 2026 hasta las 23:59:59
+  const fechaLimite = new Date(2026, 9, 24, 23, 59, 59); // Nota: Mes 9 es Octubre (0=Ene, 9=Oct)
+
+  if(hoy <= fechaLimite){
+    // Muestra el flyer del proximo partido hasta el 24/10 inclusive
+    mediaBox.innerHTML = `<img src="flyer-proximo.jpg" alt="Próximo Partido" style="width:100%; border-radius:18px;">`;
+  } else {
+    // A partir del 25/10 vuelve automaticamente el escudo giratorio .webm
+    mediaBox.innerHTML = `
+      <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
+        <source src="escudo-movil.webm" type="video/webm">
+      </video>`;
+  }
+}
 
 function cambiarCategoria(cat){
   categoriaActual = cat;
@@ -1005,6 +1026,7 @@ function cargarClimaActual(){
 }
 
 // Ejecución
+actualizarHeroSegunFecha();
 renderFixture();
 cargarTodo();
 initAdminUI();
