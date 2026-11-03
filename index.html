@@ -253,7 +253,7 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
   <button class="cat-btn" onclick="cambiarCategoria('9na')" id="cat-9na">9na</button>
 </div>
 
-<!-- HERO CON CONTENIDO DINÁMICO (FLYER O ESCUDO BUCLE) -->
+<!-- HERO CON CONTENIDO DINÁMICO (FLYER HASTA 8/11 O ESCUDO BUCLE) -->
 <div class="hero">
   <div id="heroMediaBox" class="hero-media-container">
     <!-- Se llena dinámicamente según la fecha por JavaScript -->
@@ -329,7 +329,7 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
           <div style="font-size:20px">📢</div>
           <div>
             <h4 style="margin:0 0 6px;font-size:15px;font-weight:800">Canal de WhatsApp:</h4>
-            <a class="pill-negra" href="https://whatsapp.com/channel/0029Vb89JH7Fy726ryg9Ab2y" target="_blank" style="background:#25D366; color:white;">📢 Unirme al Canal</a>
+            <a class="pill-negra" href="PEGA_TU_LINK_DE_CANAL_AQUI" target="_blank" style="background:#25D366; color:white;">📢 Unirme al Canal</a>
           </div>
         </div>
         <div class="info-row">
@@ -356,6 +356,12 @@ header img{width:40px;height:40px;border-radius:10px;background:white;border:1px
         <a href="https://wa.me/5491150555166" target="_blank" style="color:#25D366;text-decoration:none">WhatsApp →</a>
       </div>
     </div>
+    <div class="info-box" style="padding:16px">
+      <h4 id="lblCategoriaInfo">Escuela Filippo - 6ta</h4>
+      <p style="font-size:13px;color:#666">Coord. Miguel y Hernán</p>
+    </div>
+  </div>
+</div>
 
 <!-- LIGHTBOX CON NAVEGACION -->
 <div id="lightbox" onclick="cerrarLightbox(event)">
@@ -403,7 +409,7 @@ let indiceGaleriaActual = 0;
 
 let isAdmin = localStorage.getItem('filippo_admin')==='1';
 let categoriaActual = localStorage.getItem('filippo_cat') || '6ta';
-const CACHE_KEY = 'filippo_cache_v24';
+const CACHE_KEY = 'filippo_cache_v25';
 
 const partidos = [
   ["Escuela Tigre","LOCAL","Fecha 1"],
@@ -421,20 +427,20 @@ const partidos = [
   ["River Maschwitz Rojo","VISITANTE","Fecha 13"]
 ];
 
-// FUNCION PARA ACTIVAR FLYER O ESCUDO SEGUN LA FECHA
+// FUNCION PARA ACTIVAR FLYER HASTA EL DOMINGO 8/11 Y LUEGO ESCUDO
 function actualizarHeroSegunFecha(){
   const mediaBox = document.getElementById('heroMediaBox');
   if(!mediaBox) return;
 
   const hoy = new Date();
-  // Fecha limite: 24 de Octubre de 2026 hasta las 23:59:59
-  const fechaLimite = new Date(2026, 9, 24, 23, 59, 59); // Nota: Mes 9 es Octubre (0=Ene, 9=Oct)
+  // Fecha límite: Domingo 8 de Noviembre de 2026 a las 23:59:59 (Mes 10 = Noviembre)
+  const fechaLimite = new Date(2026, 10, 8, 23, 59, 59);
 
   if(hoy <= fechaLimite){
-    // Muestra el flyer del proximo partido hasta el 24/10 inclusive
+    // Muestra el flyer hasta el 08/11 inclusive
     mediaBox.innerHTML = `<img src="flyer-proximo.jpg" alt="Próximo Partido" style="width:100%; border-radius:18px;">`;
   } else {
-    // A partir del 25/10 vuelve automaticamente el escudo giratorio .webm
+    // A partir del 09/11 vuelve automáticamente el escudo giratorio .webm
     mediaBox.innerHTML = `
       <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;">
         <source src="escudo-movil.webm" type="video/webm">
